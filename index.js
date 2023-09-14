@@ -1,10 +1,12 @@
 import express from "express";
 import cors from "cors";
 import helmet from "helmet";
-import categoryRoutes from "./routes/categories.js";
 import dotenv from "dotenv";
 import connectDb from "./utility/connectDb.js";
 import morgan from "morgan";
+
+import categoryRoutes from "./routes/categories.js";
+import productRoutes from "./routes/products.js"
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -23,8 +25,16 @@ app.use(morgan('tiny'));
 
 dotenv.config();
 connectDb();
+const api = process.env.API
 
-app.use('/categories', categoryRoutes)
+
+
+
+app.use(`${api}/products`, productRoutes)
+app.use(`${api}/categories`, categoryRoutes);
+
+
+
 
 app.get('/', (req, res) => {
  res.send("Welcome to Restful API!")
