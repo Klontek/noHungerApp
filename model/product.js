@@ -47,7 +47,8 @@ const productSchema = new mongoose.Schema({
   default: 0
  },
  isFeatured: {
-  type: Boolean
+  type: Boolean,
+  default: false
  },
  dateCreated: {
   type: Date,
@@ -57,7 +58,16 @@ const productSchema = new mongoose.Schema({
 {
  timestamps: true
 }
-)
+);
+
+productSchema.virtual('id').get(function(){
+ return this._id.toHexString()
+})
+
+productSchema.set('toJSON', {
+  virtuals: true,
+});
+
 
 const productModel = mongoose.models.products || mongoose.model("products", productSchema);
 

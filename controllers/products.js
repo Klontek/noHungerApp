@@ -4,9 +4,17 @@ import productModel from "../model/product.js";
 
 
 
+
+
 export const getProducts = async (req, res) => {
  try {
-  const products = await productModel.find().populate('category');
+  let filter = {};
+  if(req.query.categories) {
+   filter = {category: req.query.categories.split(',')}
+  }
+
+  const products = await productModel.find(filter).populate('category');
+
   if(!products) {
    console.log(products)
    res.status(404).json({msg: "Cannot find products"})
@@ -19,6 +27,7 @@ export const getProducts = async (req, res) => {
   })
  }
 }
+
 
 
 export const getProduct = async (req, res) => {
@@ -46,6 +55,44 @@ export const getProduct = async (req, res) => {
  }
 };
 
+
+
+export const getCountProduct = async (req, res) => {
+ const countProduct = await productModel.countDocuments();
+
+ try{
+  if(!countProduct || countProduct.length === 0) {
+   return res.status(404).json({msg: "No available product"});
+  }
+  
+  return res.status(201).json({count: countProduct})
+ }catch(error) {
+  return res.status(500).json({
+   msg: "Internal Server Error", 
+   err: error
+  })
+ }
+}
+
+
+export const getFeaturedProduct = async (req, res) => {
+ const count = req.params.countId ? req.params.countId : 0;
+
+ try {
+  const products = await productModel.find({isFeatured: true}).limit(+count)
+
+  if(!products) {
+   return res.status.json("No featured products");
+  }
+
+  return res.status(201).json(products)
+ }catch(error) {
+  res.status(500).json({
+   msg: "Internal Server Error",
+   err: error
+  })
+ }
+}
 
 export const addProduct =  async (req, res) => {
  const categoryId = req.body.category;
@@ -94,6 +141,8 @@ export const addProduct =  async (req, res) => {
   })
  }
 }
+
+
 
 
 export const updateProduct = async (req, res) => {
@@ -157,6 +206,9 @@ export const updateProduct = async (req, res) => {
   })
  }
 }
+
+
+
 
 export const deleteProduct = async (req, res) => {
  const productId = req.params.productId;
