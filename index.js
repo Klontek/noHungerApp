@@ -7,6 +7,7 @@ import morgan from "morgan";
 
 import categoryRoutes from "./routes/categories.js";
 import productRoutes from "./routes/products.js"
+import userRoutes from "./routes/users.js"
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -32,6 +33,8 @@ const api = process.env.API
 
 app.use(`${api}/products`, productRoutes)
 app.use(`${api}/categories`, categoryRoutes);
+app.use(`${api}/users`, userRoutes);
+// app.use(`${api}/orders`, orderRoutes);
 
 
 

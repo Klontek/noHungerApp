@@ -9,7 +9,7 @@ const userSchema = mongoose.Schema({
   type: String,
   required: true
  },
- passwordHash: {
+ password: {
   type: String,
   required: true
  },
@@ -22,7 +22,7 @@ const userSchema = mongoose.Schema({
   default: ''
  },
  phone: {
-  type: Number,
+  type: String,
   required: true
  },
  apartment: {
