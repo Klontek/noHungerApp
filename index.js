@@ -2,12 +2,17 @@ import express from "express";
 import cors from "cors";
 import helmet from "helmet";
 import dotenv from "dotenv";
-import connectDb from "./utility/connectDb.js";
 import morgan from "morgan";
 
+
 import categoryRoutes from "./routes/categories.js";
+import connectDb from "./utility/connectDb.js";
 import productRoutes from "./routes/products.js"
 import userRoutes from "./routes/users.js"
+import authJwt from "./helpers/jwt.js";
+import ErrorHandler from "./helpers/error-handler.js";
+
+
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -19,10 +24,14 @@ const corsOptions = {
 }
 
 app.use(express.urlencoded({extended: true}));
-app.use(express.json());
 app.use(cors(corsOptions));
 app.use(helmet());
+
+//middleware
+app.use(express.json());
 app.use(morgan('tiny'));
+app.use(authJwt());
+app.use(ErrorHandler);
 
 dotenv.config();
 connectDb();
@@ -43,11 +52,13 @@ app.get('/', (req, res) => {
  res.send("Welcome to Restful API!")
 })
 
-app.use((req, res, next) => {
- const error = new Error("Something went wrong");
- error.status = 404;
- next(error);
-})
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(err.status || 500).json({
+    msg: "Internal Server Error",
+    error: err.message
+  });
+});
 
 
 app.listen(port, (err) => {

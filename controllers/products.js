@@ -69,7 +69,7 @@ export const getCountProduct = async (req, res) => {
  }catch(error) {
   return res.status(500).json({
    msg: "Internal Server Error", 
-   err: error
+   err: error.message
   })
  }
 }
@@ -135,8 +135,7 @@ export const addProduct =  async (req, res) => {
   res.status(201).json(newProduct)
 
  }catch(error) {
-  res.status(500).json({
-   err: error,
+  res.status(404).json({
    msg: "Internal Server Error"
   })
  }

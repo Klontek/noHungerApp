@@ -1,6 +1,6 @@
 import userModel from "../model/user.js"
 import bcrypt from "bcryptjs";
-
+import jwt from "jsonwebtoken"
 
 
 
@@ -35,9 +35,11 @@ export const addUser = async(req, res) => {
   country
  });
 
-   if(!newUser) {
+   if(!newUser ) {
     res.status(404).json("User cannot be created")
    }
+
+   
    res.status(201).json({
     msg: "User created successfully",
     newUser
@@ -85,6 +87,54 @@ export const getUser = async(req, res) => {
     })
   }
 }
+
+
+export const loginUser = async (req, res) => {
+  try {
+    const { email, password } = req.body;
+
+    // Check if email and password are provided
+    if (!email || !password) {
+      return res.status(400).json({ msg: "Email and password are required" });
+    }
+
+    const user = await userModel.findOne({ email });
+    if (!user) {
+      return res.status(404).json({ msg: "User not found" });
+    }
+
+    // Use the correct field name from the model, which is 'passwordHash'
+    const checkPassword = bcrypt.compareSync(password, user.password);
+    const secret = process.env.SECRET;
+    
+    if (checkPassword) {
+      const token = jwt.sign(
+        {
+          userId: user.id,
+          isAdmin: user.isAdmin
+        },
+        secret,
+        {
+          expiresIn: '1d'
+        }
+      );
+
+      return res.status(200).json({
+        email: user.email,
+        token: token
+        });
+    } else {
+      return res.status(404).json({ msg: "Authentication failed" });
+    }
+  } catch (error) {
+    console.error("Error", error)
+    res.status(500).json({
+      msg: "Internal Server Error",
+      error: error.message,
+    });
+  }
+};
+
 
 export const updateUser =  async(req, res) => {
  const {
@@ -142,5 +192,23 @@ export const deleteUser = async(req, res) => {
    msg: error.message
   })
  }
-
 }
+
+
+export const getUserCount = async (req, res) => {
+  const countUser = await userModel.countDocuments();
+
+  try {
+    if(!countUser || countUser.length === 0) {
+      return res.status(404).json({msg: "No user Available"});
+    }
+
+    return res.status(201).json({count: countUser})
+  }catch(error) {
+    console.error(error)
+    return res.status(500).json({
+      msg: "Internal Server Error",
+      err: error.message
+    })
+  }
+} 
