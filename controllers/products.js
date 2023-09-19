@@ -135,12 +135,12 @@ export const addProduct =  async (req, res) => {
   res.status(201).json(newProduct)
 
  }catch(error) {
-  res.status(404).json({
-   msg: "Internal Server Error"
+  res.status(500).json({
+   msg: "Internal Server Error",
+   error: error.message
   })
  }
 }
-
 
 
 

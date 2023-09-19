@@ -6,11 +6,14 @@ import morgan from "morgan";
 
 
 import categoryRoutes from "./routes/categories.js";
-import connectDb from "./utility/connectDb.js";
-import productRoutes from "./routes/products.js"
-import userRoutes from "./routes/users.js"
-import authJwt from "./helpers/jwt.js";
+import connectDb from "./utility/connectDb.js";import authJwt from "./helpers/jwt.js";
 import ErrorHandler from "./helpers/error-handler.js";
+
+import productRoutes from "./routes/products.js";
+import userRoutes from "./routes/users.js";
+import orderRoutes from "./routes/orders.js"
+
+
 
 
 
@@ -43,7 +46,7 @@ const api = process.env.API
 app.use(`${api}/products`, productRoutes)
 app.use(`${api}/categories`, categoryRoutes);
 app.use(`${api}/users`, userRoutes);
-// app.use(`${api}/orders`, orderRoutes);
+app.use(`${api}/orders`, orderRoutes);
 
 
 
