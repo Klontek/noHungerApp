@@ -3,6 +3,8 @@ import cors from "cors";
 import helmet from "helmet";
 import dotenv from "dotenv";
 import morgan from "morgan";
+import { dirname } from 'path';
+import { fileURLToPath } from 'url';
 
 
 import categoryRoutes from "./routes/categories.js";
@@ -30,11 +32,18 @@ app.use(express.urlencoded({extended: true}));
 app.use(cors(corsOptions));
 app.use(helmet());
 
-//middleware
+//middleWares
 app.use(express.json());
-app.use(morgan('tiny'));
-app.use(authJwt());
+app.use(morgan('tiny')); //terminal
 app.use(ErrorHandler);
+
+//middleware for serving static files: to enable files/images upload in gallery section after excluding it from jwt.js
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+app.use('/public/uploads', express.static(__dirname + '/public/uploads'));
+
+app.use(authJwt());  //authorization middleware
+
 
 dotenv.config();
 connectDb();

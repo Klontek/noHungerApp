@@ -9,7 +9,11 @@ function authJwt() {
     isRevoked: isRevokedFunction
   }).unless({
    path: [
-    {
+   {
+     url: /^\/public\/uploads\/.*/, 
+     methods:['GET', 'OPTIONS'] //excluding gallery-images/:productId Api
+   },
+   {
      url: /\/api\/v1\/products(.*)/, 
      methods:['GET', 'OPTIONS']
    }, // to exclude product GET api as protected route
