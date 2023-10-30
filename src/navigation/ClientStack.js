@@ -36,7 +36,6 @@ const ClientStack = ({navigation, route}) => {
      })}
     />
 
-
     <ClientSearch.Screen
      name="SearchResultScreen"
      component={SearchResultScreen}

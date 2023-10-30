@@ -1,7 +1,7 @@
 import React from "react";
 import {View, Text, Image, StyleSheet, Dimension, TouchableOpacity} from "react-native"
 import {Icon} from "react-native-elements";
-import { color } from "react-native-elements/dist/helpers";
+
 import { colors, parameters } from "../global/styles";
 
 export default function FoodCard({

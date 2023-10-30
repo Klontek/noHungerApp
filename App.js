@@ -2,7 +2,7 @@ import React from "react";
 
 import {View, Text, StyleSheet, StatusBar} from "react-native";
 import { SignInContextProvider } from "./src/contexts/authContext";
-
+import { NativeBaseProvider } from "native-base";
 import { colors } from "./src/global/styles";
 import RootNavigator from "./src/navigation/rootNavigator";
 
@@ -11,18 +11,21 @@ import RootNavigator from "./src/navigation/rootNavigator";
 
 export default function App() {
   return (
-    <SignInContextProvider>
-    <View style={styles.container}>
-      <StatusBar
-      barStyle="light-content"
-      backgroundColor={colors.statusBar}
-      />
-      <RootNavigator/>
+   
+      <SignInContextProvider>
+        <View style={styles.container}>
+          <StatusBar
+          barStyle="light-content"
+          backgroundColor={colors.statusBar}
+          />
+          <RootNavigator/>
 
 
 
-    </View>     
-    </SignInContextProvider>
+        </View>     
+      </SignInContextProvider>
+    
+
 
   )
 }

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   StyleSheet,
@@ -13,19 +13,59 @@ import Countdown from "react-native-countdown-component";
 import { Icon } from "react-native-elements";
 import HomeHeader from "../components/HomeHeader";
 import { colors } from "../global/styles";
-import { getShopData } from "../../assets/Data/data";
+import { getShopData, productFilter } from "../../assets/Data/data";
 import { Image } from "react-native-elements/dist/image/Image";
 import FoodCard from "../components/FoodCard";
+import ProductList from "./Products/ProductList";
+import Banner from "../components/Banner";
+import CategoryFilter from "../components/CategoryFilter";
 
+
+
+const data = getShopData()
 const SCREEN_WIDTH = Dimensions.get("window").width;
 
-const HomeScreen = ({ navigation }) => {
+
+const HomeScreen = ({ navigation }, props) => {
+
   const [indexCheck, setIndexCheck] = useState("a12df2329dfjl89ppo3");
   const [delivery, setDelivery] = useState(true);
+  const [products, setProducts] = useState([]);
+  const [categories, setCategories] = useState([]);
+  const [productsCategories, setProductsCategories] = useState([])
+  const [active, setActive] = useState();
+  const [initialState, setInitialState] = useState([])
+
+
+
+  useEffect(() => {
+    setProducts(data);
+    setCategories(productFilter);
+    setActive(-1);
+    setInitialState(data)
+    return () => {
+      setProducts([])
+      setCategories([]);
+      setActive();
+      setInitialState()
+    }
+  }, [])
+
+  //products categories method
+// const changeCategories = (category) => {
+//   category === 'all'
+//     ? setProductsCategories(initialState)
+//     : setProductsCategories(
+//         products.filter((item) => item.category.id.$oid === category)
+//       );
+//   setActive(true);
+// };
+
 
   return (
     <View style={styles.container}>
       <HomeHeader navigation={navigation} />
+
       <ScrollView stickyHeaderIndices={[0]} showsVerticalScrollIndicator={true}>
         <View style={{ backgroundColor: colors.CardBackground, paddingBottom: 5 }}>
           {/* Delivery and pickup header */}
@@ -85,6 +125,9 @@ const HomeScreen = ({ navigation }) => {
             <Pressable
               onPress={() => {
                 setIndexCheck(item.id.$oid);
+                navigation.navigate("CategoriesRestaurantScreen",
+                {item: {...item }}
+                )
               }}
             >
               <View
@@ -116,9 +159,9 @@ const HomeScreen = ({ navigation }) => {
         />
       </View>
 
-        {/* Free delivery Section Screen */}
+        {/* Promotions Available section */}
         <View style={styles.categoryHeader}>
-          <Text style={styles.categoryHeaderText}>Free Delivery Now</Text>
+          <Text style={styles.categoryHeaderText}>Promotions Available</Text>
         </View>
 
         <View>
@@ -151,7 +194,7 @@ const HomeScreen = ({ navigation }) => {
           />
         </View>
 
-        {/* Promotions Available section */}
+        {/* Promotions Available section
         <View style={styles.categoryHeader}>
           <Text style={styles.categoryHeaderText}>Promotions Available</Text>
         </View>
@@ -177,11 +220,44 @@ const HomeScreen = ({ navigation }) => {
               </View>
             )}
           />
+        </View> */}
+
+
+        {/* Featured Products section */}
+        <View style={styles.categoryHeader}>
+          <Text style={styles.categoryHeaderText}>Featured Products</Text>
         </View>
+
+        <View>
+          <Banner/>
+        </View>
+
+        {/* Shop Product section */}
+          <FlatList
+            numColumns={2}
+            nestedScrollEnabled={true}
+            scrollEnabled={false}
+            style={{ marginTop: 10, marginBottom: 10 }}
+            data={products}
+            keyExtractor={(item, index) => index.toString()}
+            renderItem={({ item }) => (
+              <View style={{ margin: 5 }}>
+                <ProductList
+                  navigation={navigation}
+                  key={item.productData[0].id}
+                  name={item.productData[0].name} 
+                  price={item.productData[0].price} 
+                  image={item.productData[0].image} 
+                  countInStock={item.productData[0].countInStock}
+                />
+              </View>
+            )}
+          />
+
 
         {/* Restaurant in your Area Section */}
         <View style={styles.categoryHeader}>
-          <Text style={styles.categoryHeaderText}>noHungerShops in Your Area</Text>
+          <Text style={styles.categoryHeaderText}>Restaurants in Your Area</Text>
         </View>
 
         <View style={{ paddingTop: 10, width: SCREEN_WIDTH }}>

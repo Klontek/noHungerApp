@@ -713,6 +713,15 @@ const ShopData = [
   },
 ];
 
+export const productFilter = [
+  {id: 0, name: 'Shoes'},
+  {id: 1, name: 'Cloths'},
+  {id: 2, name: 'Gadgets'},
+  {id: 3, name: 'Utensils'},
+  {id: 4, name: 'Clothings'},
+  {id: 5, name: 'More'},
+]
+
 
 export const filterShopData = [
   {
@@ -814,6 +823,33 @@ export const menuDetailedData = [
   },
   {
     id: 1,
+    meal: 'Soup',
+    price: 200.99,
+    image: require("../images/eatable-foods/egusi_eba.jpeg"),
+    details: "Tasty, yummy with crunchy chickens, with mix 100% fresh beef",
+    preferenceTitle: ['Choose your 2 d dips', 'Choose your 1st drink flavour', 'Would you like extra source?', 'would you like add our tasty Beefs/chicken variety?'],
+    preferenceData: [
+      
+        [{id: 10,name: 'White Soup',price: 200, checked: false},
+          {id: 11,name: 'Egusi Soup',price: 500, checked: false},
+          {id: 12,name: 'Egusi Soup',price: 400, checked: false},
+        ],
+        [{id: 13,name: 'Small Coke',price: 200, checked: false},
+          {id: 14,name: 'Zero Coke',price: 200, checked: false},
+          {id: 15,name: 'Fearless',price: 200, checked: false},
+        ],
+        [{id: 16,name: 'Goat Meat',price: 200, checked: false},
+          {id: 17,name: 'Cow Meat',price: 500, checked: false},
+          {id: 18,name: 'Full chicken',price: 400, checked: false},
+        ],
+    ],
+    minimum_quantity: [2,1,1, null, null],
+    counter: [0,0,0,0,0],
+    required: [true, true, true, false, false],
+  },
+
+  {
+    id: 2,
     meal: 'Soup',
     price: 200.99,
     image: require("../images/eatable-foods/egusi_eba.jpeg"),

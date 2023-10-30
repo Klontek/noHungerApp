@@ -17,6 +17,8 @@ export default function RootClientTabs() {
       screenOptions={{
         headerShown: false,
         tabBarActiveTintColor: colors.buttons,
+        keyboardHidesTabBar: true,
+        showLabel: false,
       }}
    >
 

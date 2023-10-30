@@ -1,4 +1,4 @@
-import { Text, StyleSheet, View, Platform, ScrollView, Image} from 'react-native'
+import { Text, StyleSheet, View, Platform, ScrollView, Image, TouchableOpacity} from 'react-native'
 import React, { Component } from 'react'
 import { colors } from '../global/styles'
 import { Icon, CheckBox } from 'react-native-elements'
@@ -13,8 +13,10 @@ export default class PreferenceScreen extends Component {
       this.state = {
         preference: menuDetailedData[this.props.route.params.index].preferenceData,
         required: menuDetailedData[this.props.route.params.index].required,
-        minimum_quantity: menuDetailedData[this.props.route.params.index].minimum_quantity
+        minimum_quantity: menuDetailedData[this.props.route.params.index].minimum_quantity,
+        counter: menuDetailedData[this.props.route.params.index].counter
       }
+
     }
   
   render() {
@@ -88,20 +90,53 @@ export default class PreferenceScreen extends Component {
 
                   <View style={styles.view10}>
                     {
-                      item.map(items => <View style={styles.view4}>
-                        <View style={styles.view19}>
-                            <View style={styles.view6}>
-                              <CheckBox
-                                center
-                                checkedIcon="check-square-o"
-                                unCheckedIcon="square-o"
-                                checked={false}
-                                checkedColor={colors.buttons}
-                        />
-                          <Text style={{color:colors.gray4, marginLeft: -10}}>{items.name}</Text>
+                      item.map((items) => <View style={styles.view4}>
+                        <TouchableOpacity key={item.id}
+                            onPress={() => {
+                              const id = this.state.preference.indexOf(item)
+
+                              if(this.state.minimum_quantity[id] !== null){
+                                const check = item.filter(items => items.checked ? items : null);
+                                this.state.preference[id].forEach(preferenceItem => {
+                                  if(preferenceItem.id === items.id) {
+                                    if(check.length < this.state.minimum_quantity[id]){
+                                      preferenceItem.checked = !preferenceItem.checked
+                                    }else {
+                                      preferenceItem.checked = false
+                                    }
+                                  }
+                                })
+
+                                this.state.counter[id] = this.state.counter[id] + 1; //update the counter state
+                                this.setState({
+                                  preference: [...this.state.preference],
+                                  counter: [...this.state.counter]
+                                })
+                              }else {
+                                this.state.preference[id].foreach(prefernceItem => {
+                                  if(preferenceItem.id === items.id) {
+                                    preferenceItem.checked = !preferenceItem.checked
+                                  }
+                                  this.setState({preference: [...this.state.preference]})
+                                })
+                              }
+
+                            }}
+                        >
+                            <View style={styles.view19}>
+                                <View style={styles.view6}>
+                                  <CheckBox
+                                    center
+                                    checkedIcon="check-square-o"
+                                    unCheckedIcon="square-o"
+                                    checked={items.checked}
+                                    checkedColor={colors.buttons}
+                            />
+                              <Text style={{color:colors.gray4, marginLeft: -10}}>{items.name}</Text>
+                                </View>
+                              <Text style={styles.text6}>#{items.price.toFixed(2)}</Text>
                             </View>
-                          <Text style={styles.text6}>#{items.price.toFixed(2)}</Text>
-                        </View>
+                        </TouchableOpacity>
                       </View>
                       )
                     }
