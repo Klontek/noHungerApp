@@ -1,13 +1,10 @@
-import { StyleSheet, Text, View, ImageBackground, TouchableOpacity, FlatList } from 'react-native';
-import React from 'react';
-import { colors } from '../global/styles';
-import { Icon } from 'react-native-elements';
-import ProductMenuCard from './ProductMenuCard';
+import { StyleSheet, Text, View, ImageBackground, TouchableOpacity, FlatList } from 'react-native'
+import React from 'react'
+import FoodMenuCard from './FoodMenuCard'
+import { Icon } from 'react-native-elements'
+import { colors } from '../../global/styles'
 
-
-
-
-const SearchResultCard = ({
+const RestaurantCategoryCard = ({
   OnPressShopCard,
   ShopName,
   deliveryAvailable,
@@ -18,12 +15,10 @@ const SearchResultCard = ({
   ratings,
   images,
   productData
+
 }) => {
-
-
   return (
     <View>
-
       <TouchableOpacity onPress={ OnPressShopCard}>
       <View style={styles.view1}>
         <View style={{height: 150}}>
@@ -69,7 +64,6 @@ const SearchResultCard = ({
       </View>
       </TouchableOpacity>
 
-
       <View style={{marginTop: 5, paddingBottom: 20}}>
 
         <FlatList
@@ -77,7 +71,7 @@ const SearchResultCard = ({
           data={[...productData]}
           keyExtractor={(item, index) => index.toString()}
           renderItem={({item, index}) => (
-            <ProductMenuCard
+            <FoodMenuCard
               productName = {item.name}
               price = {item.price}
               image = {item.image}
@@ -91,7 +85,7 @@ const SearchResultCard = ({
   )
 }
 
-export default SearchResultCard
+export default RestaurantCategoryCard
 
 const styles = StyleSheet.create({
  view1: {

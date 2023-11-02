@@ -2,10 +2,12 @@ import React from "react";
 import { TransitionPresets, createStackNavigator } from "@react-navigation/stack"; 
 import ShopMapScreen from "../screens/ShopMapScreen";
 import DrawerNavigator from "./DrawerNavigator";
-import { CartScreen } from "../screens/Cart/CartScreen";
+import CartScreen  from "../screens/Cart/CartScreen";
 import { AdminScreen } from "../screens/Admin/AdminScreen";
 import { SingleProduct } from "../screens/Products/SIngleProduct";
-import CategoriesRestaurantScreen from "../screens/CategoriesRestaurantScreen"
+import CategoriesRestaurantScreen from "../screens/RestaurantCategory/CategoriesRestaurantScreen";
+import ShopHomeScreen from "../screens/ShopHomeScreen";
+// import CategoriesRestaurantScreen from "../screens/CategoriesRestaurantScreen"
 
 
 const App= createStackNavigator();
@@ -52,6 +54,15 @@ export const AppStackFunction = () => {
     <App.Screen
      name="CategoriesRestaurantScreen"
      component={CategoriesRestaurantScreen}
+     options={() =>({
+      headerShown: false,
+      ...TransitionPresets.RevealFromBottomAndroid
+     })}
+    />
+
+    <App.Screen
+     name="ShopHomeScreen"
+     component={ShopHomeScreen}
      options={() =>({
       headerShown: false,
       ...TransitionPresets.RevealFromBottomAndroid

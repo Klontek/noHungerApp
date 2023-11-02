@@ -10,7 +10,8 @@ export default function ProductList({ name, price, image, countInStock, navigati
    <TouchableOpacity 
     style={{ width: '50%' }}
       onPress={() => 
-        navigation.navigate("SingleProduct", { item: { name, price, image, countInStock } })
+        navigation.navigate("SingleProduct", 
+       { item: {  name, price, image, countInStock}} )
       }
    >
     <View style={{ width: SCREEN_WIDTH / 2, backgroundColor: 'white' }}>

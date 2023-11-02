@@ -1,14 +1,19 @@
 import React from 'react';
-import {View, StyleSheet, Text} from 'react-native'
+import { View, StyleSheet, Text } from 'react-native';
+import { connect } from 'react-redux';
+
+const CartScreen = (props) => {
+  return (
+    <View>
+      {props.cartItems.map((x, index) => (
+        <Text key={index}>{x.product.name}</Text>
+      ))}
+    </View>
+  );
+};
 
 
 
-export const CartScreen = () => {
- return(
-  <View>
-   <Text>Cart Screen</Text>
-  </View>
- )
-}
+const styles = StyleSheet.create({});
 
-const styles = StyleSheet.create({})
+export default CartScreen;

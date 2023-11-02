@@ -19,6 +19,7 @@ import FoodCard from "../components/FoodCard";
 import ProductList from "./Products/ProductList";
 import Banner from "../components/Banner";
 import CategoryFilter from "../components/CategoryFilter";
+import { useSelector } from "react-redux";
 
 
 
@@ -51,6 +52,9 @@ const HomeScreen = ({ navigation }, props) => {
     }
   }, [])
 
+
+  const cart = useSelector((state) => state.cart.cart)
+  console.log(cart)
   //products categories method
 // const changeCategories = (category) => {
 //   category === 'all'
@@ -125,9 +129,9 @@ const HomeScreen = ({ navigation }, props) => {
             <Pressable
               onPress={() => {
                 setIndexCheck(item.id.$oid);
-                navigation.navigate("CategoriesRestaurantScreen",
-                {item: {...item }}
-                )
+                navigation.navigate("CategoriesRestaurantScreen",{
+                  item: item.ShopName
+                })
               }}
             >
               <View
@@ -180,6 +184,7 @@ const HomeScreen = ({ navigation }, props) => {
             keyExtractor={(item, index) => index.toString()}
             renderItem={({ item }) => (
               <View style={{ margin: 5 }}>
+
                 <FoodCard
                   screenWidth={SCREEN_WIDTH * 0.8}
                   images={item.images}
@@ -188,6 +193,7 @@ const HomeScreen = ({ navigation }, props) => {
                   businessAddress={item.businessAddress}
                   rating={item.rating}
                   numReview={item.numReviews}
+                  
                 />
               </View>
             )}
@@ -243,6 +249,7 @@ const HomeScreen = ({ navigation }, props) => {
             renderItem={({ item }) => (
               <View style={{ margin: 5 }}>
                 <ProductList
+                  item={item}
                   navigation={navigation}
                   key={item.productData[0].id}
                   name={item.productData[0].name} 

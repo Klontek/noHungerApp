@@ -1,8 +1,10 @@
+import { useNavigation } from "@react-navigation/native";
 import React from "react";
 import {View, Text, Image, StyleSheet, Dimension, TouchableOpacity} from "react-native"
 import {Icon} from "react-native-elements";
 
 import { colors, parameters } from "../global/styles";
+
 
 export default function FoodCard({
  onPressFoodCard,
@@ -17,8 +19,14 @@ export default function FoodCard({
  images,
  screenWidth
 }){
+
+  const navigation = useNavigation()
  return (
-  <TouchableOpacity>
+  <TouchableOpacity
+  onPress={() => {
+    navigation.navigate("ShopHomeScreen")
+  }}
+  >
 
    <View style={{...styles.cardView, width: screenWidth}}>
     <Image

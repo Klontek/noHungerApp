@@ -3,9 +3,10 @@ import React from 'react'
 import { colors } from '../../global/styles'
 
 
+
 const SCREEN_WIDTH = Dimensions.get('window').width
 
-export default function ProductCard({name, price, image, countInStock}) {
+const  ProductCard = ({name, price, image, countInStock}) => {
  
   return (
     <View style={styles.container}>
@@ -25,7 +26,10 @@ export default function ProductCard({name, price, image, countInStock}) {
       countInStock > 0 ? (
         <TouchableOpacity>
           <View style={{marginBottom: 60}}>
-            <Button title={'Add'} color={colors.buttons}/>
+            <Button 
+            title={'Add'} 
+            color={colors.buttons}
+            />
           </View>
         </TouchableOpacity>
 
@@ -35,6 +39,7 @@ export default function ProductCard({name, price, image, countInStock}) {
     </View>
   )
 }
+
 
 const styles = StyleSheet.create({
  container: {
@@ -74,3 +79,5 @@ const styles = StyleSheet.create({
   marginTop: 10
  }
 })
+
+export default ProductCard
