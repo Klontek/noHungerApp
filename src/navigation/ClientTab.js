@@ -8,6 +8,7 @@ import SearchScreen from '../screens/SearchScreen';
 import MyOrdersScreen from '../screens/MyOrdersScreen';
 import MyAccountScreen from '../screens/MyAccountScreen';
 import ClientStack from './ClientStack';
+import AdminNavigator from './AdminNavigator';
 
 const ClientTabs = createBottomTabNavigator()
 
@@ -47,6 +48,28 @@ export default function RootClientTabs() {
     <ClientTabs.Screen
     name="MyAccountScreen"
     component={MyAccountScreen}
+    options={
+     {
+      tabBarLabel:"My Account",
+      tabBarIcon: (({color, size}) => {
+        return(
+       <Icon
+         name='person'
+         type='material'
+         color={color}
+         size={size}
+       />
+        )
+
+      }
+      )
+     }
+    }
+    />
+
+    <ClientTabs.Screen
+    name="Admin"
+    component={AdminNavigator}
     options={
      {
       tabBarLabel:"My Account",

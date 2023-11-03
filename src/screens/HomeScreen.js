@@ -111,7 +111,12 @@ const HomeScreen = ({ navigation }, props) => {
             </View>
           </View>
 
-          <Icon type="material-community" name="tune" color={colors.gray7} size={26} />
+          <Pressable
+          onPress={() => navigation.navigate('Admin')}
+          >
+            <Icon type="material-community" name="tune" color={colors.gray7} size={26} />
+          </Pressable>
+          
         </View>
 
       {/* Categories section */}

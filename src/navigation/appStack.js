@@ -7,6 +7,7 @@ import { AdminScreen } from "../screens/Admin/AdminScreen";
 import { SingleProduct } from "../screens/Products/SIngleProduct";
 import CategoriesRestaurantScreen from "../screens/RestaurantCategory/CategoriesRestaurantScreen";
 import ShopHomeScreen from "../screens/ShopHomeScreen";
+// import AdminNavigator from "./AdminNavigator";
 // import CategoriesRestaurantScreen from "../screens/CategoriesRestaurantScreen"
 
 
@@ -33,14 +34,14 @@ export const AppStackFunction = () => {
      })}
     />
 
-    <App.Screen
+    {/* <App.Screen
      name="Admin"
-     component={AdminScreen}
+     component={AdminNavigator}
      options={() =>({
       headerShown: false,
       ...TransitionPresets.RevealFromBottomAndroid
      })}
-    />
+    /> */}
 
     <App.Screen
      name="SingleProduct"

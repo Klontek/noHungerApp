@@ -31,6 +31,7 @@ const ShopData = [
         countInStock: 120,
         category: {
           $oid: "16kdf23iojl89ddlj",
+          name: "food"
         },
         __v: 0,
       },
@@ -47,6 +48,7 @@ const ShopData = [
         countInStock: 80,
         category: {
           $oid: "26kdf3399IQl89dd",
+          name: "food"
         },
         __v: 1,
       },
@@ -63,6 +65,7 @@ const ShopData = [
         countInStock: 25,
         category: {
           $oid: "21bdf33ioUZXvtq",
+          name: "food"
         },
         __v: 1,
       }
@@ -101,6 +104,7 @@ const ShopData = [
         countInStock: 80,
         category: {
           $oid: "26kdf33iojl89ddlj",
+          name: "food"
         },
         __v: 1,
       },
@@ -117,6 +121,7 @@ const ShopData = [
         countInStock: 120,
         category: {
           $oid: "16kdf543ojl89ddHT",
+          name: "food"
         },
         __v: 0,
       },
@@ -133,6 +138,7 @@ const ShopData = [
         countInStock: 25,
         category: {
           $oid: "21bdf$221iojl89f$",
+          name: "food"
         },
         __v: 1,
       }
@@ -245,6 +251,7 @@ const ShopData = [
         countInStock: 80,
         category: {
           $oid: "26kdf33iojl89ddlj",
+          name: "fruits"
         },
         __v: 1,
       }
@@ -282,6 +289,7 @@ const ShopData = [
         countInStock: 80,
         category: {
           $oid: "212pmf33iojl8zznm",
+          name: "food"
         },
         __v: 1,
       }
@@ -356,6 +364,7 @@ const ShopData = [
         countInStock: 80,
         category: {
           $oid: "10qdf33iojl89dzld",
+          name: "food"
         },
         __v: 1,
       },
@@ -393,6 +402,7 @@ const ShopData = [
         countInStock: 80,
         category: {
           $oid: "10YBcf33iojl89Koa",
+          name: "fast food"
         },
         __v: 1,
       }
@@ -422,7 +432,7 @@ const ShopData = [
         id: {
           $oid: "f3Ruq1K9dfjl89ddlj4",
         },
-        name: "Pckaged goods",
+        name: "Packaged goods",
         price: 99.95,
         image: require("../images/products/school_provision.jpeg"),
         brand: "Spice Haven",
@@ -431,6 +441,7 @@ const ShopData = [
         countInStock: 80,
         category: {
           $oid: "19Vdf33iojl76OpTy",
+          name: "products"
         },
         __v: 1,
       }
@@ -468,6 +479,7 @@ const ShopData = [
         countInStock: 180,
         category: {
           $oid: "26kdtete34jl89ddlj",
+          name: "Product"
         },
         __v: 1,
       }
