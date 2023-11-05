@@ -174,7 +174,7 @@ export default class PreferenceScreen extends Component {
 
         <View style={styles.view17}>
           <View style={styles.view18}>
-            <Text style={styles.text10}>Add 1 to Cart #500</Text>
+            <Text style={styles.text10}>Add 1 to Basket #500</Text>
           </View>
         </View>
       </View>

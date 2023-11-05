@@ -1,6 +1,17 @@
-import React from 'react';
-import { View, StyleSheet, Text } from 'react-native';
-import { connect } from 'react-redux';
+import React, { useLayoutEffect, useEffect, useContext, useState } from 'react';
+import {
+  Image,
+  StyleSheet,
+  Text,
+  View,
+  ScrollView,
+  Pressable,
+} from "react-native";
+// import { useNavigation } from "@react-navigation/native";
+// import { Ionicons, AntDesign } from "@expo/vector-icons";
+// import axios from "axios";
+// import { UserType } from "../UserContext";
+// import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const CartScreen = (props) => {
   return (

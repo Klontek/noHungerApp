@@ -3,7 +3,7 @@ import { TransitionPresets, createStackNavigator } from "@react-navigation/stack
 import ShopMapScreen from "../screens/ShopMapScreen";
 import DrawerNavigator from "./DrawerNavigator";
 import CartScreen  from "../screens/Cart/CartScreen";
-import { AdminScreen } from "../screens/Admin/AdminScreen";
+// import { AdminScreen } from "../screens/Admin/AdminScreen";
 import { SingleProduct } from "../screens/Products/SIngleProduct";
 import CategoriesRestaurantScreen from "../screens/RestaurantCategory/CategoriesRestaurantScreen";
 import ShopHomeScreen from "../screens/ShopHomeScreen";
@@ -62,15 +62,6 @@ export const AppStackFunction = () => {
     />
 
     <App.Screen
-     name="ShopHomeScreen"
-     component={ShopHomeScreen}
-     options={() =>({
-      headerShown: false,
-      ...TransitionPresets.RevealFromBottomAndroid
-     })}
-    />
-
-      <App.Screen
       name="ShopMapScreen"
       component={ShopMapScreen}
       options={{

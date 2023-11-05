@@ -5,10 +5,13 @@ import {Icon} from "react-native-elements";
 import HomeScreen from '../screens/HomeScreen';
 import { colors } from '../global/styles';
 import SearchScreen from '../screens/SearchScreen';
-import MyOrdersScreen from '../screens/MyOrdersScreen';
-import MyAccountScreen from '../screens/MyAccountScreen';
+// import MyOrdersScreen from '../screens/MyOrdersScreen';
+// import MyAccountScreen from '../screens/MyAccountScreen';
 import ClientStack from './ClientStack';
 import AdminNavigator from './AdminNavigator';
+import MyAccount from '../screens/Account/MyAccount';
+import AccountNavigator from './AccountNavigation';
+// import MyOrders from '../screens/Account/MyOrders';
 
 const ClientTabs = createBottomTabNavigator()
 
@@ -46,8 +49,8 @@ export default function RootClientTabs() {
     />
 
     <ClientTabs.Screen
-    name="MyAccountScreen"
-    component={MyAccountScreen}
+    name="Account"
+    component={AccountNavigator}
     options={
      {
       tabBarLabel:"My Account",
@@ -68,15 +71,15 @@ export default function RootClientTabs() {
     />
 
     <ClientTabs.Screen
-    name="Admin"
+    name="Dashboard"
     component={AdminNavigator}
     options={
      {
-      tabBarLabel:"My Account",
+      tabBarLabel:"Admin",
       tabBarIcon: (({color, size}) => {
         return(
        <Icon
-         name='person'
+         name='settings'
          type='material'
          color={color}
          size={size}
@@ -110,10 +113,10 @@ export default function RootClientTabs() {
      }
     }
     />
-
+{/* 
     <ClientTabs.Screen
-    name="MyOrdersScreen"
-    component={MyOrdersScreen}
+    name="Myorders"
+    component={MyOrders}
     options={
      {
       tabBarLabel:"My Orders",
@@ -131,7 +134,7 @@ export default function RootClientTabs() {
       )
      }
     }
-    />
+    /> */}
 
 
    </ClientTabs.Navigator>
