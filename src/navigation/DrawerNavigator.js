@@ -3,8 +3,9 @@ import {createDrawerNavigator} from "@react-navigation/drawer";
 import RootClientTabs from "./ClientTab";
 import { Icon } from "react-native-elements";
 import { colors } from "../global/styles";
-import BusinessConsoleScreen from "../screens/BusinessConsoleScreen.";
 import DrawerContent from "../components/DrawerContent";
+import BusinessConsoleScreen from "../screens/BusinessScreen/BusinessConsoleScreen";
+
 
 const Drawer = createDrawerNavigator();
 
@@ -46,6 +47,8 @@ export default function DrawerNavigator() {
     )
    }}
    />
+
+   
 
   </Drawer.Navigator>
  )

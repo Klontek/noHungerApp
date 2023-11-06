@@ -39,6 +39,7 @@ async function SignUp(values) {
   try {
     const response = await createUserWithEmailAndPassword(auth, email, password);
     console.log('USER ACCOUNT CREATED');
+    Alert.alert('USER ACCOUNT CREATED')
     
     // Check authentication state
     const user = auth.currentUser;

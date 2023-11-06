@@ -9,29 +9,29 @@ import {colors, parameters, title} from "../../global/styles";
 import Header from "../../components/Header";
 import { Button, Icon, SocialIcon} from "react-native-elements";
 import Swiper from "react-native-swiper";
-import {SignInContext} from "../../contexts/authContext"
-import{ FIREBASE_AUTH }from '../../../db/firestore'
+// import {SignInContext} from "../../contexts/authContext"
+// import{ FIREBASE_AUTH }from '../../../db/firestore'
 
 
 
 export default function SignInWelcomeScreen({navigation}) {
 
-  const {dispatchSignedIn} = useContext(SignInContext);
-  const auth = FIREBASE_AUTH
+  // const {dispatchSignedIn} = useContext(SignInContext);
+  // const auth = FIREBASE_AUTH
   
   // side effect to persist users in the app even after quiting the app without signing out of the app
-  useEffect(() => {
+  // useEffect(() => {
 
-    auth.onAuthStateChanged((user => {
-      if(user) {
-        dispatchSignedIn({type: "UPDATE_SIGN_IN", payload: {userToken: "signed-in"}});
-      }else {
-        dispatchSignedIn({type: "UPDATE_SIGN_IN", payload: {userToken: null}});  
-      }
-    }))
+  //   auth.onAuthStateChanged((user => {
+  //     if(user) {
+  //       dispatchSignedIn({type: "UPDATE_SIGN_IN", payload: {userToken: "signed-in"}});
+  //     }else {
+  //       dispatchSignedIn({type: "UPDATE_SIGN_IN", payload: {userToken: null}});  
+  //     }
+  //   }))
 
 
-  }, [])
+  // }, [])
 
  return (
 

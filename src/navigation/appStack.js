@@ -7,6 +7,7 @@ import CartScreen  from "../screens/Cart/CartScreen";
 import { SingleProduct } from "../screens/Products/SIngleProduct";
 import CategoriesRestaurantScreen from "../screens/RestaurantCategory/CategoriesRestaurantScreen";
 import ShopHomeScreen from "../screens/ShopHomeScreen";
+import RegisterBusinessScreen from "../screens/BusinessScreen/RegisterBusinessScreen";
 // import AdminNavigator from "./AdminNavigator";
 // import CategoriesRestaurantScreen from "../screens/CategoriesRestaurantScreen"
 
@@ -34,14 +35,14 @@ export const AppStackFunction = () => {
      })}
     />
 
-    {/* <App.Screen
-     name="Admin"
-     component={AdminNavigator}
+    <App.Screen
+     name="RegisterBusinessScreen"
+     component={RegisterBusinessScreen}
      options={() =>({
       headerShown: false,
       ...TransitionPresets.RevealFromBottomAndroid
      })}
-    /> */}
+    />
 
     <App.Screen
      name="SingleProduct"

@@ -74,7 +74,7 @@ export default function DrawerContent(props) {
       label= 'payment'
       icon={({color, size}) => (
         <Icon 
-        type="material-community"
+          type="material-community"
           name="credit-card-outline" 
           color={color} 
           size={size} />
@@ -96,7 +96,7 @@ export default function DrawerContent(props) {
       label= 'Settings'
       icon={({color, size}) => (
         <Icon 
-        type="material-community"
+          type="material-community"
           name="cog-outline" 
           color={color} 
           size={size} />
