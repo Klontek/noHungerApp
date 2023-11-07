@@ -53,7 +53,7 @@ export default function RootClientTabs() {
     component={AccountNavigator}
     options={
      {
-      tabBarLabel:"My Account",
+      tabBarLabel:"Account",
       tabBarIcon: (({color, size}) => {
         return(
        <Icon
