@@ -9,7 +9,7 @@ import { addToCart } from "../../Redux/Reducers/CartReducer";
 const windowWidth = Dimensions.get('window').width;
 
 
-export const SingleProduct = ({route, navigation, navigation: {goBack}}) => {
+export const BannerSingleProduct = ({route, navigation, navigation: {goBack}}) => {
  const [item, setItem] = useState(route.params.item);
  const [availability, setAvailability] = useState('');
  const {

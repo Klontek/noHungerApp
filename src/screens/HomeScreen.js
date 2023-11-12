@@ -191,6 +191,7 @@ const HomeScreen = ({ navigation }, props) => {
               <View style={{ margin: 5 }}>
 
                 <FoodCard
+                  id={item.id.$oid}
                   screenWidth={SCREEN_WIDTH * 0.8}
                   images={item.images}
                   shopName={item.ShopName}
@@ -198,7 +199,11 @@ const HomeScreen = ({ navigation }, props) => {
                   businessAddress={item.businessAddress}
                   rating={item.rating}
                   numReview={item.numReviews}
-                  
+                  countInStock={item.productData[0].countInStock}
+                  price={item.productData[0].price}
+                  description={item.productData[0].description}
+                  navigation={navigation}
+                  item={item}
                 />
               </View>
             )}
@@ -240,7 +245,32 @@ const HomeScreen = ({ navigation }, props) => {
         </View>
 
         <View>
-          <Banner/>
+          <FlatList
+            showsHorizontalScrollIndicator={false}
+            style={{ marginTop: 10, marginBottom: 10 }}
+            horizontal={true}
+            data={getShopData()}
+            keyExtractor={(item, index) => index.toString()}
+            renderItem={({ item }) => (
+              <View style={{ margin: 5 }}>
+              <Banner
+                  id={item.id.$oid}
+                  screenWidth={SCREEN_WIDTH * 0.8}
+                  images={item.images}
+                  shopName={item.ShopName}
+                  farAway={item.farAway}
+                  businessAddress={item.businessAddress}
+                  rating={item.rating}
+                  numReview={item.numReviews}
+                  countInStock={item.productData[0].countInStock}
+                  price={item.productData[0].price}
+                  description={item.productData[0].description}
+                  // navigation={navigation}
+                  item={item}
+              />
+              </View>
+            )}
+            />          
         </View>
 
         {/* Shop Product section */}

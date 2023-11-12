@@ -1,7 +1,7 @@
 import { StyleSheet, Text, View } from 'react-native'
 import React, {useLayoutEffect} from 'react';
 import { createStackNavigator, transitionPresets } from '@react-navigation/stack';
-import SearchScreen from '../screens/SearchScreen';
+import SearchScreen from '../screens/ShopSearchScreen';
 import SearchResultScreen from '../screens/SearchResultScreen';
 import ShopHomeScreen from '../screens/ShopHomeScreen';
 import ShopItemsDetailScreen from '../screens/ShopItemsDetailScreen';

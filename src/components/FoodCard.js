@@ -1,4 +1,4 @@
-import { useNavigation } from "@react-navigation/native";
+// import { useNavigation } from "@react-navigation/native";
 import React from "react";
 import {View, Text, Image, StyleSheet, Dimension, TouchableOpacity} from "react-native"
 import {Icon} from "react-native-elements";
@@ -7,6 +7,7 @@ import { colors, parameters } from "../global/styles";
 
 
 export default function FoodCard({
+  id,
  onPressFoodCard,
  shopName,
  deliveryAvailable,
@@ -17,14 +18,18 @@ export default function FoodCard({
  farAway,
  rating,
  images,
- screenWidth
+ screenWidth,
+ price,
+ countInStock,
+ description,
+ navigation
 }){
 
-  const navigation = useNavigation()
+  // const navigation = useNavigation()
  return (
   <TouchableOpacity
   onPress={() => {
-    navigation.navigate("ShopHomeScreen")
+    navigation.navigate("SingleProduct", {item: {  id,shopName, price, images, countInStock,description}})
   }}
   >
 

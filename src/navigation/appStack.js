@@ -8,6 +8,7 @@ import { SingleProduct } from "../screens/Products/SIngleProduct";
 import CategoriesRestaurantScreen from "../screens/RestaurantCategory/CategoriesRestaurantScreen";
 import ShopHomeScreen from "../screens/ShopHomeScreen";
 import RegisterBusinessScreen from "../screens/BusinessScreen/RegisterBusinessScreen";
+import { BannerSingleProduct } from "../screens/Products/BannerSingleProduct";
 // import AdminNavigator from "./AdminNavigator";
 // import CategoriesRestaurantScreen from "../screens/CategoriesRestaurantScreen"
 
@@ -34,6 +35,14 @@ export const AppStackFunction = () => {
       ...TransitionPresets.RevealFromBottomAndroid
      })}
     />
+    {/* <App.Screen
+     name="ShopHomeScreen"
+     component={ShopHomeScreen}
+     options={() =>({
+      headerShown: false,
+      ...TransitionPresets.RevealFromBottomAndroid
+     })}
+    /> */}
 
     <App.Screen
      name="RegisterBusinessScreen"
@@ -47,6 +56,15 @@ export const AppStackFunction = () => {
     <App.Screen
      name="SingleProduct"
      component={SingleProduct}
+     options={() =>({
+      headerShown: false,
+      ...TransitionPresets.RevealFromBottomAndroid
+     })}
+    />
+
+    <App.Screen
+     name="BannerSingleProduct"
+     component={BannerSingleProduct}
      options={() =>({
       headerShown: false,
       ...TransitionPresets.RevealFromBottomAndroid

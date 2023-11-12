@@ -22,9 +22,9 @@ const ShopHomeScreen = ({navigation, route}) => {
   const data = getShopData();
 
   const [routes] = useState([
-    {key: 'first',title: 'OFFERS'},
-    {key: 'second',title: 'INFO'},
-    {key: 'third',title: 'REVIEWS'},
+    { key: 'first',title: 'OFFERS'},
+    { key: 'second',title: 'INFO'},
+    { key: 'third',title: 'REVIEWS'},
     {key: 'fourth',title: 'GALLERY'},
   ])
 

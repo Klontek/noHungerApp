@@ -1,12 +1,32 @@
-import { StyleSheet, Text, View, Dimensions, ScrollView, Image } from 'react-native'
+import { StyleSheet, Text, View, Dimensions, ScrollView, Image, TouchableOpacity } from 'react-native'
 import React, { useEffect, useState } from 'react';
 import Swiper from "react-native-swiper";
+import { useNavigation } from '@react-navigation/native';
 
 
 
 const SCREEN_WIDTH = Dimensions.get("window").width
 
-export default function Banner() {
+export default function Banner(
+  id,
+ onPressFoodCard,
+ shopName,
+ deliveryAvailable,
+ discountAvailable,
+ discountPercent,
+ numReview,
+ businessAddress,
+ farAway,
+ rating,
+ images,
+ screenWidth,
+ price,
+ countInStock,
+ description,
+//  navigation
+) {
+
+  const navigation = useNavigation()
 
  const [bannerData, setBannerData] = useState([])
 
@@ -35,12 +55,19 @@ export default function Banner() {
        >
         {bannerData.map((item) => {
          return (
-          <Image
-            key={item}
-            style={styles.imageBanner}
-            resizeMode='contain'
-            source={{uri: item}}
-          />
+          <TouchableOpacity
+            onPress={() => {
+            navigation.navigate("BannerSingleProduct", {item: {  id,shopName, price, images, countInStock,description}})
+            }}
+          >
+            <Image
+              key={item}
+              style={styles.imageBanner}
+              resizeMode='contain'
+              source={{uri: item}}
+            />
+          </TouchableOpacity>
+
          )         
         })}
        </Swiper>

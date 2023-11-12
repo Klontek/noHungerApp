@@ -4,7 +4,7 @@ import {Icon} from "react-native-elements";
 // import {} from "react-native"
 import HomeScreen from '../screens/HomeScreen';
 import { colors } from '../global/styles';
-import SearchScreen from '../screens/SearchScreen';
+import SearchScreen from '../screens/ShopSearchScreen';
 // import MyOrdersScreen from '../screens/MyOrdersScreen';
 // import MyAccountScreen from '../screens/MyAccountScreen';
 import ClientStack from './ClientStack';
@@ -93,6 +93,28 @@ export default function RootClientTabs() {
     />
 
     <ClientTabs.Screen
+    name="Search"
+    component={Search}
+    options={
+     {
+      tabBarLabel:"Search",
+      tabBarIcon: (({color, size}) => {
+        return(
+       <Icon
+         name='search'
+         type='material'
+         color={color}
+         size={size}
+       />
+        )
+
+      }
+      )
+     }
+    }
+    />
+
+    {/* <ClientTabs.Screen
     name="ClientStack"
     component={ClientStack}
     options={
@@ -112,7 +134,7 @@ export default function RootClientTabs() {
       )
      }
     }
-    />
+    /> */}
 {/* 
     <ClientTabs.Screen
     name="Myorders"

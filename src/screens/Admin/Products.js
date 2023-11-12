@@ -1,6 +1,13 @@
 import { useNavigation } from '@react-navigation/native';
 import React, {useState, useCallback} from 'react';
-import { StyleSheet, Text, View, FlatList, ActivityIndicator, Dimensions } from 'react-native';
+import { 
+  StyleSheet, 
+  Text, 
+  View, 
+  FlatList, 
+  ActivityIndicator, 
+  Dimensions,
+} from 'react-native';
 // import { Icon, Input, SearchBar } from 'react-native-elements';
 import { getShopData } from '../../../assets/Data/data';
 import SearchBar from '../../components/SearchBar/SearchBar';
@@ -97,8 +104,10 @@ const updateSearch = () => {
               categoryName={item.productData[0].category.name}
               price={item.productData[0].price}
               image={item.productData[0].image}
+              description={item.productData[0].description}
               navigation={navigation}
               index={index}
+              {...item}
           />
         )}
        

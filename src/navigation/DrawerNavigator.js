@@ -48,6 +48,13 @@ export default function DrawerNavigator() {
    }}
    />
 
+   {/* <Drawer.Screen
+   name="Products"
+   options={{
+    title: "produc
+   }}
+   /> */}
+
    
 
   </Drawer.Navigator>

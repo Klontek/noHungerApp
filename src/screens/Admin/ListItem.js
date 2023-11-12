@@ -1,3 +1,4 @@
+// import { useNavigation } from '@react-navigation/native'
 import React, {useState} from 'react'
 import {
  View,
@@ -7,7 +8,8 @@ import {
  TouchableOpacity,
  TouchableHighLight,
  Dimensions,
- Button
+ Button,
+ Modal
 } from "react-native"
 import { Icon } from 'react-native-elements'
 
@@ -21,14 +23,57 @@ categoryName,
 price,
 image,
 navigation,
-index
+index,
+item
 }) => {
+  // const navigation = useNavigation()
+
+  const [modalVisisble, setModalVisible]= useState(false)
  return (
   <View>
+    <Modal
+      animationType='fade'
+      transparent={true}
+      visible={modalVisisble}
+      onRequestClose={() => {
+        setModalVisible(false)
+      }}
+    >
+      <View>
+        <View>
+          <TouchableHighLight
+          underlayColor="#E8E8E8"
+          onPress={() => {
+            setModalVisible(false)
+          }}
+          style={{
+            alignSelf: "flex-end",
+            position: "absolute",
+            top: 5,
+            right: 10
+          }}
+          >
+            <Icon name='close' size={20}/>
+          </TouchableHighLight>
+          <Button title='Edit'
+            onPress={() => [
+            navigation.navigate("ProductForm"),
+            setModalVisible(false)
+            ]}
+          />
+          <Button title='Delete'
+            //onDelete={}
+          />
+        </View>
+      </View>
+
+    </Modal>
    <TouchableOpacity
-     style={[styles.container, {
-      backgroundColor: index % 2 == 0 ? 'white' : 'gainsboro'
-     }]}
+      onPress={() => navigation.navigate("ProductDetail", {item: item})}
+      style={[styles.container, {
+        backgroundColor: index % 2 == 0 ? 'white' : 'gainsboro'
+      }]}
+      onLongPress={() => setModalVisible(true)}
    >
     <Image
       source={image}
