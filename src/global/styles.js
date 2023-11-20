@@ -8,7 +8,6 @@ export const colors = {
  buttons: "#5C44AB",
  gray: "#83829A",
  // gray2: "#C1C0C0",
-
  gray1: "#462B9C", // dark purple
  gray2:"#FBFBFB", // purple
  gray3: "#36AE93", // light green
@@ -24,11 +23,9 @@ export const colors = {
  headerText: "white",
  borderColor: "#86939e",
  black: "black",
-
  primary: "#2A4D50",
  secondary: "#DDF0FF",
  tertiary: "#FF7754",
-
  offWhite: "#F3F4F8",
  green: "#00C135",
  lightWhite: "#FAFAFC"

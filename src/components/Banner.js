@@ -2,6 +2,7 @@ import { StyleSheet, Text, View, Dimensions, ScrollView, Image, TouchableOpacity
 import React, { useEffect, useState } from 'react';
 import Swiper from "react-native-swiper";
 import { useNavigation } from '@react-navigation/native';
+import { colors } from '../global/styles';
 
 
 
@@ -80,7 +81,7 @@ export default function Banner(
 const styles = StyleSheet.create({
  container: {
   flex: 1,
-  backgroundColor: 'gainsboro'
+  backgroundColor: colors.CardBackground
  },
  swiper: {
   width: SCREEN_WIDTH,

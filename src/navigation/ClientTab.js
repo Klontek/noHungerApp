@@ -4,14 +4,17 @@ import {Icon} from "react-native-elements";
 // import {} from "react-native"
 import HomeScreen from '../screens/HomeScreen';
 import { colors } from '../global/styles';
-import SearchScreen from '../screens/ShopSearchScreen';
+// import SearchScreen from '../screens/ShopSearchScreen';
 // import MyOrdersScreen from '../screens/MyOrdersScreen';
 // import MyAccountScreen from '../screens/MyAccountScreen';
 import ClientStack from './ClientStack';
 import AdminNavigator from './AdminNavigator';
 import MyAccount from '../screens/Account/MyAccount';
 import AccountNavigator from './AccountNavigation';
+import SearchScreen from '../screens/SearchScreen';
 // import MyOrders from '../screens/Account/MyOrders';
+
+
 
 const ClientTabs = createBottomTabNavigator()
 
@@ -94,7 +97,7 @@ export default function RootClientTabs() {
 
     <ClientTabs.Screen
     name="Search"
-    component={Search}
+    component={SearchScreen}
     options={
      {
       tabBarLabel:"Search",

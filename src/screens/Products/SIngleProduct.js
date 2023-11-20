@@ -1,42 +1,48 @@
 import { useNavigation } from "@react-navigation/native";
-import React, {useEffect, useState} from "react";
-import { Image, View, StyleSheet, Text, ScrollView, Button, Dimensions, SafeAreaView, TouchableOpacity} from "react-native";
-import {useDispatch, useSelector} from 'react-redux';
+import React, { useEffect, useState } from "react";
+import {
+  Image,
+  View,
+  StyleSheet,
+  Text,
+  ScrollView,
+  Button,
+  Dimensions,
+  SafeAreaView,
+  TouchableOpacity,
+} from "react-native";
+import { useDispatch, useSelector } from "react-redux";
 import CustomHeader from "../../components/CustomHeader";
 import { colors } from "../../global/styles";
-import { addToCart } from "../../Redux/Reducers/CartReducer";
 
-const windowWidth = Dimensions.get('window').width;
+const windowWidth = Dimensions.get("window").width;
 
+export const SingleProduct = ({
+  route,
+  navigation,
+  navigation: { goBack },
+}) => {
+  const [item, setItem] = useState(route.params.item);
+  const [availability, setAvailability] = useState("");
+  const { name, price, images, countInStock, description } = route.params.item;
 
-export const SingleProduct = ({route, navigation, navigation: {goBack}}) => {
- const [item, setItem] = useState(route.params.item);
- const [availability, setAvailability] = useState('');
- const {
-  name, 
-  price, 
-  images, 
-  countInStock, 
-  description
-} = route.params.item;
-
-   //carouse imports
+  //carouse imports
   const [index, setIndex] = React.useState(0);
   const [seeMore, setSeeMore] = React.useState(false);
   const isCarousel = React.useRef(null);
   const dispatch = useDispatch();
 
-  const _renderItem = ({item, index}) => {
+  const _renderItem = ({ item, index }) => {
     return (
       <View
         style={{
-          justifyContent: 'center',
-          alignItems: 'center',
-          backgroundColor: 'white',
+          justifyContent: "center",
+          alignItems: "center",
+          backgroundColor: "white",
           borderRadius: 0,
-          width: '100%',
+          width: "100%",
           paddingBottom: 0,
-          shadowColor: '#000',
+          shadowColor: "#000",
           shadowOffset: {
             width: 0,
             height: 3,
@@ -45,36 +51,36 @@ export const SingleProduct = ({route, navigation, navigation: {goBack}}) => {
           shadowRadius: 4.65,
           elevation: 7,
         }}
-        key={index}>
+        key={index}
+      >
         <Image
-          source={images} 
+          source={images}
           style={{
             width: 300,
             height: 300,
           }}
-          resizeMode={'cover'}
+          resizeMode={"cover"}
         />
       </View>
     );
   };
 
-  const ScreenButtons = ({CartScreenName}) => {
-
+  const ScreenButtons = ({ CartScreenName }) => {
     const navigation = useNavigation();
 
     return (
       <View>
         <TouchableOpacity
           style={{
-            width: '100%',
+            width: "100%",
             height: 50,
             borderRadius: 5,
             backgroundColor: colors.buttons,
-            justifyContent: 'center',
-            alignItems: 'center',
+            justifyContent: "center",
+            alignItems: "center",
           }}
           // onPress={() => navigation.navigate(CheckoutScreenName)}
-          onPress={() => dispatch(addToCart(item))}
+          onPress={() => {}}
 
           // onPress={() =>
           //   navigation.navigate("Cart", {
@@ -88,33 +94,36 @@ export const SingleProduct = ({route, navigation, navigation: {goBack}}) => {
         >
           <Text
             style={{
-              color: 'white',
+              color: "white",
               fontSize: 18,
-              fontWeight: '500',
-            }}>
+              fontWeight: "500",
+            }}
+          >
             Add to Basket
           </Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={{
-            width: '100%',
+            width: "100%",
             height: 50,
             borderRadius: 5,
-            backgroundColor: 'white',
-            justifyContent: 'center',
-            alignItems: 'center',
+            backgroundColor: "white",
+            justifyContent: "center",
+            alignItems: "center",
             marginTop: 10,
             borderWidth: 3,
             borderColor: colors.buttons,
             borderRadius: 5,
           }}
-          onPress={() => navigation.navigate('CartScreen')}>
+          onPress={() => navigation.navigate("CartScreen")}
+        >
           <Text
             style={{
-              color: 'black',
+              color: "black",
               fontSize: 18,
-              fontWeight: '500',
-            }}>
+              fontWeight: "500",
+            }}
+          >
             Go to Basket
           </Text>
         </TouchableOpacity>
@@ -122,7 +131,7 @@ export const SingleProduct = ({route, navigation, navigation: {goBack}}) => {
     );
   };
 
- return (
+  return (
     <SafeAreaView>
       <CustomHeader onPressBack={() => goBack()} />
       {/* <Header
@@ -134,10 +143,11 @@ export const SingleProduct = ({route, navigation, navigation: {goBack}}) => {
       <ScrollView>
         <View
           style={{
-            alignItems: 'center',
+            alignItems: "center",
             paddingVertical: 0,
-          }}>
-          <View style={{width: '100%'}}>
+          }}
+        >
+          <View style={{ width: "100%" }}>
             <_renderItem item={images} index={0} />
 
             {/* <Carousel
@@ -154,10 +164,11 @@ export const SingleProduct = ({route, navigation, navigation: {goBack}}) => {
           </View>
           <View
             style={{
-              width: '100%',
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}>
+              width: "100%",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
             {/* <Pagination
               dotsLength={itemOtherImages.length}
               activeDotIndex={index}
@@ -176,64 +187,67 @@ export const SingleProduct = ({route, navigation, navigation: {goBack}}) => {
             /> */}
           </View>
         </View>
-        <View style={{paddingHorizontal: 20, paddingTop: 20}}>
-          <Text style={{fontSize: 15, fontWeight: 'bold'}}>{name}</Text>
+        <View style={{ paddingHorizontal: 20, paddingTop: 20 }}>
+          <Text style={{ fontSize: 15, fontWeight: "bold" }}>{name}</Text>
         </View>
         {/* set the number of lines to four but with a see more button*/}
-        <View style={{paddingHorizontal: 20}}>
+        <View style={{ paddingHorizontal: 20 }}>
           <Text
             numberOfLines={seeMore ? null : 4}
             style={{
               fontSize: 15,
-              fontWeight: '500',
+              fontWeight: "500",
               marginTop: 10,
-            }}>
+            }}
+          >
             {description}
           </Text>
           <TouchableOpacity
             onPress={() => {
               //see more functionality
               setSeeMore(!seeMore);
-            }}>
+            }}
+          >
             <Text
               style={{
                 fontSize: 15,
-                fontWeight: '500',
+                fontWeight: "500",
                 marginBottom: 10,
-                color: 'blue',
-              }}>
+                color: "blue",
+              }}
+            >
               See more
             </Text>
           </TouchableOpacity>
         </View>
 
-        <View style={{paddingHorizontal: 20}}>
-          <Text style={{fontSize: 20, fontWeight: 'bold'}}>
+        <View style={{ paddingHorizontal: 20 }}>
+          <Text style={{ fontSize: 20, fontWeight: "bold" }}>
             ₦{JSON.stringify(price * 15)}
           </Text>
         </View>
 
-        <View style={{padding: 20}}>
+        <View style={{ padding: 20 }}>
           <ScreenButtons CartScreenName="CartScreen" />
         </View>
-        <View style={{height: 300}} />
+        <View style={{ height: 300 }} />
       </ScrollView>
     </SafeAreaView>
- )
-}
+  );
+};
 
 const styles = StyleSheet.create({
- container: {
-  position: 'relative',
-  height: '100%'
- },
- imageContainer: {
-  backgroundColor: colors.CardBackground,
-  padding: 0,
-  margin: 0
- },
- image: {
-  width: "100%",
-  height: 250
- }
-})
+  container: {
+    position: "relative",
+    height: "100%",
+  },
+  imageContainer: {
+    backgroundColor: colors.CardBackground,
+    padding: 0,
+    margin: 0,
+  },
+  image: {
+    width: "100%",
+    height: 250,
+  },
+});

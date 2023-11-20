@@ -1,8 +1,6 @@
-import { configureStore } from "@reduxjs/toolkit";
-import CartReducer from "./src/Redux/Reducers/CartReducer";
+import { combineReducers, createStore } from "redux";
+import CartReducers from "./src/Redux/CartReducers";
+import WishlistReducers from "./src/Redux/WishListReducers";
 
-export default configureStore({
-    reducer:{
-        cart:CartReducer
-    }
-})
+const routeReducer = combineReducers({ CartReducers, WishlistReducers });
+export const store = createStore(routeReducer);
