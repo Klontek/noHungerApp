@@ -65,7 +65,7 @@ export default function HomeHeader({ navigation }) {
           marginRight: 18,
         }}
       >
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate("CartScreen")}>
           <BadgeIcon
             type="material-community"
             name="basket"

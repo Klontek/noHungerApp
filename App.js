@@ -5,6 +5,7 @@ import { SignInContextProvider } from "./src/contexts/authContext";
 // import { NativeBaseProvider } from "native-base";
 import { colors } from "./src/global/styles";
 import RootNavigator from "./src/navigation/rootNavigator";
+import Toast from "react-native-toast-message";
 
 // Redux
 import { Provider } from "react-redux";
@@ -20,6 +21,7 @@ export default function App() {
             backgroundColor={colors.statusBar}
           />
           <RootNavigator />
+          <Toast ref={(ref) => Toast.setRef(ref)} />
         </View>
       </SignInContextProvider>
     </Provider>

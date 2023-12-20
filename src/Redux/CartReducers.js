@@ -1,9 +1,4 @@
-import {
-  ADD_TO_CART,
-  ADD_WISH_LIST,
-  REMOVE_FROM_CART,
-  REMOVE_FROM_WISHLIST,
-} from "./ActionTypes";
+import { ADD_TO_CART, CLEAR_CART, REMOVE_FROM_CART } from "./ActionTypes";
 
 const CartReducers = (state = [], action) => {
   switch (action.type) {
@@ -11,10 +6,13 @@ const CartReducers = (state = [], action) => {
       return [...state, action.payload];
 
     case REMOVE_FROM_CART:
-      const deletedArray1 = initialState.filter((item, index) => {
-        return index !== action.payload;
-      });
-      return deletedArray1;
+      const updatedCart = state.filter(
+        (item, index) => index !== action.payload
+      );
+      return updatedCart;
+
+    case CLEAR_CART:
+      return [];
 
     default:
       return state;

@@ -1,6 +1,7 @@
 import {
   ADD_TO_CART,
   ADD_WISH_LIST,
+  CLEAR_CART,
   REMOVE_FROM_CART,
   REMOVE_FROM_WISHLIST,
 } from "./ActionTypes";
@@ -23,4 +24,8 @@ export const addToWishList = (data) => ({
 export const removeFromWishlist = (index) => ({
   type: REMOVE_FROM_WISHLIST,
   payload: index,
+});
+
+export const clearCart = () => ({
+  type: CLEAR_CART,
 });

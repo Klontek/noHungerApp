@@ -10,6 +10,7 @@ import {
 import React from "react";
 import { colors, SIZES } from "../../global/styles";
 import { Icon } from "react-native-elements";
+import Toast from "react-native-toast-message";
 
 const SCREEN_WIDTH = Dimensions.get("window").width;
 
@@ -42,7 +43,14 @@ const ProductCard = ({
 
         <TouchableOpacity
           style={styles.addBtn}
-          onPress={() => onAddToCart(item)}
+          onPress={() => {
+            onAddToCart(item),
+              Toast.show({
+                topOffset: 60,
+                type: "success",
+                text1: `${name} added to basket`,
+              });
+          }}
         >
           <Icon
             name="plus-circle"

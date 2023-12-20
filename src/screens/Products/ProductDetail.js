@@ -31,7 +31,7 @@ const ProductDetail = ({ route, navigation, navigation: { goBack } }) => {
           <Icon name="arrow-left" type="material-community" size={30} />
         </TouchableOpacity>
 
-        <TouchableOpacity onPress={(item) => dispatch(addToWishList(item))}>
+        <TouchableOpacity onPress={(x) => dispatch(addToWishList(x))}>
           <Icon name="favorite" type="material" size={30} color="red" />
         </TouchableOpacity>
       </View>

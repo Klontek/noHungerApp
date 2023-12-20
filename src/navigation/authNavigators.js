@@ -1,24 +1,27 @@
 import React from "react";
-import { TransitionPresets, createStackNavigator } from "@react-navigation/stack"; // Import from @react-navigation/stack
+import {
+  TransitionPresets,
+  createStackNavigator,
+} from "@react-navigation/stack"; // Import from @react-navigation/stack
 
 import SignInWelcomeScreen from "../screens/authScreens/SignInWelcomeScreen";
 import SignInScreen from "../screens/authScreens/SignInScreen";
 // import RootClientTabs from "./ClientTab";
 
 import SignUpScreen from "../screens/authScreens/SignUpScreen";
-
+import UserProfile from "../screens/authScreens/UserProfile";
 
 const AuthStack = createStackNavigator();
 
-export const AuthStackFunction = () =>{
+export const AuthStackFunction = () => {
   return (
-    <AuthStack.Navigator screenOptions={{headerShown: false}}>
+    <AuthStack.Navigator screenOptions={{ headerShown: false }}>
       <AuthStack.Screen
         name="SignInWelcomeScreen"
         component={SignInWelcomeScreen}
         options={{
           headerShown: false, // Use headerShown instead of headerOptions
-          ...TransitionPresets.RevealFromBottomAndroid
+          ...TransitionPresets.RevealFromBottomAndroid,
         }}
       />
 
@@ -27,7 +30,7 @@ export const AuthStackFunction = () =>{
         component={SignInScreen}
         options={{
           headerShown: false, // Use headerShown instead of headerOptions
-          ...TransitionPresets.RevealFromBottomAndroid
+          ...TransitionPresets.RevealFromBottomAndroid,
         }}
       />
 
@@ -36,10 +39,18 @@ export const AuthStackFunction = () =>{
         component={SignUpScreen}
         options={{
           headerShown: false, // Use headerShown instead of headerOptions
-          ...TransitionPresets.RevealFromBottomAndroid
+          ...TransitionPresets.RevealFromBottomAndroid,
         }}
       />
 
+      <AuthStack.Screen
+        name="UserProfile"
+        component={UserProfile}
+        options={{
+          headerShown: false, // Use headerShown instead of headerOptions
+          ...TransitionPresets.RevealFromBottomAndroid,
+        }}
+      />
     </AuthStack.Navigator>
   );
-}
+};

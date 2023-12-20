@@ -4,6 +4,7 @@ import { colors, SIZES } from "../../global/styles";
 import { size } from "lodash";
 import { Icon, Image } from "react-native-elements";
 // import { useNavigation } from '@react-navigation/native';
+import Toast from "react-native-toast-message";
 
 const ProductCardView = ({
   item,
@@ -42,7 +43,15 @@ const ProductCardView = ({
 
           <TouchableOpacity
             style={styles.addBtn}
-            onPress={() => onAddToCart(item)}
+            onPress={() => {
+              onAddToCart(item),
+                Toast.show({
+                  topOffset: 60,
+                  type: "success",
+                  text1: `${name} added to basket`,
+                  text2: "Proceed to your basket to complete your order",
+                });
+            }}
           >
             <Icon
               name="plus-circle"

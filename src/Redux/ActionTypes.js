@@ -2,3 +2,4 @@ export const ADD_TO_CART = "ADD_TO_CART";
 export const REMOVE_FROM_CART = "REMOVE_FROM_CART";
 export const ADD_WISH_LIST = "ADD_WISH_LIST";
 export const REMOVE_FROM_WISHLIST = "REMOVE_FROM_WISHLIST";
+export const CLEAR_CART = "CLEAR_CART";
