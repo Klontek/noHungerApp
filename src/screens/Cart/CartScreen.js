@@ -17,6 +17,7 @@ import { clearCart, removeFromCart } from "../../Redux/Actions";
 import CartItem from "./CartItem";
 
 import { SwipeListView } from "react-native-swipe-list-view";
+import EasyButton from "../../Shared/StyledComponent";
 
 const { height, width } = Dimensions.get("window");
 
@@ -66,18 +67,24 @@ const CartScreen = ({ navigation }) => {
             </View>
 
             <View>
-              <Button
-                title="Clear"
+              <EasyButton
+                medium
+                danger
                 buttonStyle={{ backgroundColor: colors.buttons }}
                 onPress={() => dispatch(clearCart())}
-              />
+              >
+                <Text style={{ color: "white" }}>Clear</Text>
+              </EasyButton>
             </View>
             <View>
-              <Button
-                title="Checkout"
+              <EasyButton
+                medium
+                primary
                 buttonStyle={{ backgroundColor: colors.buttons }}
                 onPress={() => navigation.navigate("Checkout")}
-              />
+              >
+                <Text style={{ color: "white" }}>Checkout</Text>
+              </EasyButton>
             </View>
           </View>
         </View>

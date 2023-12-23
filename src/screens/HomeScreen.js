@@ -55,43 +55,44 @@ const HomeScreen = ({ navigation }, props) => {
   }, []);
 
   // sample
-  const getProduct = () => {
-    axios
-      .get(`${baseUrl}products`)
-      .then((res) => {
-        setProducts(res.data);
-        setInitialState(res.data);
-        console.log(res.data);
-      })
-      .catch((error) => {
-        console.log({ error: error, msg: "Api call error" });
-      });
-  };
+  // const getProduct = () => {
+  //   axios
+  //     .get(`${baseUrl}products`)
+  //     .then((res) => {
+  //       setProducts(res.data);
+  //       // setInitialState(res.data);
+  //       console.log(res.data);
+  //     })
+  //     .catch((error) => {
+  //       console.log({ error: error, msg: "Api call error" });
+  //     });
+  // };
 
   // Products Api
-  useEffect(() => {
-    // setCategories(productFilter);
-    setActive(-1);
-    getProduct();
+  // useEffect(() => {
+  //   // setCategories(productFilter);
+  //   setActive(-1);
+  //   getProduct();
+  //   setLoading(false);
 
-    // axios
-    //   .get(`${baseUrl}products`)
-    //   .then((res) => {
-    //     setProducts(res.data);
-    //     setInitialState(res.data);
-    //     console.log(res.data);
-    //   })
-    //   .catch((error) => {
-    //     console.log({ error: error, msg: "Api call error" });
-    //   });
+  //   // axios
+  //   //   .get(`${baseUrl}products`)
+  //   //   .then((res) => {
+  //   //     setProducts(res.data);
+  //   //     setInitialState(res.data);
+  //   //     console.log(res.data);
+  //   //   })
+  //   //   .catch((error) => {
+  //   //     console.log({ error: error, msg: "Api call error" });
+  //   //   });
 
-    return () => {
-      setProducts([]);
-      // setCategories([]);
-      setActive();
-      setInitialState();
-    };
-  }, []);
+  //   return () => {
+  //     setProducts([]);
+  //     // setCategories([]);
+  //     setActive();
+  //     // setInitialState();
+  //   };
+  // }, []);
 
   // products categories method
   const changeCategories = (category) => {
@@ -304,6 +305,7 @@ const HomeScreen = ({ navigation }, props) => {
               <Text style={styles.categoryHeaderText}>Categories</Text>
             </View>
 
+            <Text>Products</Text>
             <View>
               <FlatList
                 horizontal

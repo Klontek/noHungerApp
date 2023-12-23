@@ -1,123 +1,108 @@
-import React from 'react'
-import {createBottomTabNavigator} from "@react-navigation/bottom-tabs"
-import {Icon} from "react-native-elements";
+import React, { useContext } from "react";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { Icon } from "react-native-elements";
 // import {} from "react-native"
-import HomeScreen from '../screens/HomeScreen';
-import { colors } from '../global/styles';
+import HomeScreen from "../screens/HomeScreen";
+import { colors } from "../global/styles";
 // import SearchScreen from '../screens/ShopSearchScreen';
 // import MyOrdersScreen from '../screens/MyOrdersScreen';
 // import MyAccountScreen from '../screens/MyAccountScreen';
-import ClientStack from './ClientStack';
-import AdminNavigator from './AdminNavigator';
-import MyAccount from '../screens/Account/MyAccount';
-import AccountNavigator from './AccountNavigation';
-import SearchScreen from '../screens/SearchScreen';
+import ClientStack from "./ClientStack";
+import AdminNavigator from "./AdminNavigator";
+import MyAccount from "../screens/Account/MyAccount";
+import AccountNavigator from "./AccountNavigation";
+import SearchScreen from "../screens/SearchScreen";
+import AuthGlobal from "../contexts/store/AuthGlobal";
 // import MyOrders from '../screens/Account/MyOrders';
 
-
-
-const ClientTabs = createBottomTabNavigator()
+const ClientTabs = createBottomTabNavigator();
 
 export default function RootClientTabs() {
+  const context = useContext(AuthGlobal);
+
   return (
-   <ClientTabs.Navigator
+    <ClientTabs.Navigator
       screenOptions={{
         headerShown: false,
         tabBarActiveTintColor: colors.buttons,
         keyboardHidesTabBar: true,
         showLabel: false,
       }}
-   >
+    >
+      <ClientTabs.Screen
+        name="HomeScreen"
+        component={HomeScreen}
+        options={{
+          tabBarLabel: "Home",
+          tabBarIcon: ({ color, size }) => {
+            return (
+              <Icon name="home" type="material" color={color} size={size} />
+            );
+          },
+        }}
+      />
 
-    <ClientTabs.Screen
-    name="HomeScreen"
-    component={HomeScreen}
-    options={
-     {
-      tabBarLabel:"Home",
-      tabBarIcon: (({color, size}) => {
-        return(
-       <Icon
-         name='home'
-         type='material'
-         color={color}
-         size={size}
-       />
-        )
+      <ClientTabs.Screen
+        name="Account"
+        component={AccountNavigator}
+        options={{
+          tabBarLabel: "Account",
+          tabBarIcon: ({ color, size }) => {
+            return (
+              <Icon name="person" type="material" color={color} size={size} />
+            );
+          },
+        }}
+      />
 
-      }
-      )
-     }
-    }
-    />
+      {/* conditionally render the Admin icon on the bottom tab navigator */}
+      {/* {context.stateUser.user.isAdmin == true ? (
+        <ClientTabs.Screen
+          name="Dashboard"
+          component={AdminNavigator}
+          options={{
+            tabBarLabel: "Admin",
+            tabBarIcon: ({ color, size }) => {
+              return (
+                <Icon
+                  name="settings"
+                  type="material"
+                  color={color}
+                  size={size}
+                />
+              );
+            },
+          }}
+        />
+      ) : null} */}
 
-    <ClientTabs.Screen
-    name="Account"
-    component={AccountNavigator}
-    options={
-     {
-      tabBarLabel:"Account",
-      tabBarIcon: (({color, size}) => {
-        return(
-       <Icon
-         name='person'
-         type='material'
-         color={color}
-         size={size}
-       />
-        )
+      <ClientTabs.Screen
+        name="Dashboard"
+        component={AdminNavigator}
+        options={{
+          tabBarLabel: "Admin",
+          tabBarIcon: ({ color, size }) => {
+            return (
+              <Icon name="settings" type="material" color={color} size={size} />
+            );
+          },
+        }}
+      />
 
-      }
-      )
-     }
-    }
-    />
+      <ClientTabs.Screen
+        name="Search"
+        component={SearchScreen}
+        options={{
+          tabBarLabel: "Search",
+          tabBarIcon: ({ color, size }) => {
+            return (
+              <Icon name="search" type="material" color={color} size={size} />
+            );
+          },
+        }}
+      />
 
-    <ClientTabs.Screen
-    name="Dashboard"
-    component={AdminNavigator}
-    options={
-     {
-      tabBarLabel:"Admin",
-      tabBarIcon: (({color, size}) => {
-        return(
-       <Icon
-         name='settings'
-         type='material'
-         color={color}
-         size={size}
-       />
-        )
-
-      }
-      )
-     }
-    }
-    />
-
-    <ClientTabs.Screen
-    name="Search"
-    component={SearchScreen}
-    options={
-     {
-      tabBarLabel:"Search",
-      tabBarIcon: (({color, size}) => {
-        return(
-       <Icon
-         name='search'
-         type='material'
-         color={color}
-         size={size}
-       />
-        )
-
-      }
-      )
-     }
-    }
-    />
-
-    {/* <ClientTabs.Screen
+      {/* <ClientTabs.Screen
     name="ClientStack"
     component={ClientStack}
     options={
@@ -138,7 +123,7 @@ export default function RootClientTabs() {
      }
     }
     /> */}
-{/* 
+      {/* 
     <ClientTabs.Screen
     name="Myorders"
     component={MyOrders}
@@ -160,8 +145,6 @@ export default function RootClientTabs() {
      }
     }
     /> */}
-
-
-   </ClientTabs.Navigator>
-  )
+    </ClientTabs.Navigator>
+  );
 }

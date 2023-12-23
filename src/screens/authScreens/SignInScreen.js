@@ -1,4 +1,4 @@
-import React, { useRef, useState, useContext } from "react";
+import React, { useRef, useState, useContext, useEffect } from "react";
 
 import { View, Text, StyleSheet, Dimension, TextInput } from "react-native";
 import * as Animatable from "react-native-animatable";
@@ -14,19 +14,39 @@ import { signInWithEmailAndPassword } from "firebase/auth";
 import { SignInContext } from "../../contexts/authContext";
 import Toast from "react-native-toast-message";
 
+// Context
+import AuthGlobal from "../../contexts/store/AuthGlobal";
+import { loginUser } from "../../contexts/actions/Auth.action";
+
 export default function SignInScreen({ navigation }) {
   const { dispatchSignedIn } = useContext(SignInContext);
+
+  // from Context
+  const context = useContext(AuthGlobal);
 
   const [textInput2Focused, setTextInput2focused] = useState(false);
   const textInput1 = useRef(1);
   const textInput2 = useRef(2);
   const auth = FIREBASE_AUTH;
+  const [error, setError] = useState("");
+
+  // useEffect for Context
+  useEffect(() => {
+    if (context.stateUser.isAuthenticated === true) {
+      props.navigation.navigate("UserProfile");
+    }
+  }, [context.stateUser.isAuthenticated]);
 
   async function signIn(data) {
     try {
       const { email, password } = data;
       const user = await signInWithEmailAndPassword(auth, email, password);
 
+      if (email === "" || password === "") {
+        setError("please fill in your credentials");
+      } else {
+        loginUser(user, context.dispatch);
+      }
       if (user) {
         // console.log({msg:'User Signed In', data:user});
         Toast.show({

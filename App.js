@@ -11,18 +11,23 @@ import Toast from "react-native-toast-message";
 import { Provider } from "react-redux";
 import { store } from "./store";
 
+//Context Api
+import Auth from "./src/contexts/store/Auth";
+
 export default function App() {
   return (
     <Provider store={store}>
       <SignInContextProvider>
-        <View style={styles.container}>
-          <StatusBar
-            barStyle="light-content"
-            backgroundColor={colors.statusBar}
-          />
-          <RootNavigator />
-          <Toast ref={(ref) => Toast.setRef(ref)} />
-        </View>
+        <Auth>
+          <View style={styles.container}>
+            <StatusBar
+              barStyle="light-content"
+              backgroundColor={colors.statusBar}
+            />
+            <RootNavigator />
+            <Toast ref={(ref) => Toast.setRef(ref)} />
+          </View>
+        </Auth>
       </SignInContextProvider>
     </Provider>
   );

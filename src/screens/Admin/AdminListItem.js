@@ -12,13 +12,19 @@ import {
   Modal,
 } from "react-native";
 import { Icon } from "react-native-elements";
+import EasyButton from "../../Shared/StyledComponent";
 
 const { width } = Dimensions.get("window");
 
-const ListItem = ({
-  item = { item }, // Pass the entire item as a prop
-  navigation = { navigation },
-  index = { index },
+const AdminListItem = ({
+  brand,
+  itemName,
+  categoryName,
+  price,
+  image,
+  navigation,
+  index,
+  item,
 }) => {
   // const navigation = useNavigation()
 
@@ -49,29 +55,33 @@ const ListItem = ({
             >
               <Icon name="close" size={20} />
             </TouchableOpacity>
-            <Button
-              title="Edit"
+            <EasyButton
+              medium
+              secondary
               onPress={() => [
                 navigation.navigate("ProductForm"),
                 setModalVisible(false),
               ]}
-            />
-            <Button
-              title="Delete"
-              //onDelete={}
-            />
+            >
+              <Text style={styles.textStyle}>Edit</Text>
+            </EasyButton>
+            <EasyButton medium danger>
+              <Text style={styles.textStyle}>Delete</Text>
+            </EasyButton>
           </View>
         </View>
       </Modal>
       <TouchableOpacity
         onPress={() =>
           navigation.navigate("AdminProductDetail", {
-            brand: item.brand,
-            itemName: item.itemName,
-            categoryName: item.categoryName,
-            price: item.price,
-            image: item.image,
-            index: index,
+            item: item,
+            // brand: brand,
+            // itemName: itemName,
+            // categoryName: categoryName,
+            // price: price,
+            // image: image,
+            // index: index,
+            // item: item,
           })
         }
         style={[
@@ -83,7 +93,7 @@ const ListItem = ({
         onLongPress={() => setModalVisible(true)}
       >
         <Image
-          source={item.image}
+          source={image}
           // source={
           //  image
           //  ? image
@@ -144,6 +154,10 @@ const styles = StyleSheet.create({
     shadowRadius: 3.84,
     elevation: 5,
   },
+  textStyle: {
+    color: "white",
+    fontWeight: "bold",
+  },
 });
 
-export default ListItem;
+export default AdminListItem;

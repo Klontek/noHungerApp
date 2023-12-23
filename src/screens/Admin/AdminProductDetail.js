@@ -1,37 +1,18 @@
 import { StyleSheet, Text, View } from "react-native";
-import React, { useEffect, useState } from "react";
-import { colors, SIZES } from "../../global/styles";
+import React, { useState } from "react";
+// import { colors, SIZES } from "../../global/styles";
 import { Icon, Image } from "react-native-elements";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { addToWishList } from "../../Redux/Actions";
 import { useDispatch, useSelector } from "react-redux";
-import TrafficLight from "../../Shared/TrafficLight";
+import { colors, SIZES } from "../../global/styles";
 
-const ProductDetail = ({ route, navigation, navigation: { goBack } }) => {
+const AdminProductDetail = ({ route, navigation }) => {
   const [count, setCount] = useState(1);
-  const [item, setItem] = useState(route.params.item);
-  const [availability, setAvailability] = useState(null);
-  const { index, name, price, images, countInStock, description } =
-    route.params.item;
-  const [availabilityText, setAvailabilityText] = useState("");
-
-  useEffect(() => {
-    if (route.params.item.countInStock == 0) {
-      setAvailability(<TrafficLight unavailable></TrafficLight>);
-      setAvailabilityText("Unavailable");
-    } else if (route.params.item.countInStock <= 5) {
-      setAvailability(<TrafficLight limited></TrafficLight>);
-      setAvailabilityText("Limited Stock");
-    } else {
-      setAvailability(<TrafficLight available></TrafficLight>);
-      setAvailabilityText("Available");
-    }
-
-    return () => {
-      setAvailability(null);
-      setAvailabilityText("");
-    };
-  }, []);
+  // const [Item, setItem] = useState(route.params.item);
+  const [availability, setAvailability] = useState("");
+  const { item } = route.params || {};
+  const { brand, itemName, categoryName, price, image, index } = item || {};
 
   const dispatch = useDispatch();
   const items = useSelector((state) => state);
@@ -56,22 +37,13 @@ const ProductDetail = ({ route, navigation, navigation: { goBack } }) => {
         </TouchableOpacity>
       </View>
 
-      <Image key={index} source={images} style={styles.image} />
+      <Image key={index} source={image} style={styles.image} />
 
       <View style={styles.details}>
         <View style={styles.titleRow}>
-          <Text style={styles.title}>{name}</Text>
+          <Text style={styles.title}>{itemName}</Text>
           <View style={styles.priceWrapper}>
             <Text style={styles.title}>₦{JSON.stringify(price)}</Text>
-          </View>
-        </View>
-
-        <View style={styles.availabilityContainer}>
-          <View style={styles.availability}>
-            <Text style={{ marginRight: 8 }}>
-              Availability: {availabilityText}
-            </Text>
-            {availability}
           </View>
         </View>
 
@@ -98,7 +70,7 @@ const ProductDetail = ({ route, navigation, navigation: { goBack } }) => {
               />
             </TouchableOpacity>
 
-            <Text style={styles.ratingText}> {count}</Text>
+            <Text style={styles.ratingText}> {brand}</Text>
             <TouchableOpacity onPress={() => increment()}>
               <Icon
                 name="plus-circle-outline"
@@ -112,10 +84,9 @@ const ProductDetail = ({ route, navigation, navigation: { goBack } }) => {
         <View style={styles.descriptionWrapper}>
           <Text style={styles.description}>Description</Text>
           <Text style={styles.descText}>
-            {description}
-            {/* Choose your 2 d dips', 'Choose your 1st drink flavour', 'Would you
+            Choose your 2 d dips', 'Choose your 1st drink flavour', 'Would you
             like extra source?', 'would you like add our tasty Beefs/chicken
-            variety? */}
+            variety?
           </Text>
         </View>
 
@@ -154,8 +125,6 @@ const ProductDetail = ({ route, navigation, navigation: { goBack } }) => {
     </View>
   );
 };
-
-export default ProductDetail;
 
 const styles = StyleSheet.create({
   container: {
@@ -269,12 +238,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
-  availabilityContainer: {
-    marginBottom: 20,
-    alignItems: "center",
-  },
-  availability: {
-    flexDirection: "row",
-    marginBottom: 10,
-  },
 });
+
+export default AdminProductDetail;
