@@ -27,8 +27,8 @@ import Heading from "../components/Heading";
 import ProductsComponent from "../components/Products/ProductsComponent";
 import { addItemToCart } from "../Redux/Actions";
 
-import axios from "axios";
-import baseUrl from "../../assets/Common/baseUrl";
+// import axios from "axios";
+// import baseUrl from "../../assets/Common/baseUrl";
 
 const SCREEN_WIDTH = Dimensions.get("window").width;
 

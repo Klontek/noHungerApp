@@ -19,13 +19,13 @@ import baseUrl from "../../../assets/Common/baseUrl";
 import axios from "axios";
 // import CustomPicker from "../../components/customPicker";
 import { getShopData } from "../../../assets/Data/data";
-import ModalDropdown from "react-native-modal-dropdown";
+// import ModalDropdown from "react-native-modal-dropdown";
 import RNPickerSelect from "react-native-picker-select";
 import { colors, SIZES } from "../../global/styles";
 import * as ImagePicker from "expo-image-picker";
 import mime from "mime"; // package to handle image upload
 
-const ProductForm = ({ navigation }) => {
+const ProductForm = (props) => {
   const [pickerValue, setPickerValue] = useState();
   const [brand, setBrand] = useState();
   const [name, setName] = useState();
@@ -103,12 +103,27 @@ const ProductForm = ({ navigation }) => {
   // Api UseEffect
   // useEffect(() => {
 
-  // to get token form AsyncStorage
-  AsyncStorage.getItem("jwt")
-    .then((res) => {
-      setToken(res);
-    })
-    .catch((error) => console.log(error));
+  //   // to update/Edit ProductForm
+  //   if(!props.route.params) {
+  //     setItem(null)
+  //   }else{
+  //     setItem(props.route.params.item);
+  //     setBrand(props.route.params.item.brand);
+  //     setName(props.route.params.item.name);
+  //     setPrice(props.route.params.item.price.toString());
+  //     setDescription(props.route.params.item.description);
+  //     setMainImage(props.route.params.item.image);
+  //     setImage(props.route.params.item.image);
+  //     setCategory(props.route.params.item.category._id);
+  //     setCountInStock(props.route.params.item.countInStock.toString());
+  //   }
+
+  // // to get token form AsyncStorage
+  // AsyncStorage.getItem("jwt")
+  //   .then((res) => {
+  //     setToken(res);
+  //   })
+  //   .catch((error) => console.log(error));
 
   //   //categories
   //   axios
@@ -129,7 +144,7 @@ const ProductForm = ({ navigation }) => {
   //   return () => {
   //     setCategories([]);
   //   };
-  // }, []);
+  // }, [])
   // pick image function for Api
   // const pickImage = async() => {
   //   let result = await ImagePicker.launchImageLibraryAsync({
@@ -145,70 +160,98 @@ const ProductForm = ({ navigation }) => {
   //   }
   // }
 
-  const addProduct = () => {
-    if (
-      name == "" ||
-      brand == "" ||
-      price == "" ||
-      description == "" ||
-      category == "" ||
-      countInStock == ""
-    ) {
-      setError("Please fill in the form correctly!");
-    }
+  // const addProduct = () => {
+  //   if (
+  //     name == "" ||
+  //     brand == "" ||
+  //     price == "" ||
+  //     description == "" ||
+  //     category == "" ||
+  //     countInStock == ""
+  //   ) {
+  //     setError("Please fill in the form correctly!");
+  //   }
 
-    let formData = new FormData();
+  //   let formData = new FormData();
 
-    const newImageUri = "file:///" + image.split("file:/").join("");
+  //   const newImageUri = "file:///" + image.split("file:/").join("");
 
-    formData.append("image", {
-      uri: newImageUri,
-      type: mime.getType(newImageUri),
-      name: newImageUri.split("/").pop(), //to get only the name of the uploaded image
-    });
-    formData.append("name", name);
-    formData.append("brand", brand);
-    formData.append("price", price);
-    formData.append("description", description);
-    formData.append("category", category);
-    formData.append("countInStock", countInStock);
-    formData.append("richDescription", richDescription);
-    formData.append("rating", rating);
-    formData.append("numReviews", numReviews);
-    formData.append("isFeatured", isFeatured);
+  //   formData.append("image", {
+  //     uri: newImageUri,
+  //     type: mime.getType(newImageUri),
+  //     name: newImageUri.split("/").pop(), //to get only the name of the uploaded image
+  //   });
+  //   formData.append("name", name);
+  //   formData.append("brand", brand);
+  //   formData.append("price", price);
+  //   formData.append("description", description);
+  //   formData.append("category", category);
+  //   formData.append("countInStock", countInStock);
+  //   formData.append("richDescription", richDescription);
+  //   formData.append("rating", rating);
+  //   formData.append("numReviews", numReviews);
+  //   formData.append("isFeatured", isFeatured);
 
-    // get token for authorization
-    const config = {
-      headers: {
-        "Content-Type": "multipart/form-data",
-        Authorization: `Bearer ${token}`,
-      },
-    };
+  //   // get token for authorization
+  //   const config = {
+  //     headers: {
+  //       "Content-Type": "multipart/form-data",
+  //       Authorization: `Bearer ${token}`,
+  //     },
+  //   };
 
-    axios
-      .post(`${baseUrl}products`, formData, config)
-      .then((res) => {
-        if (res.status == 200 || res.status == 201) {
-          Toast.show({
-            topOffset: 60,
-            type: "success",
-            text1: "New Product Added",
-            text2: "",
-          });
-          setTimeOut(() => {
-            navigation.navigate("Products");
-          }, 500);
-        }
-      })
-      .catch((error) => {
-        Toast.show({
-          topOffset: 60,
-          type: "error",
-          text1: "Something went wrong",
-          text2: "Please try again",
-        });
-      });
-  };
+  //   if(item !== null){
+  //     axios
+  //       .put(`${baseUrl}products/${item.id}`, formData, config)
+  //       .then((res) => {
+  //         if (res.status == 200 || res.status == 201) {
+  //           Toast.show({
+  //             topOffset: 60,
+  //             type: "success",
+  //             text1: "Product successfully updated!",
+  //             text2: "",
+  //           });
+  //           setTimeOut(() => {
+  //             props.navigation.navigate("Products");
+  //           }, 500);
+  //         }
+  //       })
+  //       .catch((error) => {
+  //         Toast.show({
+  //           topOffset: 60,
+  //           type: "error",
+  //           text1: "Something went wrong",
+  //           text2: "Please try again",
+  //         });
+  //       });
+
+  //   }else {
+  //   axios
+  //     .post(`${baseUrl}products`, formData, config)
+  //     .then((res) => {
+  //       if (res.status == 200 || res.status == 201) {
+  //         Toast.show({
+  //           topOffset: 60,
+  //           type: "success",
+  //           text1: "New Product Added",
+  //           text2: "",
+  //         });
+  //         setTimeOut(() => {
+  //           props.navigation.navigate("Products");
+  //         }, 500);
+  //       }
+  //     })
+  //     .catch((error) => {
+  //       Toast.show({
+  //         topOffset: 60,
+  //         type: "error",
+  //         text1: "Something went wrong",
+  //         text2: "Please try again",
+  //       });
+  //     });
+  //   }
+
+  // };
 
   return (
     <View style={styles.container}>
