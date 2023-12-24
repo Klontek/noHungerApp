@@ -1,4 +1,5 @@
 import { useNavigation } from "@react-navigation/native";
+import axios from "axios";
 import React, { useState, useCallback, useEffect } from "react";
 import {
   StyleSheet,
@@ -8,9 +9,12 @@ import {
   ActivityIndicator,
   Dimensions,
 } from "react-native";
+import { Icon } from "react-native-elements";
 // import { Icon, Input, SearchBar } from 'react-native-elements';
 import { getShopData } from "../../../assets/Data/data";
 import SearchBar from "../../components/SearchBar/SearchBar";
+import { colors } from "../../global/styles";
+import EasyButton from "../../Shared/StyledComponent";
 import AdminListItem from "./AdminListItem";
 // import ListItem from "./ListItem";
 
@@ -108,8 +112,64 @@ const Products = () => {
   //   )
   // }
 
+  // delete functionality for products
+  const deleteProduct = (id) => {
+    axios
+      .delete(`${baseUrl}products/${id}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      .then((res) => {
+        const products = productFilter.filter((item) => item.id !== id);
+        setProductFilter(products);
+      })
+      .catch((error) => console.log(error));
+  };
+
   return (
-    <View>
+    <View style={styles.container}>
+      <View style={styles.buttonContainer}>
+        <EasyButton
+          medium
+          secondary
+          onPress={() => navigation.navigate("Orders")}
+        >
+          <Icon
+            type="material-community"
+            name="shopping"
+            color={colors.CardBackground}
+            size={18}
+          />
+          <Text style={styles.buttonText}>Orders</Text>
+        </EasyButton>
+
+        <EasyButton
+          medium
+          secondary
+          onPress={() => navigation.navigate("ProductForm")}
+        >
+          <Icon
+            type="material-community"
+            name="plus"
+            color={colors.CardBackground}
+            size={18}
+          />
+          <Text style={styles.buttonText}>Products</Text>
+        </EasyButton>
+
+        <EasyButton
+          medium
+          secondary
+          onPress={() => navigation.navigate("Categories")}
+        >
+          <Icon
+            type="material-community"
+            name="shape"
+            color={colors.CardBackground}
+            size={18}
+          />
+          <Text style={styles.buttonText}>Categories</Text>
+        </EasyButton>
+      </View>
       <View>
         <SearchBar />
         {/* <Header searchBar rounded>
@@ -142,6 +202,7 @@ const Products = () => {
               navigation={navigation}
               index={index}
               {...item}
+              deleteProduct={deleteProduct}
             />
           )}
         />
@@ -211,6 +272,19 @@ const styles = StyleSheet.create({
     height: height / 2,
     alignItems: "center",
     justifyContent: "center",
+  },
+  container: {
+    marginBottom: 160,
+    backgroundColor: "white",
+  },
+  buttonContainer: {
+    margin: 20,
+    alignSelf: "center",
+    flexDirection: "row",
+  },
+  buttonText: {
+    marginLeft: 4,
+    color: "white",
   },
 });
 export default Products;

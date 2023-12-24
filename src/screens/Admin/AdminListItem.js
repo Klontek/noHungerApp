@@ -17,6 +17,7 @@ import EasyButton from "../../Shared/StyledComponent";
 const { width } = Dimensions.get("window");
 
 const AdminListItem = ({
+  deleteProduct,
   brand,
   itemName,
   categoryName,
@@ -65,7 +66,11 @@ const AdminListItem = ({
             >
               <Text style={styles.textStyle}>Edit</Text>
             </EasyButton>
-            <EasyButton medium danger>
+            <EasyButton
+              medium
+              danger
+              onPress={() => [deleteProduct(item._id), setModalVisible(false)]}
+            >
               <Text style={styles.textStyle}>Delete</Text>
             </EasyButton>
           </View>
