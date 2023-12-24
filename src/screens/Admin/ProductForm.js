@@ -23,8 +23,9 @@ import ModalDropdown from "react-native-modal-dropdown";
 import RNPickerSelect from "react-native-picker-select";
 import { colors, SIZES } from "../../global/styles";
 import * as ImagePicker from "expo-image-picker";
+import mime from "mime"; // package to handle image upload
 
-const ProductForm = () => {
+const ProductForm = ({ navigation }) => {
   const [pickerValue, setPickerValue] = useState();
   const [brand, setBrand] = useState();
   const [name, setName] = useState();
@@ -37,11 +38,12 @@ const ProductForm = () => {
   const [token, setToken] = useState();
   const [error, setError] = useState();
   const [countInStock, setCountInStock] = useState();
-  const [rating, setRating] = useState();
+  const [rating, setRating] = useState(0);
   const [isFeatured, setIsFeatured] = useState(false);
   const [richDescription, setRichDescription] = useState();
   const [numReviews, setNumReviews] = useState(0);
   const [item, setItem] = useState(null);
+  // const navigation = useNavigation()
 
   // Function to filter out unique category objects from productData
   const extractCategories = (shopData) => {
@@ -100,6 +102,14 @@ const ProductForm = () => {
 
   // Api UseEffect
   // useEffect(() => {
+
+  // to get token form AsyncStorage
+  AsyncStorage.getItem("jwt")
+    .then((res) => {
+      setToken(res);
+    })
+    .catch((error) => console.log(error));
+
   //   //categories
   //   axios
   //     .get(`${baseUrl}categories`)
@@ -134,6 +144,71 @@ const ProductForm = () => {
   //     setImage(result.uri)
   //   }
   // }
+
+  const addProduct = () => {
+    if (
+      name == "" ||
+      brand == "" ||
+      price == "" ||
+      description == "" ||
+      category == "" ||
+      countInStock == ""
+    ) {
+      setError("Please fill in the form correctly!");
+    }
+
+    let formData = new FormData();
+
+    const newImageUri = "file:///" + image.split("file:/").join("");
+
+    formData.append("image", {
+      uri: newImageUri,
+      type: mime.getType(newImageUri),
+      name: newImageUri.split("/").pop(), //to get only the name of the uploaded image
+    });
+    formData.append("name", name);
+    formData.append("brand", brand);
+    formData.append("price", price);
+    formData.append("description", description);
+    formData.append("category", category);
+    formData.append("countInStock", countInStock);
+    formData.append("richDescription", richDescription);
+    formData.append("rating", rating);
+    formData.append("numReviews", numReviews);
+    formData.append("isFeatured", isFeatured);
+
+    // get token for authorization
+    const config = {
+      headers: {
+        "Content-Type": "multipart/form-data",
+        Authorization: `Bearer ${token}`,
+      },
+    };
+
+    axios
+      .post(`${baseUrl}products`, formData, config)
+      .then((res) => {
+        if (res.status == 200 || res.status == 201) {
+          Toast.show({
+            topOffset: 60,
+            type: "success",
+            text1: "New Product Added",
+            text2: "",
+          });
+          setTimeOut(() => {
+            navigation.navigate("Products");
+          }, 500);
+        }
+      })
+      .catch((error) => {
+        Toast.show({
+          topOffset: 60,
+          type: "error",
+          text1: "Something went wrong",
+          text2: "Please try again",
+        });
+      });
+  };
 
   return (
     <View style={styles.container}>
@@ -255,11 +330,7 @@ const ProductForm = () => {
         />
         {error ? <Error message={error} /> : null}
         <View style={styles.buttonContainer}>
-          <EasyButton
-            primary
-            large
-            // onPress={{}}
-          >
+          <EasyButton primary large onPress={() => addProduct()}>
             <Text style={styles.buttonText}>Confirm</Text>
           </EasyButton>
         </View>
