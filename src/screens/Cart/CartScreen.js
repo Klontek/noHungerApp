@@ -18,10 +18,12 @@ import CartItem from "./CartItem";
 
 import { SwipeListView } from "react-native-swipe-list-view";
 import EasyButton from "../../Shared/StyledComponent";
+import AuthGlobal from "../../contexts/store/AuthGlobal";
 
 const { height, width } = Dimensions.get("window");
 
 const CartScreen = ({ navigation }) => {
+  const context = useContext(AuthGlobal);
   const [cartList, setCartList] = useState([]);
   // const [quantity, setQuantity] = useState(car);
   const cartData = useSelector((state) => state.CartReducers);
@@ -77,14 +79,25 @@ const CartScreen = ({ navigation }) => {
               </EasyButton>
             </View>
             <View>
-              <EasyButton
-                medium
-                primary
-                buttonStyle={{ backgroundColor: colors.buttons }}
-                onPress={() => navigation.navigate("Checkout")}
-              >
-                <Text style={{ color: "white" }}>Checkout</Text>
-              </EasyButton>
+              {context.stateUser.isAuthenticated ? (
+                <EasyButton
+                  medium
+                  primary
+                  buttonStyle={{ backgroundColor: colors.buttons }}
+                  onPress={() => navigation.navigate("Checkout")}
+                >
+                  <Text style={{ color: "white" }}>Checkout</Text>
+                </EasyButton>
+              ) : (
+                <EasyButton
+                  medium
+                  secondary
+                  buttonStyle={{ backgroundColor: colors.buttons }}
+                  onPress={() => navigation.navigate("SignInScreen")}
+                >
+                  <Text style={{ color: "white" }}>Login</Text>
+                </EasyButton>
+              )}
             </View>
           </View>
         </View>

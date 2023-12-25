@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { useDispatch, useSelector } from "react-redux";
 import { Button } from "react-native-elements";
@@ -7,10 +7,14 @@ import Input from "../../../components/Form/Input";
 import RNPickerSelect from "react-native-picker-select";
 import { View } from "react-native";
 import { colors } from "../../../global/styles";
+import AuthGlobal from "../../../contexts/store/AuthGlobal";
+import { Toast } from "react-native-toast-message/lib/src/Toast";
 
 // const dispatch = useDispatch();
 
 const Checkout = ({ navigation }) => {
+  const context = useContext(AuthGlobal);
+
   const [orderItem, setOrderItem] = useState();
   const [address, setAddress] = useState();
   const [address2, setAddress2] = useState();
@@ -18,10 +22,24 @@ const Checkout = ({ navigation }) => {
   const [zip, setZip] = useState();
   const [country, setCountry] = useState();
   const [phone, setPhone] = useState();
+  const [user, setUser] = useState();
+
   const countries = require("../../../../assets/Data/countries.json");
 
   useEffect(() => {
     setOrderItem(cartData);
+
+    if (context.stateUser.isAuthenticated) {
+      setUser(context.stateUser.user.sub);
+    } else {
+      navigation.navigate("CartScreen");
+      Toast.show({
+        topOffset: 60,
+        type: "error",
+        text1: "Please Login to Checkout",
+        text2: "",
+      });
+    }
 
     return () => {
       setOrderItem();
@@ -35,10 +53,12 @@ const Checkout = ({ navigation }) => {
       city,
       country,
       dateOrdered: Date.now(),
-      orderItems,
+      orderItem,
       phone,
       shippingAddress1: address,
       shippingAddress2: address2,
+      status: "3",
+      user,
       zip,
     };
     navigation.navigate("Payment", { order: order });

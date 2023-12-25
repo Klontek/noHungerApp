@@ -1,6 +1,6 @@
 const ShopData = [
   {
-    id:{
+    id: {
       $oid: "a12df2329dfjl89ppo3",
     },
     ShopName: "Kebabs & Kurries",
@@ -31,7 +31,7 @@ const ShopData = [
         countInStock: 120,
         category: {
           $oid: "16kdf23iojl89ddlj",
-          name: "food"
+          name: "food",
         },
         __v: 0,
       },
@@ -48,11 +48,11 @@ const ShopData = [
         countInStock: 80,
         category: {
           $oid: "26kdf3399IQl89dd",
-          name: "food"
+          name: "food",
         },
         __v: 1,
       },
-    {
+      {
         id: {
           $oid: "6dkdf3329dGLOP$12",
         },
@@ -65,15 +65,14 @@ const ShopData = [
         countInStock: 25,
         category: {
           $oid: "21bdf33ioUZXvtq",
-          name: "food"
+          name: "food",
         },
         __v: 1,
-      }
+      },
     ],
-    
   },
   {
-    id:{
+    id: {
       $oid: "2okdf3329dfjl89qlpx",
     },
     ShopName: "Amala360",
@@ -104,7 +103,7 @@ const ShopData = [
         countInStock: 80,
         category: {
           $oid: "26kdf33iojl89ddlj",
-          name: "food"
+          name: "food",
         },
         __v: 1,
       },
@@ -121,11 +120,11 @@ const ShopData = [
         countInStock: 120,
         category: {
           $oid: "16kdf543ojl89ddHT",
-          name: "food"
+          name: "food",
         },
         __v: 0,
       },
-    {
+      {
         id: {
           $oid: "6dGHZX32dfzxddlj",
         },
@@ -138,15 +137,15 @@ const ShopData = [
         countInStock: 25,
         category: {
           $oid: "21bdf$221iojl89f$",
-          name: "food"
+          name: "food",
         },
         __v: 1,
-      }
+      },
     ],
   },
 
   {
-    id:{
+    id: {
       $oid: "6dkdD329dfupzt9j4",
     },
     ShopName: "Babbi Restaurant",
@@ -164,7 +163,7 @@ const ShopData = [
     collectTimes: 5,
     foodType: "Jollof Rice, White Rice, Beans...",
     productData: [
-    {
+      {
         id: {
           $oid: "6dkdf3329dfzxddlj4",
         },
@@ -179,11 +178,11 @@ const ShopData = [
           $oid: "21bdf33iojl89ffm",
         },
         __v: 1,
-      }
-    ]
+      },
+    ],
   },
   {
-   id:{
+    id: {
       $oid: "6df3329dfjl89dxzmn",
     },
     ShopName: "Chicken Cottage",
@@ -201,7 +200,7 @@ const ShopData = [
     collectTimes: 3,
     foodType: "Garri, Yam, custard...",
     productData: [
-    {
+      {
         id: {
           $oid: "6df3329dfjl89dxzmn",
         },
@@ -216,11 +215,11 @@ const ShopData = [
           $oid: "26kdf33iojl89ddlj",
         },
         __v: 1,
-      }
-    ]
+      },
+    ],
   },
   {
-    id:{
+    id: {
       $oid: "dkdf3329dfjl89ymn",
     },
     ShopName: "Tutti Fruit",
@@ -238,7 +237,7 @@ const ShopData = [
     collectTimes: 8,
     foodType: "Apples, Banana, Salads...",
     productData: [
-    {
+      {
         id: {
           $oid: "dkdf3329dfjl89ymn",
         },
@@ -251,14 +250,14 @@ const ShopData = [
         countInStock: 80,
         category: {
           $oid: "26kdf33iojl89ddlj",
-          name: "fruits"
+          name: "fruits",
         },
         __v: 1,
-      }
-    ]
+      },
+    ],
   },
   {
-    id:{
+    id: {
       $oid: "aaitdf3329dfjl89dj4",
     },
     ShopName: "Sisishola Amala & Co",
@@ -289,14 +288,14 @@ const ShopData = [
         countInStock: 80,
         category: {
           $oid: "212pmf33iojl8zznm",
-          name: "food"
+          name: "food",
         },
         __v: 1,
-      }
-    ]
+      },
+    ],
   },
   {
-    id:{
+    id: {
       $oid: "6dkdf3329dfjl89pplt",
     },
     ShopName: "Chef Signature & Catering Services",
@@ -314,7 +313,7 @@ const ShopData = [
     collectTimes: 18,
     foodType: "Jollof Rice, Chicken, Salad...",
     productData: [
-    {
+      {
         id: {
           $oid: "6dkdf3329dfjl89pplt",
         },
@@ -330,16 +329,17 @@ const ShopData = [
         },
         __v: 1,
       },
-    ]
+    ],
   },
   {
-    id:{
+    id: {
       $oid: "1xmzf3329dfjl8top1",
     },
     ShopName: "KetchUp Fast Food",
     farAway: "14.5",
     businessAddress: "8 Zik Avenue, Lagos",
     images: require("../images/restaurants/tutti_fruit.jpeg"),
+
     rating: 4.6,
     numReviews: 690,
     coordinates: {
@@ -351,7 +351,7 @@ const ShopData = [
     collectTimes: 38,
     foodType: "Jollof Rice, Chicken, Salad...",
     productData: [
-    {
+      {
         id: {
           $oid: "1xmzf3329dfjl8top1",
         },
@@ -364,14 +364,14 @@ const ShopData = [
         countInStock: 80,
         category: {
           $oid: "10qdf33iojl89dzld",
-          name: "food"
+          name: "food",
         },
         __v: 1,
       },
-    ]
+    ],
   },
   {
-    id:{
+    id: {
       $oid: "6ptdf3329dfjl89ll1z",
     },
     ShopName: "Olivier Burger",
@@ -389,7 +389,7 @@ const ShopData = [
     collectTimes: 78,
     foodType: "Shawarma, Burger, Hotdog...",
     productData: [
-    {
+      {
         id: {
           $oid: "6ptdf3329dfjl89ll1z",
         },
@@ -402,14 +402,14 @@ const ShopData = [
         countInStock: 80,
         category: {
           $oid: "10YBcf33iojl89Koa",
-          name: "fast food"
+          name: "fast food",
         },
         __v: 1,
-      }
-    ]
+      },
+    ],
   },
   {
-    id:{
+    id: {
       $oid: "f3Ruq1K9dfjl89ddlj4",
     },
     ShopName: "Passion Trust Cosmetics & supermarket",
@@ -424,11 +424,11 @@ const ShopData = [
     },
     discount: 150,
     deliveryTimes: 20,
-    collectTimes:10,
+    collectTimes: 10,
     foodType: "Jollof Rice, Chicken, Salad...",
     productType: "Facial Creams, Massage box, MakeUp Kit...",
     productData: [
-    {
+      {
         id: {
           $oid: "f3Ruq1K9dfjl89ddlj4",
         },
@@ -441,14 +441,14 @@ const ShopData = [
         countInStock: 80,
         category: {
           $oid: "19Vdf33iojl76OpTy",
-          name: "products"
+          name: "products",
         },
         __v: 1,
-      }
-    ]
+      },
+    ],
   },
   {
-    id:{
+    id: {
       $oid: "6dkdf440tyjl89ddlj4",
     },
     ShopName: "Manner Stores",
@@ -466,7 +466,7 @@ const ShopData = [
     collectTimes: 28,
     foodType: "Butter, Sugar, groundnut",
     productData: [
-    {
+      {
         id: {
           $oid: "6dkdf440tyjl89ddlj4",
         },
@@ -479,14 +479,14 @@ const ShopData = [
         countInStock: 180,
         category: {
           $oid: "26kdtete34jl89ddlj",
-          name: "Product"
+          name: "Product",
         },
         __v: 1,
-      }
-    ]
+      },
+    ],
   },
   {
-    id:{
+    id: {
       $oid: "44tpxz9dfjl89ioqwp",
     },
     ShopName: "Unique Global Store",
@@ -504,7 +504,7 @@ const ShopData = [
     collectTimes: 18,
     foodType: "Buter, Sugar, groundnut",
     productData: [
-    {
+      {
         id: {
           $oid: "44tpxz9dfjl89ioqwp",
         },
@@ -519,11 +519,11 @@ const ShopData = [
           $oid: "ewqp21Qiojl7p1p",
         },
         __v: 1,
-      }
-    ]
+      },
+    ],
   },
   {
-    id:{
+    id: {
       $oid: "6dkdf44igfjl89ywq",
     },
     ShopName: "Excellent Shop",
@@ -541,7 +541,7 @@ const ShopData = [
     collectTimes: 70,
     foodType: "Buter, Sugar, groundnut",
     productData: [
-    {
+      {
         id: {
           $oid: "6dkdf44igfjl89ywq",
         },
@@ -556,11 +556,11 @@ const ShopData = [
           $oid: "26kdf71oiljl89dd",
         },
         __v: 1,
-      }
-    ]
+      },
+    ],
   },
   {
-    id:{
+    id: {
       $oid: "40Pif3329dfjl89ddljt",
     },
     ShopName: "Unique Metro Store",
@@ -578,7 +578,7 @@ const ShopData = [
     collectTimes: 28,
     foodType: "Buter, Sugar, groundnut",
     productData: [
-    {
+      {
         id: {
           $oid: "40Pif3329dfjl89ddljt",
         },
@@ -593,11 +593,11 @@ const ShopData = [
           $oid: "11dTf33iojl89ddlY",
         },
         __v: 1,
-      }
-    ]
+      },
+    ],
   },
   {
-    id:{
+    id: {
       $oid: "23i8fr9dfjlgmxz21",
     },
     ShopName: "Delis Supermarket",
@@ -615,7 +615,7 @@ const ShopData = [
     collectTimes: 218,
     foodType: "Garri, Sugar, groundnut",
     productData: [
-    {
+      {
         id: {
           $oid: "23i8fr9dfjlgmxz21",
         },
@@ -630,11 +630,11 @@ const ShopData = [
           $oid: "l01f33iojl89ddlj",
         },
         __v: 1,
-      }
-    ]
+      },
+    ],
   },
   {
-    id:{
+    id: {
       $oid: "f3329dfjl89ffvms",
     },
     ShopName: "H-medix",
@@ -652,7 +652,7 @@ const ShopData = [
     collectTimes: 28,
     foodType: "Buter, Sugar, groundnut",
     productData: [
-    {
+      {
         id: {
           $oid: "f3329dfjl89ffvms",
         },
@@ -667,11 +667,11 @@ const ShopData = [
           $oid: "56fgdf33iojl89ddlj",
         },
         __v: 1,
-      }
-    ]
+      },
+    ],
   },
   {
-    id:{
+    id: {
       $oid: "6dkdf39dfaql9ddlj4",
     },
     ShopName: "Skylark Pharmacy",
@@ -689,7 +689,7 @@ const ShopData = [
     collectTimes: 28,
     foodType: "Buter, Sugar, groundnut",
     productData: [
-    {
+      {
         id: {
           $oid: "I0dkdf419x2zjl89dj",
         },
@@ -705,7 +705,7 @@ const ShopData = [
         },
         __v: 1,
       },
-    {
+      {
         id: {
           $oid: "f3329dfOl25ffvTZ",
         },
@@ -720,178 +720,240 @@ const ShopData = [
           $oid: "56fgdf33iojl89ddlj",
         },
         __v: 1,
-      }
-    ]
+      },
+    ],
   },
 ];
 
 export const productFilter = [
-  {id: 0, name: 'Shoes'},
-  {id: 1, name: 'Cloths'},
-  {id: 2, name: 'Gadgets'},
-  {id: 3, name: 'Utensils'},
-  {id: 4, name: 'Clothings'},
-  {id: 5, name: 'More'},
-]
-
+  { id: 0, name: "Shoes" },
+  { id: 1, name: "Cloths" },
+  { id: 2, name: "Gadgets" },
+  { id: 3, name: "Utensils" },
+  { id: 4, name: "Clothings" },
+  { id: 5, name: "More" },
+];
 
 export const filterShopData = [
   {
     id: 1,
     name: "Fast food",
-    image: require("../images/eatable-foods/rice_beans.jpeg")
+    image: require("../images/eatable-foods/rice_beans.jpeg"),
   },
   {
     id: 2,
     name: "Barbeque",
-    image: require("../images/eatable-foods/egusi_1.jpeg")
+    image: require("../images/eatable-foods/egusi_1.jpeg"),
   },
   {
     id: 3,
     name: "western delicacies",
-    image: require("../images/eatable-foods/white_soup_eba.jpeg")
+    image: require("../images/eatable-foods/white_soup_eba.jpeg"),
   },
   {
     id: 4,
     name: "H-max Superstores",
-    image: require("../images/eatable-foods/banga_soup.jpeg")
+    image: require("../images/eatable-foods/banga_soup.jpeg"),
   },
   {
     id: 5,
     name: "Deli Superstores",
-    image: require("../images/eatable-foods/white_soup_fufu.jpeg")
+    image: require("../images/eatable-foods/white_soup_fufu.jpeg"),
   },
   {
     id: 6,
     name: "chicken Cottage",
-    image: require("../images/products/biscuits.jpeg")
+    image: require("../images/products/biscuits.jpeg"),
   },
   {
     id: 7,
     name: "Amala 360",
-    image: require("../images/products/biscuits.jpeg")
-  }
+    image: require("../images/products/biscuits.jpeg"),
+  },
 ];
 
-
 export const MenuData = [
-  {key: 0, title: "STUDENT'S PROVISON", special: false},
-  {key: 1, title: "HAPPY MEALS", special: false},
-  {key: 2, title: "GROCERIES FLAVOURS", special: false},
-  {key: 3, title: "RICE VARIETY", special: false},
-  {key: 4, title: "BEANS VARIETY", special: false},
-  {key: 5, title: "SUPPLEMENTS", special: false},
-  {key: 6, title: "YAM VARIETY", special: false},
-  {key: 7, title: "BEVERAGES", special: false},
-  {key: 8, title: "CHICKEN & FRIES", special: false},
-  {key: 9, title: "FAST FOODS", special: false},
-  {key: 10, title: "DRINKS", special: false},
+  { key: 0, title: "STUDENT'S PROVISON", special: false },
+  { key: 1, title: "HAPPY MEALS", special: false },
+  { key: 2, title: "GROCERIES FLAVOURS", special: false },
+  { key: 3, title: "RICE VARIETY", special: false },
+  { key: 4, title: "BEANS VARIETY", special: false },
+  { key: 5, title: "SUPPLEMENTS", special: false },
+  { key: 6, title: "YAM VARIETY", special: false },
+  { key: 7, title: "BEVERAGES", special: false },
+  { key: 8, title: "CHICKEN & FRIES", special: false },
+  { key: 9, title: "FAST FOODS", special: false },
+  { key: 10, title: "DRINKS", special: false },
 ];
 
 export const specialData = [
-  {key: 0, title: "LIMITED OFFER"},
-  {key: 1, title: "GO GROCERIES"},
-  {key: 2, title: "GO MEALS"},
-  {key: 3, title: "DELUXE PROMO"},
+  { key: 0, title: "LIMITED OFFER" },
+  { key: 1, title: "GO GROCERIES" },
+  { key: 2, title: "GO MEALS" },
+  { key: 3, title: "DELUXE PROMO" },
 ];
 
 export const menu = [
-  {key: 1, title: "SOUP"},
-  {key: 2, title: "GROCERIES"},
-  {key: 3, title: "FRIES"},
-  {key: 4, title: "MILK SHAKES"},
-  {key: 5, title: "LIMITED OFFER"},
-  {key: 6, title: "RICE"},
-  {key: 7, title: "VEGGIE"},
-  {key: 8, title: "BEVERAGE"},
-]
+  { key: 1, title: "SOUP" },
+  { key: 2, title: "GROCERIES" },
+  { key: 3, title: "FRIES" },
+  { key: 4, title: "MILK SHAKES" },
+  { key: 5, title: "LIMITED OFFER" },
+  { key: 6, title: "RICE" },
+  { key: 7, title: "VEGGIE" },
+  { key: 8, title: "BEVERAGE" },
+];
 
 export const menuDetailedData = [
   {
     id: 0,
-    meal: 'Rice',
+    meal: "Rice",
     price: 100.99,
     image: require("../images/eatable-foods/jollof_rice.jpeg"),
     details: "Tasty, yummy with crunchy chickens, with mix 100% fresh beef",
-    preferenceTitle: ['Choose your 2 d dips', 'Choose your 1st drink flavour', 'Would you like extra source?', 'would you like add our tasty Beefs/chicken variety?'],
-    preferenceData: [
-      
-        [{id: 10,name: 'Jollof Rice',price: 200, checked: false},
-          {id: 11,name: 'White Rice',price: 500, checked: false},
-          {id: 12,name: 'Fried Rice',price: 400, checked: false},
-        ],
-        [{id: 13,name: 'Small Coke',price: 200, checked: false},
-          {id: 14,name: 'Zero Coke',price: 200, checked: false},
-          {id: 15,name: 'Fearless',price: 200, checked: false},
-        ],
-        [{id: 16,name: 'Goat Meat',price: 200, checked: false},
-          {id: 17,name: 'Cow Meat',price: 500, checked: false},
-          {id: 18,name: 'Full chicken',price: 400, checked: false},
-        ],
+    preferenceTitle: [
+      "Choose your 2 d dips",
+      "Choose your 1st drink flavour",
+      "Would you like extra source?",
+      "would you like add our tasty Beefs/chicken variety?",
     ],
-    minimum_quantity: [2,1,1, null, null],
-    counter: [0,0,0,0,0],
+    preferenceData: [
+      [
+        { id: 10, name: "Jollof Rice", price: 200, checked: false },
+        { id: 11, name: "White Rice", price: 500, checked: false },
+        { id: 12, name: "Fried Rice", price: 400, checked: false },
+      ],
+      [
+        { id: 13, name: "Small Coke", price: 200, checked: false },
+        { id: 14, name: "Zero Coke", price: 200, checked: false },
+        { id: 15, name: "Fearless", price: 200, checked: false },
+      ],
+      [
+        { id: 16, name: "Goat Meat", price: 200, checked: false },
+        { id: 17, name: "Cow Meat", price: 500, checked: false },
+        { id: 18, name: "Full chicken", price: 400, checked: false },
+      ],
+    ],
+    minimum_quantity: [2, 1, 1, null, null],
+    counter: [0, 0, 0, 0, 0],
     required: [true, true, true, false, false],
   },
   {
     id: 1,
-    meal: 'Soup',
+    meal: "Soup",
     price: 200.99,
     image: require("../images/eatable-foods/egusi_eba.jpeg"),
     details: "Tasty, yummy with crunchy chickens, with mix 100% fresh beef",
-    preferenceTitle: ['Choose your 2 d dips', 'Choose your 1st drink flavour', 'Would you like extra source?', 'would you like add our tasty Beefs/chicken variety?'],
-    preferenceData: [
-      
-        [{id: 10,name: 'White Soup',price: 200, checked: false},
-          {id: 11,name: 'Egusi Soup',price: 500, checked: false},
-          {id: 12,name: 'Egusi Soup',price: 400, checked: false},
-        ],
-        [{id: 13,name: 'Small Coke',price: 200, checked: false},
-          {id: 14,name: 'Zero Coke',price: 200, checked: false},
-          {id: 15,name: 'Fearless',price: 200, checked: false},
-        ],
-        [{id: 16,name: 'Goat Meat',price: 200, checked: false},
-          {id: 17,name: 'Cow Meat',price: 500, checked: false},
-          {id: 18,name: 'Full chicken',price: 400, checked: false},
-        ],
+    preferenceTitle: [
+      "Choose your 2 d dips",
+      "Choose your 1st drink flavour",
+      "Would you like extra source?",
+      "would you like add our tasty Beefs/chicken variety?",
     ],
-    minimum_quantity: [2,1,1, null, null],
-    counter: [0,0,0,0,0],
+    preferenceData: [
+      [
+        { id: 10, name: "White Soup", price: 200, checked: false },
+        { id: 11, name: "Egusi Soup", price: 500, checked: false },
+        { id: 12, name: "Egusi Soup", price: 400, checked: false },
+      ],
+      [
+        { id: 13, name: "Small Coke", price: 200, checked: false },
+        { id: 14, name: "Zero Coke", price: 200, checked: false },
+        { id: 15, name: "Fearless", price: 200, checked: false },
+      ],
+      [
+        { id: 16, name: "Goat Meat", price: 200, checked: false },
+        { id: 17, name: "Cow Meat", price: 500, checked: false },
+        { id: 18, name: "Full chicken", price: 400, checked: false },
+      ],
+    ],
+    minimum_quantity: [2, 1, 1, null, null],
+    counter: [0, 0, 0, 0, 0],
     required: [true, true, true, false, false],
   },
 
   {
     id: 2,
-    meal: 'Soup',
+    meal: "Soup",
     price: 200.99,
     image: require("../images/eatable-foods/egusi_eba.jpeg"),
     details: "Tasty, yummy with crunchy chickens, with mix 100% fresh beef",
-    preferenceTitle: ['Choose your 2 d dips', 'Choose your 1st drink flavour', 'Would you like extra source?', 'would you like add our tasty Beefs/chicken variety?'],
-    preferenceData: [
-      
-        [{id: 10,name: 'White Soup',price: 200, checked: false},
-          {id: 11,name: 'Egusi Soup',price: 500, checked: false},
-          {id: 12,name: 'Egusi Soup',price: 400, checked: false},
-        ],
-        [{id: 13,name: 'Small Coke',price: 200, checked: false},
-          {id: 14,name: 'Zero Coke',price: 200, checked: false},
-          {id: 15,name: 'Fearless',price: 200, checked: false},
-        ],
-        [{id: 16,name: 'Goat Meat',price: 200, checked: false},
-          {id: 17,name: 'Cow Meat',price: 500, checked: false},
-          {id: 18,name: 'Full chicken',price: 400, checked: false},
-        ],
+    preferenceTitle: [
+      "Choose your 2 d dips",
+      "Choose your 1st drink flavour",
+      "Would you like extra source?",
+      "would you like add our tasty Beefs/chicken variety?",
     ],
-    minimum_quantity: [2,1,1, null, null],
-    counter: [0,0,0,0,0],
+    preferenceData: [
+      [
+        { id: 10, name: "White Soup", price: 200, checked: false },
+        { id: 11, name: "Egusi Soup", price: 500, checked: false },
+        { id: 12, name: "Egusi Soup", price: 400, checked: false },
+      ],
+      [
+        { id: 13, name: "Small Coke", price: 200, checked: false },
+        { id: 14, name: "Zero Coke", price: 200, checked: false },
+        { id: 15, name: "Fearless", price: 200, checked: false },
+      ],
+      [
+        { id: 16, name: "Goat Meat", price: 200, checked: false },
+        { id: 17, name: "Cow Meat", price: 500, checked: false },
+        { id: 18, name: "Full chicken", price: 400, checked: false },
+      ],
+    ],
+    minimum_quantity: [2, 1, 1, null, null],
+    counter: [0, 0, 0, 0, 0],
     required: [true, true, true, false, false],
   },
-]
+];
+
+export const customerOrders = [
+  {
+    id: 1,
+    phone: "555-1234",
+    shippingAddress1: "123 Main St",
+    shippingAddress2: "Apt 4B",
+    city: "Cityville",
+    zipCode: "12345",
+  },
+  {
+    id: 2,
+    phone: "555-5678",
+    shippingAddress1: "456 Oak St",
+    shippingAddress2: "Suite 302",
+    city: "Townsville",
+    zipCode: "67890",
+  },
+  {
+    id: 3,
+    phone: "555-9876",
+    shippingAddress1: "789 Pine St",
+    shippingAddress2: "Unit 10",
+    city: "Villagetown",
+    zipCode: "34567",
+  },
+  {
+    id: 4,
+    phone: "555-4321",
+    shippingAddress1: "876 Elm St",
+    shippingAddress2: "Apt 5C",
+    city: "Hamletsville",
+    zipCode: "54321",
+  },
+  {
+    id: 5,
+    phone: "555-8765",
+    shippingAddress1: "234 Cedar St",
+    shippingAddress2: "Suite 101",
+    city: "Burgville",
+    zipCode: "98765",
+  },
+];
 
 export function getShopData() {
-  return ShopData
-} 
+  return ShopData;
+}
 
 export function getRestaurantData(id) {
-  return PRODUCTS.find((product) => product.id === id)
+  return PRODUCTS.find((product) => product.id === id);
 }
