@@ -1,40 +1,42 @@
 import mongoose from "mongoose";
 
-const productDataSchema = new mongoose.Schema(
-  {
-    name: {
-      type: String,
-      // required: [true, "please provide your name"],
-    },
-    price: {
-      type: Number,
-      default: 0,
-    },
-    isFeatured: {
-      type: Boolean,
-    },
-    brand: {
-      type: String,
-      default: "",
-    },
-    description: {
-      type: String,
-      default: "",
-    },
-    countInStock: {
-      type: Number,
-      min: 0,
-      max: 255,
-    },
-    image: {
-      type: String,
-      default: "",
-    },
+const productDataSchema = new mongoose.Schema({
+  name: {
+    type: String,
+    required: true,
   },
-  {
-    timestamps: true,
-  }
-);
+  price: {
+    type: Number,
+    required: true,
+  },
+  image: {
+    type: String, // Assuming images are stored as file paths or URLs
+    required: true,
+  },
+  brand: {
+    type: String,
+  },
+  isFeatured: {
+    type: Boolean,
+    default: false,
+  },
+  description: {
+    type: String,
+    default: "",
+  },
+  countInStock: {
+    type: Number,
+    default: 0,
+  },
+  category: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "categories",
+  },
+  dateCreated: {
+    type: Date,
+    default: Date.now(),
+  },
+});
 
 productDataSchema.virtual("id").get(function () {
   return this._id.toHexString();

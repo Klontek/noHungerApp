@@ -14,7 +14,8 @@ import ErrorHandler from "./helpers/error-handler.js";
 import productRoutes from "./routes/products.js";
 import userRoutes from "./routes/users.js";
 import orderRoutes from "./routes/orders.js";
-import productDataRoutes from "./routes/productDatas.js";
+import shopDataRoutes from "./routes/shopDatas.js";
+import productDataRoutes from "./routes/productData.js";
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -49,6 +50,7 @@ app.use(`${api}/products`, productRoutes);
 app.use(`${api}/categories`, categoryRoutes);
 app.use(`${api}/users`, userRoutes);
 app.use(`${api}/orders`, orderRoutes);
+app.use(`${api}/shopDatas`, shopDataRoutes);
 app.use(`${api}/productDatas`, productDataRoutes);
 
 app.get("/", (req, res) => {
