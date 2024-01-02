@@ -36,7 +36,7 @@ export const addCategory = async (req, res) => {
       name: req.body.name,
       icon: req.body.icon,
       color: req.body.color,
-      image: req.body.image,
+      description: req.body.description,
     });
     res.status(201).json(newCategory);
   } catch (error) {
