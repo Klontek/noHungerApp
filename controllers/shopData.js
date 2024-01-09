@@ -21,7 +21,7 @@ const storage = multer.diskStorage({
       uploadError = null;
     }
 
-    cb(uploadError, "public/uploads"); //directory where image will be uploaded
+    cb(uploadError, "public/shopData"); //directory where image will be uploaded
   },
   filename: function (req, file, cb) {
     const fileName = file.originalname.split(" ").join("-");
@@ -84,7 +84,7 @@ export const addShopData = async (req, res) => {
       }
 
       const fileName = file.filename;
-      const basePath = `${req.protocol}://${req.get("host")}/public/uploads`;
+      const basePath = `${req.protocol}://${req.get("host")}/public/shopData`;
 
       const {
         ShopName,
