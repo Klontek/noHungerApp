@@ -19,7 +19,7 @@ const storage = multer.diskStorage({
       uploadError = null;
     }
 
-    cb(uploadError, "public/uploads"); //directory where image will be uploaded
+    cb(uploadError, "public/productData"); //directory where image will be uploaded
   },
   filename: function (req, file, cb) {
     const fileName = file.originalname.split(" ").join("-");
@@ -142,7 +142,9 @@ export const addProductData = async (req, res) => {
       }
 
       const fileName = file.filename;
-      const basePath = `${req.protocol}://${req.get("host")}/public/uploads`;
+      const basePath = `${req.protocol}://${req.get(
+        "host"
+      )}/public/productData`;
 
       const {
         name,
@@ -200,7 +202,9 @@ export const updateProductData = async (req, res) => {
 
     if (file) {
       const fileName = file.filename;
-      const basePath = `${req.protocol}://${req.get("host")}/public/uploads`;
+      const basePath = `${req.protocol}://${req.get(
+        "host"
+      )}/public/productData`;
       imagePath = `${basePath}/${fileName}`;
     } else {
       imagePath = productData.image;
@@ -279,7 +283,9 @@ export const updateProductDataGalleryImages = async (req, res) => {
         });
       }
       const files = req.files;
-      const basePath = `${req.protocol}://${req.get("host")}/public/uploads`;
+      const basePath = `${req.protocol}://${req.get(
+        "host"
+      )}/public/productData`;
       let imagePaths = [];
 
       if (files) {
