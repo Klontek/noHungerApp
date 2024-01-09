@@ -22,6 +22,10 @@ function authJwt() {
         methods: ["GET", "OPTIONS"],
       }, // to exclude productData GET api as protected route
       {
+        url: /\/api\/v1\/shopDatas(.*)/,
+        methods: ["GET", "OPTIONS"],
+      }, // to exclude productData GET api as protected route
+      {
         url: /\/api\/v1\/categories(.*)/,
         methods: ["GET", "OPTIONS"],
       },
