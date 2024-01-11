@@ -9,9 +9,12 @@ const productDataSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
+  publicId: {
+    type: String,
+  },
   image: {
     type: String, // Assuming images are stored as file paths or URLs
-    required: true,
+    required: false,
   },
   brand: {
     type: String,

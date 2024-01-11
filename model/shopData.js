@@ -11,9 +11,12 @@ const shopDataSchema = new mongoose.Schema({
   businessAddress: {
     type: String,
   },
+  publicId: {
+    type: String,
+  },
   image: {
     type: String, // Assuming images are stored as file paths or URLs
-    default: "",
+    required: false,
   },
   rating: {
     type: Number,
