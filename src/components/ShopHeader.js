@@ -4,8 +4,8 @@ import { getShopData } from "../../assets/Data/data";
 import { colors } from "../global/styles";
 import { Icon } from "react-native-elements";
 
-export default function ShopHeader({ navigation, id }) {
-  const shopData = getShopData();
+export default function ShopHeader(props) {
+  // const shopData = getShopData();
   const currentValue = new Animated.Value(1);
 
   const [liked, setLiked] = useState(false);
@@ -25,10 +25,7 @@ export default function ShopHeader({ navigation, id }) {
 
   return (
     <View style={styles.container}>
-      <ImageBackground
-        style={styles.container}
-        source={shopData[id].images}
-      >
+      <ImageBackground style={styles.container} source={{ uri: props.image }}>
         <View style={styles.view1}>
           <View style={styles.view2}>
             <Icon
@@ -36,13 +33,13 @@ export default function ShopHeader({ navigation, id }) {
               type="material"
               color={colors.black}
               size={25}
-              onPress={() => navigation.goBack()}
+              onPress={() => props.navigation.goBack()}
             />
           </View>
 
           <View style={styles.view3}>
             <Icon
-              name={liked ? 'favorite' : 'favorite-border'}
+              name={liked ? "favorite" : "favorite-border"}
               type="material"
               color="red"
               size={30}

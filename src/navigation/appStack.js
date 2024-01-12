@@ -14,6 +14,7 @@ import RegisterBusinessScreen from "../screens/BusinessScreen/RegisterBusinessSc
 import { BannerSingleProduct } from "../screens/Products/BannerSingleProduct";
 import ProductDetail from "../screens/Products/ProductDetail";
 import CheckoutNavigator from "./CheckoutNavigator";
+import ChatScreen from "../screens/Chat/ChatScreen";
 // import AdminNavigator from "./AdminNavigator";
 // import CategoriesRestaurantScreen from "../screens/CategoriesRestaurantScreen"
 
@@ -34,6 +35,15 @@ export const AppStackFunction = () => {
       <App.Screen
         name="CartScreen"
         component={CartScreen}
+        options={() => ({
+          headerShown: true,
+          ...TransitionPresets.RevealFromBottomAndroid,
+        })}
+      />
+
+      <App.Screen
+        name="ChatScreen"
+        component={ChatScreen}
         options={() => ({
           headerShown: true,
           ...TransitionPresets.RevealFromBottomAndroid,

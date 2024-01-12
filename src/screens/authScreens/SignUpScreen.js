@@ -12,23 +12,29 @@ import Header from "../../components/Header";
 import { Button, Icon } from "react-native-elements";
 import { Formik } from "formik";
 import * as Animatable from "react-native-animatable";
-import { FIREBASE_AUTH } from "../../../db/firestore";
-import { createUserWithEmailAndPassword } from "firebase/auth";
+// import { FIREBASE_AUTH } from "../../../db/firestore";
+// import { createUserWithEmailAndPassword } from "firebase/auth";
 import Toast from "react-native-toast-message";
+import { Error } from "../../Shared/Error";
+
+import axios from "axios";
+import baseUrl from "../../../assets/Common/baseUrl";
 
 const initialValues = {
-  phone_number: "",
-  firstname: "",
-  lastname: "",
-  password: "",
+  name: "",
   email: "",
-  username: "",
+  password: "",
+  isAdmin: false,
+  street: "",
+  phone: "",
+  city: "",
 };
 
 export default function SignUpScreen({ navigation }) {
   const [passwordBlurred, setPasswordBlurred] = useState(false);
   const [passwordFocused, setPasswordFocused] = useState(false);
-  const auth = FIREBASE_AUTH;
+  const [error, setError] = useState("");
+  // const auth = FIREBASE_AUTH;
 
   const handleSignUpError = (errorCode) => {
     switch (errorCode) {
@@ -41,51 +47,115 @@ export default function SignUpScreen({ navigation }) {
     }
   };
 
-  async function SignUp(values) {
-    const { email, password } = values;
+  // async function SignUp(values) {
+  //   const { email, password } = values;
 
+  //   try {
+  //     const response = await createUserWithEmailAndPassword(
+  //       auth,
+  //       email,
+  //       password
+  //     );
+  //     console.log("USER ACCOUNT CREATED");
+  //     if (response) {
+  //       Toast.show({
+  //         topOffset: 60,
+  //         type: "success",
+  //         text1: "Registration Successful",
+  //         text2: "Please login into your account",
+  //       });
+  //     }
+  //     // Alert.alert('USER ACCOUNT CREATED')
+
+  //     // Check authentication state
+  //     const user = auth.currentUser;
+  //     if (user) {
+  //       // Alert.alert('User signed in');
+  //       Toast.show({
+  //         topOffset: 60,
+  //         type: "success",
+  //         text1: "User Signed in",
+  //       });
+  //     } else {
+  //       // Alert.alert('User not signed in');
+  //       Toast.show({
+  //         topOffset: 60,
+  //         type: "error",
+  //         text1: "User not Signed in",
+  //       });
+  //     }
+  //   } catch (error) {
+  //     const errorMessage = handleSignUpError(error.code);
+  //     // Alert.alert(errorMessage);
+  //     Toast.show({
+  //       topOffset: 60,
+  //       type: "error",
+  //       text1: "Invalid Entry",
+  //       text2: "Please Fill in the form correctly"
+  //     });
+  //   }
+  // }
+
+  async function SignUp(values) {
     try {
-      const response = await createUserWithEmailAndPassword(
-        auth,
-        email,
-        password
-      );
-      console.log("USER ACCOUNT CREATED");
-      if (response) {
+      const response = await axios.post(`${baseUrl}users/register`, values);
+      console.log("USER ACCOUNT CREATED", response.data);
+
+      if (response.status === 201) {
+        navigation.navigate("SignInScreen");
         Toast.show({
           topOffset: 60,
           type: "success",
           text1: "Registration Successful",
-          text2: "Please login into your account",
-        });
-      }
-      // Alert.alert('USER ACCOUNT CREATED')
-
-      // Check authentication state
-      const user = auth.currentUser;
-      if (user) {
-        // Alert.alert('User signed in');
-        Toast.show({
-          topOffset: 60,
-          type: "success",
-          text1: "User Signed in",
+          text2: "Please log in to your account",
         });
       } else {
-        // Alert.alert('User not signed in');
+        // Handle unexpected response status
+        console.error("Unexpected response status:", response.status);
         Toast.show({
           topOffset: 60,
           type: "error",
-          text1: "User not Signed in",
+          text1: "Signup Failed",
+          text2: "Unexpected response status",
         });
       }
     } catch (error) {
-      const errorMessage = handleSignUpError(error.code);
-      // Alert.alert(errorMessage);
-      Toast.show({
-        topOffset: 60,
-        type: "error",
-        text1: errorMessage,
-      });
+      console.error("Signup Error:", error);
+
+      if (error.response) {
+        // The request was made, but the server responded with a non-2xx status
+        console.error(
+          "Server responded with error status:",
+          error.response.status
+        );
+        console.error("Server response data:", error.response.data);
+
+        const errorMessage = handleSignUpError(error.response.data);
+        Toast.show({
+          topOffset: 60,
+          type: "error",
+          text1: "Signup Failed",
+          text2: errorMessage,
+        });
+      } else if (error.request) {
+        // The request was made but no response was received
+        console.error("No response received from the server");
+        Toast.show({
+          topOffset: 60,
+          type: "error",
+          text1: "Signup Failed",
+          text2: "No response received from the server",
+        });
+      } else {
+        // Something happened in setting up the request that triggered an Error
+        console.error("Error setting up the request:", error.message);
+        Toast.show({
+          topOffset: 60,
+          type: "error",
+          text1: "Signup Failed",
+          text2: "Error setting up the request",
+        });
+      }
     }
   }
 
@@ -100,10 +170,10 @@ export default function SignUpScreen({ navigation }) {
 
         <Formik
           initialValues={initialValues}
-          onSubmit={(values) => {
-            console.log("Form submitted with values:", values);
-            SignUp(values);
-          }}
+          onSubmit={(values) =>
+            // console.log("Form submitted with values:", values)
+            SignUp(values)
+          }
         >
           {(props) => (
             <View style={styles.view2}>
@@ -113,22 +183,11 @@ export default function SignUpScreen({ navigation }) {
 
               <View style={styles.view6}>
                 <TextInput
-                  placeholder="Phone Number"
-                  style={styles.input1}
-                  keyboardType="number-pad"
-                  autoFocus={true}
-                  onChangeText={props.handleChange("phone_number")}
-                  value={props.values.phone_number}
-                />
-              </View>
-
-              <View style={styles.view6}>
-                <TextInput
                   placeholder="Firstname"
                   style={styles.input1}
                   autoFocus={false}
-                  onChangeText={props.handleChange("firstname")}
-                  value={props.values.firstname}
+                  onChangeText={props.handleChange("name")}
+                  value={props.values.name}
                 />
               </View>
 
@@ -137,8 +196,8 @@ export default function SignUpScreen({ navigation }) {
                   placeholder="Lastname"
                   style={styles.input1}
                   autoFocus={false}
-                  onChangeText={props.handleChange("lastname")}
-                  value={props.values.lastname}
+                  onChangeText={props.handleChange("lastName")}
+                  value={props.values.lastName}
                 />
               </View>
 
@@ -199,6 +258,42 @@ export default function SignUpScreen({ navigation }) {
                 </Animatable.View>
               </View>
 
+              <View style={styles.view10}>
+                <View style={styles.view11}>
+                  <TextInput
+                    placeholder="Address"
+                    style={{ ...styles.input4, flex: 1, padding: 10 }}
+                    autoFocus={false}
+                    onChangeText={props.handleChange("street")}
+                    value={props.values.street}
+                  />
+                </View>
+              </View>
+
+              <View style={styles.view6}>
+                <TextInput
+                  placeholder="Phone Number"
+                  style={styles.input1}
+                  keyboardType="number-pad"
+                  autoFocus={true}
+                  onChangeText={props.handleChange("phone")}
+                  value={props.values.phone}
+                />
+              </View>
+
+              {/* city */}
+              <View style={styles.view10}>
+                <View style={styles.view11}>
+                  <TextInput
+                    placeholder="City"
+                    style={{ ...styles.input4, flex: 1, padding: 10 }}
+                    autoFocus={false}
+                    onChangeText={props.handleChange("city")}
+                    value={props.values.city}
+                  />
+                </View>
+              </View>
+
               <View style={styles.view15}>
                 <Text style={styles.text3}>
                   By Creating or loging into an account you are
@@ -212,6 +307,7 @@ export default function SignUpScreen({ navigation }) {
               </View>
 
               <View style={styles.view17}>
+                <View>{error ? <Error message={error} /> : null}</View>
                 <Button
                   title="Create my account"
                   buttonStyle={styles.button1}

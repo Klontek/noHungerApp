@@ -98,7 +98,7 @@ const AdminListItem = ({
         onLongPress={() => setModalVisible(true)}
       >
         <Image
-          source={image}
+          source={{ uri: image }}
           // source={
           //  image
           //  ? image

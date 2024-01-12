@@ -1,7 +1,6 @@
 import {
   Button,
   Dimensions,
-  Image,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -9,7 +8,7 @@ import {
 } from "react-native";
 import React from "react";
 import { colors, SIZES } from "../../global/styles";
-import { Icon } from "react-native-elements";
+import { Icon, Image } from "react-native-elements";
 import Toast from "react-native-toast-message";
 
 const SCREEN_WIDTH = Dimensions.get("window").width;
@@ -28,7 +27,7 @@ const ProductCard = ({
     <View>
       <View style={styles.container}>
         <View style={styles.imageContainer}>
-          <Image source={image} style={styles.image} />
+          <Image source={{ uri: image }} style={styles.image} />
         </View>
 
         <View style={styles.details}>

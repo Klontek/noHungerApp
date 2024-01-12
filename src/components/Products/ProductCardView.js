@@ -13,6 +13,7 @@ const ProductCardView = ({
   image,
   countInStock,
   index,
+  description,
   navigation,
   onAddToCart,
 }) => {
@@ -22,13 +23,13 @@ const ProductCardView = ({
       <TouchableOpacity
         onPress={() =>
           navigation.navigate("ProductDetail", {
-            item: { name, price, image, countInStock, index },
+            item: { name, price, image, countInStock, index, description },
           })
         }
       >
         <View style={styles.container}>
           <View style={styles.imageContainer}>
-            <Image source={image} style={styles.image} />
+            <Image source={{ uri: image }} style={styles.image} />
           </View>
 
           <View style={styles.details}>

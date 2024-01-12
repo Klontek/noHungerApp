@@ -56,7 +56,7 @@ export default function RootClientTabs() {
       />
 
       {/* conditionally render the Admin icon on the bottom tab navigator */}
-      {/* {context.stateUser.user.isAdmin == true ? (
+      {/* {context.stateUser.user.isAdmin ? (
         <ClientTabs.Screen
           name="Dashboard"
           component={AdminNavigator}

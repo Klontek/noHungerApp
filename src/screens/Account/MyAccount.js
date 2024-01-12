@@ -3,47 +3,43 @@ import React from "react";
 import { userData } from "../../../assets/Data/userData";
 import AntDesign from "react-native-vector-icons/AntDesign";
 
-
 const MyAccount = ({ navigation }) => {
   return (
-    
-      <View style={styles.container}>
-        <Image source={{ uri: userData.profilePic }} style={styles.image} />
-        <View style={{ justifyContent: "center", alignItems: "center" }}>
-          <Text style={styles.name}>
-            Hi
-            <Text style={{ color: "green" }}> {userData.name}</Text>
-            👋
-          </Text>
-          <Text>email : {userData.email}</Text>
-          <Text>contact : {userData.contact}</Text>
-        </View>
-        <View style={styles.btnContainer}>
-          <Text style={styles.heading}>Account Setting</Text>
-          <TouchableOpacity
-            style={styles.btn}
-            onPress={() => navigation.navigate("Profile", { id: userData._id })}
-          >
-            <AntDesign style={styles.btnText} name="edit" />
-            <Text style={styles.btnText}>Edit Profile</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.btn}
-            onPress={() =>
-              navigation.navigate("Myorders", { id: userData._id })
-            }
-          >
-            <AntDesign style={styles.btnText} name="bars" />
-            <Text style={styles.btnText}>My Orders</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.btn}
-            onPress={() => navigation.navigate("Notifications")}
-          >
-            <AntDesign style={styles.btnText} name="bells" />
-            <Text style={styles.btnText}>Notification</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
+    <View style={styles.container}>
+      <Image source={{ uri: userData.profilePic }} style={styles.image} />
+      <View style={{ justifyContent: "center", alignItems: "center" }}>
+        <Text style={styles.name}>
+          Hi
+          <Text style={{ color: "green" }}> {userData.name}</Text>
+          👋
+        </Text>
+        <Text>email : {userData.email}</Text>
+        <Text>contact : {userData.contact}</Text>
+      </View>
+      <View style={styles.btnContainer}>
+        <Text style={styles.heading}>Account Setting</Text>
+        <TouchableOpacity
+          style={styles.btn}
+          onPress={() => navigation.navigate("Profile", { id: userData._id })}
+        >
+          <AntDesign style={styles.btnText} name="edit" />
+          <Text style={styles.btnText}>Edit Profile</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.btn}
+          onPress={() => navigation.navigate("Myorders", { id: userData._id })}
+        >
+          <AntDesign style={styles.btnText} name="bars" />
+          <Text style={styles.btnText}>My Orders</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.btn}
+          onPress={() => navigation.navigate("Notifications")}
+        >
+          <AntDesign style={styles.btnText} name="bells" />
+          <Text style={styles.btnText}>Notification</Text>
+        </TouchableOpacity>
+        {/* <TouchableOpacity
             style={styles.btn}
             onPress={() =>
               navigation.navigate("Dashboard", { id: userData._id })
@@ -51,9 +47,9 @@ const MyAccount = ({ navigation }) => {
           >
             <AntDesign style={styles.btnText} name="windows" />
             <Text style={styles.btnText}>Admin Panel</Text>
-          </TouchableOpacity>
-        </View>
+          </TouchableOpacity> */}
       </View>
+    </View>
   );
 };
 

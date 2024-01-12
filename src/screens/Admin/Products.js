@@ -1,5 +1,4 @@
 import { useNavigation } from "@react-navigation/native";
-import axios from "axios";
 import React, { useState, useCallback, useEffect } from "react";
 import {
   StyleSheet,
@@ -18,10 +17,11 @@ import EasyButton from "../../Shared/StyledComponent";
 import AdminListItem from "./AdminListItem";
 // import ListItem from "./ListItem";
 
-// import { useFocusEffect } from '@react-navigation/native';
-// import axios from 'axios';
+import { useFocusEffect } from "@react-navigation/native";
+import axios from "axios";
 // import baseURL from '../../assets/common/baseUrl'
-// import AsyncStorage from "@react-native-async-storage/async-storage"
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import baseUrl from "../../../assets/Common/baseUrl";
 
 // ProductHeader
 
@@ -50,72 +50,102 @@ const ListHeader = () => {
 const { height, width } = Dimensions.get("window");
 
 const Products = () => {
-  const [data, setData] = useState([]);
-  const [search, setSearch] = useState("");
-  const navigation = useNavigation();
-  const [loading, setLoading] = useState(true);
+  // const [data, setData] = useState([]);
+  // const [search, setSearch] = useState("");
+  // const navigation = useNavigation();
+  // const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    // Simulate data fetching
-    const fetchData = async () => {
-      try {
-        const shopData = await getShopData();
-        setData(shopData);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      } finally {
-        setLoading(false); // Set loading to false after data is fetched (success or error)
-      }
-    };
+  // useEffect(() => {
+  //   // Simulate data fetching
+  //   const fetchData = async () => {
+  //     try {
+  //       const shopData = await getShopData();
+  //       setData(shopData);
+  //     } catch (error) {
+  //       console.error("Error fetching data:", error);
+  //     } finally {
+  //       setLoading(false); // Set loading to false after data is fetched (success or error)
+  //     }
+  //   };
 
-    fetchData();
-  }, []);
+  //   fetchData();
+  // }, []);
 
   // const updateSearch = () => {
   //   return;
   // };
-  // const [ProductList, setProductList] = useState();
-  // const [productFilter, setProductFilter] = useState();
-  //  const [loading, setLoading] = useState(true);
-  // const [token, setToken] = useState();
+  const [productList, setProductList] = useState();
+  const [productFilter, setProductFilter] = useState();
+  const [loading, setLoading] = useState(true);
+  const [token, setToken] = useState();
+  const navigation = useNavigation();
 
   // useFocusEffect(
-  //  useCallback(
-  //   () => {
-  //    // Get Token
-  //    AsyncStorage.getItem("jwt").then((res) => {
-  //     setToken(res).catch((error) => console.log(error))
-  //    })
+  //   useCallback(() => {
+  //     // Get Token
+  //     AsyncStorage.getItem("jwt").then((res) => {
+  //       setToken(res).catch((error) => console.log(error));
+  //     });
 
-  //    axios.get(`${baseURL}products`),then((res) => {
-  //     setProductList(res.data)
-  //     setProductFilter(res.data);
-  //     setLoading(false)
-  //    })
+  //     axios.get(`${baseUrl}productData`).then((res) => {
+  //       setProductList(res.data);
+  //       setProductFilter(res.data);
+  //       setLoading(false);
+  //     });
 
-  //    return () => {
-  //     setProductList()
-  //     setProductFilter()
-  //     setLoading(true)
-  //    }
-  //   },[]
-  //  )
-  // )
+  //     return () => {
+  //       setProductList();
+  //       setProductFilter();
+  //       setLoading(true);
+  //     };
+  //   }, [])
+  // );
+
+  useFocusEffect(
+    useCallback(() => {
+      // Get Token
+      AsyncStorage.getItem("jwt")
+        .then((res) => {
+          setToken(res); // No need for catch here
+        })
+        .catch((error) => console.log(error)); // Move the catch outside the setToken
+
+      axios
+        .get(`${baseUrl}productDatas`)
+        .then((res) => {
+          setProductList(res.data);
+          setProductFilter(res.data);
+          setLoading(false);
+        })
+        .catch((error) => {
+          console.log(error);
+          setLoading(false); // Make sure to set loading to false even in case of an error
+        });
+
+      return () => {
+        setProductList([]);
+        setProductFilter([]);
+        setLoading(true);
+      };
+    }, [])
+  );
 
   // Search functionality to filter searched products
-  // const searchProduct = (text) => {
-  //   if(text == "") {
-  //     setProductFilter(productList)
-  //   }
-  //   setProductFilter(
-  //     productList.filter((i) => i.name.toLowerCase().includes(text.toLowerCase()))
-  //   )
-  // }
+  const searchProduct = (text) => {
+    if (text == "") {
+      setProductFilter(productList);
+    }
+    setProductFilter(
+      productList.filter((i) =>
+        i.name.toLowerCase().includes(text.toLowerCase())
+      )
+    );
+  };
 
   // delete functionality for products
   const deleteProduct = (id) => {
     axios
-      .delete(`${baseUrl}products/${id}`, {
+      .delete(`${baseUrl}productData/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then((res) => {
@@ -188,17 +218,17 @@ const Products = () => {
         </View>
       ) : (
         <FlatList
-          data={data}
+          data={productList}
           ListHeaderComponent={ListHeader}
-          keyExtractor={(item) => item.id.$oid.toString()}
+          keyExtractor={(item) => item._id}
           renderItem={({ item, index }) => (
             <AdminListItem
-              brand={item.productData[0].brand}
-              itemName={item.productData[0].name}
-              categoryName={item.productData[0].category.name}
-              price={item.productData[0].price}
-              image={item.productData[0].image}
-              description={item.productData[0].description}
+              brand={item.brand}
+              itemName={item.name}
+              categoryName={item.category.name}
+              price={item.price}
+              image={item.image}
+              description={item.description}
               navigation={navigation}
               index={index}
               {...item}

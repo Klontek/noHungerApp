@@ -24,7 +24,8 @@ export const SingleProduct = ({
 }) => {
   const [item, setItem] = useState(route.params.item);
   const [availability, setAvailability] = useState("");
-  const { name, price, images, countInStock, description } = route.params.item;
+  const { shopName, price, image, countInStock, description } =
+    route.params.item;
 
   //carouse imports
   const [index, setIndex] = React.useState(0);
@@ -54,7 +55,7 @@ export const SingleProduct = ({
         key={index}
       >
         <Image
-          source={images}
+          source={{ uri: image }}
           style={{
             width: 300,
             height: 300,
@@ -148,7 +149,7 @@ export const SingleProduct = ({
           }}
         >
           <View style={{ width: "100%" }}>
-            <_renderItem item={images} index={0} />
+            <_renderItem item={{ uri: image }} index={0} />
 
             {/* <Carousel
               layout="default"
@@ -188,7 +189,7 @@ export const SingleProduct = ({
           </View>
         </View>
         <View style={{ paddingHorizontal: 20, paddingTop: 20 }}>
-          <Text style={{ fontSize: 15, fontWeight: "bold" }}>{name}</Text>
+          <Text style={{ fontSize: 15, fontWeight: "bold" }}>{shopName}</Text>
         </View>
         {/* set the number of lines to four but with a see more button*/}
         <View style={{ paddingHorizontal: 20 }}>
@@ -221,11 +222,11 @@ export const SingleProduct = ({
           </TouchableOpacity>
         </View>
 
-        <View style={{ paddingHorizontal: 20 }}>
+        {/* <View style={{ paddingHorizontal: 20 }}>
           <Text style={{ fontSize: 20, fontWeight: "bold" }}>
             ₦{JSON.stringify(price * 15)}
           </Text>
-        </View>
+        </View> */}
 
         <View style={{ padding: 20 }}>
           <ScreenButtons CartScreenName="CartScreen" />

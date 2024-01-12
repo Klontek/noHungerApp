@@ -2,32 +2,26 @@ import React, { useRef, useState, useContext, useEffect } from "react";
 
 import { View, Text, StyleSheet, Dimension, TextInput } from "react-native";
 import * as Animatable from "react-native-animatable";
-// import { Icon } from "react-native-elements";
 
 import { colors, parameters, title } from "../../global/styles";
 import Header from "../../components/Header";
 import { Button, Icon, SocialIcon } from "react-native-elements";
 
 import { Formik } from "formik";
-import { FIREBASE_AUTH } from "../../../db/firestore";
-import { signInWithEmailAndPassword } from "firebase/auth";
-import { SignInContext } from "../../contexts/authContext";
 import Toast from "react-native-toast-message";
+import { Error } from "../../Shared/Error";
 
 // Context
 import AuthGlobal from "../../contexts/store/AuthGlobal";
 import { loginUser } from "../../contexts/actions/Auth.action";
 
 export default function SignInScreen({ navigation }) {
-  const { dispatchSignedIn } = useContext(SignInContext);
-
   // from Context
   const context = useContext(AuthGlobal);
 
   const [textInput2Focused, setTextInput2focused] = useState(false);
   const textInput1 = useRef(1);
   const textInput2 = useRef(2);
-  const auth = FIREBASE_AUTH;
   const [error, setError] = useState("");
 
   // useEffect for Context
@@ -40,35 +34,25 @@ export default function SignInScreen({ navigation }) {
   async function signIn(data) {
     try {
       const { email, password } = data;
-      const user = await signInWithEmailAndPassword(auth, email, password);
 
       if (email === "" || password === "") {
         setError("please fill in your credentials");
       } else {
-        loginUser(user, context.dispatch);
-      }
-      if (user) {
-        // console.log({msg:'User Signed In', data:user});
+        loginUser(data, context.dispatch);
         Toast.show({
-          topOffset: 60,
+          topOffset: 50,
           type: "success",
-          text1: "User Signed In Successful",
-        });
-        dispatchSignedIn({
-          type: "UPDATE_SIGN_IN",
-          payload: { userToken: "signed-in" },
+          text1: `User Signed In`,
+          text2: "Loading...",
         });
       }
     } catch (error) {
       Toast.show({
-        topOffset: 60,
+        topOffset: 50,
         type: "error",
-        text1: `${error.code} ${error.message}`,
+        text1: `Invalid entry`,
+        text2: "Please Fill in the form correctly",
       });
-      // alert(
-      //   `Error: ${error.code}`,
-      //   `Message: ${error.message}`
-      // );
     }
   }
 
@@ -145,6 +129,8 @@ export default function SignInScreen({ navigation }) {
                 </Animatable.View>
               </View>
             </View>
+
+            <View>{error ? <Error message={error} /> : null}</View>
 
             <View style={{ marginHorizontal: 20, marginTop: 30 }}>
               <Button

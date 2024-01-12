@@ -122,7 +122,8 @@ const Categories = (props) => {
         <FlatList
           data={categories}
           renderItem={({ item, index }) => (
-            <Item item={item} index={index} delete={deleteCategory} />
+            // <Item item={item} index={index} delete={deleteCategory} />
+            <Item item={item} index={index} />
           )}
           keyExtractor={(item) => item.id}
         />

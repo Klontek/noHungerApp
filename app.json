@@ -4,12 +4,12 @@
     "slug": "noHungerApp",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/noHungerApp.png",
+    "icon": "./assets/newHungerLogo.png",
     "userInterfaceStyle": "light",
     "splash": {
-      "image": "./assets/splash.png",
+      "image": "./assets/newHungerLogo.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#000000"
     },
     "assetBundlePatterns": [
       "**/*"
@@ -17,7 +17,8 @@
     "ios": {
       "supportsTablet": true
     },
-    "android": {
+    "android": 
+    {
       "package": "com.klonTech.nohungerapp", 
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",

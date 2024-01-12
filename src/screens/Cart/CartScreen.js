@@ -65,7 +65,7 @@ const CartScreen = ({ navigation }) => {
 
           <View style={styles.bottomContainer}>
             <View>
-              <Text style={styles.price}>Total: #{total}</Text>
+              <Text style={styles.price}>Total: ₦{total}</Text>
             </View>
 
             <View>

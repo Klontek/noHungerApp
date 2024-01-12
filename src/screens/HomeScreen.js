@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import {
   View,
   StyleSheet,
@@ -11,12 +11,14 @@ import {
   Dimensions,
   TextInput,
 } from "react-native";
-import Countdown from "react-native-countdown-component";
+import { useFocusEffect } from "@react-navigation/native";
+import CountDown from "react-native-countdown-component";
+
 import { Icon } from "react-native-elements";
 import HomeHeader from "../components/HomeHeader";
 import { colors, SIZES } from "../global/styles";
-import { getShopData, productFilter } from "../../assets/Data/data";
-import { Image } from "react-native-elements/dist/image/Image";
+// import { getShopData, productFilter } from "../../assets/Data/data";
+import { Image } from "react-native-elements";
 import FoodCard from "../components/FoodCard";
 import ProductList from "./Products/ProductList";
 import Banner from "../components/Banner";
@@ -26,15 +28,20 @@ import { CarouselComponent } from "../components/CarouselComponent";
 import Heading from "../components/Heading";
 import ProductsComponent from "../components/Products/ProductsComponent";
 import { addItemToCart } from "../Redux/Actions";
+// import CategoryFilter from "../components/CategoryFilter";
 
-// import axios from "axios";
-// import baseUrl from "../../assets/Common/baseUrl";
+import axios from "axios";
+import baseUrl from "../../assets/Common/baseUrl";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import CategoriesComponent from "../components/CategoriesComponent";
 
 const SCREEN_WIDTH = Dimensions.get("window").width;
 
+const { height } = Dimensions.get("window");
+
 const HomeScreen = ({ navigation }, props) => {
   // const data = getShopData();
-  const [indexCheck, setIndexCheck] = useState("a12df2329dfjl89ppo3");
+  const [indexCheck, setIndexCheck] = useState("");
   const [delivery, setDelivery] = useState(true);
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
@@ -42,70 +49,150 @@ const HomeScreen = ({ navigation }, props) => {
   const [active, setActive] = useState();
   const [initialState, setInitialState] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [productData, setProductData] = useState([]);
+  const [shopData, setShopData] = useState([]);
+  const [focus, setFocus] = useState();
+  const [productFilter, setProductFilter] = useState([]);
 
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    setProducts(getShopData());
-    setLoading(false);
-
-    return () => {
-      setProducts([]);
-    };
-  }, []);
-
-  // sample
-  // const getProduct = () => {
-  //   axios
-  //     .get(`${baseUrl}products`)
-  //     .then((res) => {
-  //       setProducts(res.data);
-  //       // setInitialState(res.data);
-  //       console.log(res.data);
-  //     })
-  //     .catch((error) => {
-  //       console.log({ error: error, msg: "Api call error" });
-  //     });
+  // const getToken = async () => {
+  //   try {
+  //     const token = await AsyncStorage.getItem("jwt");
+  //     return token;
+  //   } catch (error) {
+  //     console.error("Error getting token:", error);
+  //     return null;
+  //   }
   // };
 
+  const getProduct = () => {
+    axios
+      .get(`${baseUrl}products`)
+      .then((res) => {
+        setProducts(res.data);
+        setLoading(false);
+        // setInitialState(res.data);
+        // console.log(res.data);
+      })
+      .catch((error) => {
+        console.log({ error: error, msg: "getProduct Api call error" });
+      });
+  };
+
+  const getProductData = () => {
+    axios
+      .get(`${baseUrl}productDatas`)
+      .then((res) => {
+        setProductData(res.data);
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.log({ error: error, msg: "product Data Api call error" });
+      });
+  };
+
+  const getShopData = async () => {
+    // const token = await getToken();
+    axios
+      .get(`${baseUrl}shopDatas`)
+      .then((res) => {
+        setShopData(res.data);
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.log({ error: error, msg: "shop Data Api call error" });
+      });
+    // if (token) {
+    //   try {
+    //     const response = await axios.get(`${baseUrl}shopDatas`, {
+    //       headers: { Authorization: `Bearer ${token}` },
+    //     });
+    //     console.log("Shop Data Response:", response.data);
+    //     setShopData(response.data);
+    //   } catch (error) {
+    //     console.error("Shop Data API Error:", error);
+    //   }
+    // }
+  };
+
   // Products Api
+  useFocusEffect(
+    useCallback(() => {
+      // setCategories(productFilter);
+      // setActive(-1);
+
+      getProduct();
+      // setLoading(false);
+      getProductData();
+      getShopData();
+      setFocus(false);
+      // setProductFilter(productData);
+
+      return () => {
+        setProducts([]);
+        setProductData([]);
+        setShopData([]);
+        setLoading(true);
+        // setProductFilter([]);
+        setFocus();
+      };
+    }, [])
+  );
+
+  // // Products Api
+  // useFocusEffect()
   // useEffect(() => {
   //   // setCategories(productFilter);
-  //   setActive(-1);
+  //   //   setActive(-1);
   //   getProduct();
   //   setLoading(false);
-
-  //   // axios
-  //   //   .get(`${baseUrl}products`)
-  //   //   .then((res) => {
-  //   //     setProducts(res.data);
-  //   //     setInitialState(res.data);
-  //   //     console.log(res.data);
-  //   //   })
-  //   //   .catch((error) => {
-  //   //     console.log({ error: error, msg: "Api call error" });
-  //   //   });
+  //   getProductData();
+  //   getShopData();
+  //   setFocus(false);
+  //   setProductFilter(productData);
 
   //   return () => {
   //     setProducts([]);
+  //     setProductData([]);
+  //     setShopData([]);
+  //     setProductFilter([]);
+  //     setFocus();
   //     // setCategories([]);
-  //     setActive();
+  //     // setActive();
   //     // setInitialState();
   //   };
   // }, []);
 
-  // products categories method
-  const changeCategories = (category) => {
-    category === "all"
-      ? setProductsCategories(initialState)
-      : setProductsCategories(
-          products.filter((item) => item.category.id.$oid === category)
-        );
-    setActive(true);
+  // search Product
+  // const SearchProduct = (text) => {
+  //   setProductFilter(
+  //     productData.filter((i) =>
+  //       i.name.toLowerCase().includes(text.toLowerCase())
+  //     )
+  //   );
+  // };
+
+  const openList = () => {
+    setFocus(true);
   };
+  // const openBlur = () => {
+  //   setFocus(false);
+  // };
+  // products categories method
+  // const changeCategories = (category) => {
+  //   category === "all"
+  //     ? setProductsCategories(initialState, setActive(true))
+  //     : [
+  //     setProductsCategories(
+  //         products.filter((item) => item.category.id.$oid === category),
+  //     setActive(true)
+  //       )
+  //     ]
+  // };
 
   const items = useSelector((state) => state);
-  console.log(items);
+  // console.log(items);
 
   // const handleAddToCart = () => {
   //   // Dispatch an action to add the current item to the cart
@@ -113,7 +200,12 @@ const HomeScreen = ({ navigation }, props) => {
   // };
   return (
     <>
-      {loading == false ? (
+      {loading ? (
+        //loading
+        <View style={[styles.spinner, { backgroundColor: "#f2f2f2" }]}>
+          <ActivityIndicator size="large" color="red" />
+        </View>
+      ) : (
         <View style={styles.container}>
           <HomeHeader navigation={navigation} />
 
@@ -185,7 +277,6 @@ const HomeScreen = ({ navigation }, props) => {
                 </TouchableOpacity>
               </View>
             </View>
-
             {/* Address and Now header */}
             <View style={styles.filterHeader}>
               <View style={styles.addressHeader}>
@@ -202,7 +293,7 @@ const HomeScreen = ({ navigation }, props) => {
                     color={colors.gray7}
                     size={26}
                   />
-                  <Text style={{ marginLeft: 5 }}>24 Iddo street Uniabuja</Text>
+                  <Text style={{ marginLeft: 5 }}>UniAbuja</Text>
                 </View>
 
                 <View style={styles.clockHeader}>
@@ -225,6 +316,7 @@ const HomeScreen = ({ navigation }, props) => {
                     type="material-community"
                     size={SIZES.xLarge}
                     // color={colors.offWhite}
+                    onPress={() => navigation.navigate("UploadForm")}
                   />
                 </TouchableOpacity>
               </View>
@@ -235,7 +327,6 @@ const HomeScreen = ({ navigation }, props) => {
             <Icon type="material-community" name="tune" color={colors.gray7} size={26} />
           </Pressable> */}
             </View>
-
             {/* Search section */}
             <View>
               <View style={styles.searchContainer}>
@@ -251,38 +342,39 @@ const HomeScreen = ({ navigation }, props) => {
                 <View style={styles.searchWrapper}>
                   <TextInput
                     value=""
+                    onFocus={openList}
                     onPressIn={() => navigation.navigate("Search")}
-                    placeholder="What are you looking for?
-                "
+                    placeholder="What are you looking for?"
+                    // onChangeText={(text) => searchProduct(text)}
                     style={styles.searchInput}
                   />
                 </View>
               </View>
             </View>
-
+            {/* {focus == true ? (
+            ): ()} */}
             {/* Carousel section */}
-
             <View>
               <FlatList
                 showsHorizontalScrollIndicator={false}
                 style={{ marginTop: 10, marginBottom: 10 }}
                 horizontal={true}
-                data={products}
-                keyExtractor={(item, index) => index.toString()}
+                data={productData}
+                keyExtractor={(item, index) => item._id}
                 renderItem={({ item }) => (
                   <View style={{ margin: 5 }}>
                     <Banner
-                      id={item.id.$oid}
+                      id={item._id}
                       screenWidth={SCREEN_WIDTH * 0.8}
-                      images={item.images}
+                      image={item.image}
                       shopName={item.ShopName}
                       farAway={item.farAway}
                       businessAddress={item.businessAddress}
                       rating={item.rating}
                       numReview={item.numReviews}
-                      countInStock={item.productData[0].countInStock}
-                      price={item.productData[0].price}
-                      description={item.productData[0].description}
+                      countInStock={item.countInStock}
+                      // price={item.productData.price}
+                      // description={item.productData.description}
                       // navigation={navigation}
                       item={item}
                     />
@@ -290,65 +382,29 @@ const HomeScreen = ({ navigation }, props) => {
                 )}
               />
             </View>
-
             {/* <CarouselComponent/> */}
-
-            {/* Featured Products section */}
-            <View style={styles.categoryHeader}>
-              {/* <Text style={styles.categoryHeaderProductsComponentText}>New Arrival</Text> */}
-              <Heading />
-              <ProductsComponent />
-            </View>
-
+            {/* category Filter */}
+            {/* <View>
+              <CategoryFilter 
+                categories={categories}
+                categoryFilter={changeCategories}
+                productCategories={productsCategories}
+                active={active}
+                setActive={setActive}
+              />
+            </View> */}
             {/* Categories section */}
             <View style={styles.categoryHeader}>
               <Text style={styles.categoryHeaderText}>Categories</Text>
             </View>
+            {/* categories component */}
+            <CategoriesComponent navigation={navigation} />
 
-            <Text>Products</Text>
-            <View>
-              <FlatList
-                horizontal
-                showsHorizontalScrollIndicator={false}
-                data={products}
-                keyExtractor={(item) => item.id.$oid}
-                renderItem={({ item }) => (
-                  <Pressable
-                    onPress={() => {
-                      setIndexCheck(item.id.$oid);
-                      navigation.navigate("CategoriesRestaurantScreen", {
-                        item: item.ShopName,
-                      });
-                    }}
-                  >
-                    <View
-                      style={
-                        indexCheck === item.id.$oid
-                          ? { ...styles.categoriesCardSelected }
-                          : { ...styles.categoriesCard }
-                      }
-                    >
-                      <Image
-                        style={{ height: 60, width: 60, borderRadius: 30 }}
-                        source={item.productData[0].image} // Use the image of the first product
-                      />
-
-                      <View>
-                        <Text
-                          style={
-                            indexCheck === item.id.$oid
-                              ? { ...styles.categoriesCardTextSelected }
-                              : { ...styles.categoriesCardText }
-                          }
-                        >
-                          {item.productData[0].name}{" "}
-                          {/* Use the name of the first product */}
-                        </Text>
-                      </View>
-                    </View>
-                  </Pressable>
-                )}
-              />
+            {/* New Arrival section */}
+            <View style={styles.categoryHeader}>
+              {/* <Text style={styles.categoryHeaderProductsComponentText}>New Arrival</Text> */}
+              <Heading />
+              <ProductsComponent />
             </View>
 
             {/* Promotions Available section */}
@@ -357,7 +413,6 @@ const HomeScreen = ({ navigation }, props) => {
                 Promotions Available
               </Text>
             </View>
-
             <View>
               <View style={{ flexDirection: "row" }}>
                 <Text
@@ -370,36 +425,45 @@ const HomeScreen = ({ navigation }, props) => {
                 >
                   Options changing in
                 </Text>
-                <Countdown
-                  until={86400}
+                {/* <CountDown
+                  until={86500}
                   size={14}
+                  onFinish={() => console.log("Countdown finished")}
                   digitStyle={{ backgroundColor: colors.lightGreen }}
                   digitTxtStyle={{ color: colors.CardBackground }}
-                  timeToShow={["D", "M", "S"]}
-                  timeLabels={{ d: "Days", m: "Min", s: "Sec" }}
-                />
+                  timeToShow={["D", "H", "M", "S"]}
+                  timeLabels={{ d: "Days", h: "Hours", m: "Min", s: "Sec" }}
+                /> */}
               </View>
 
               <FlatList
                 showsHorizontalScrollIndicator={false}
                 style={{ marginTop: 10, marginBottom: 10 }}
                 horizontal={true}
-                data={products}
-                keyExtractor={(item, index) => index.toString()}
+                data={shopData}
+                keyExtractor={(item, index) => item._id}
                 renderItem={({ item }) => (
                   <View style={{ margin: 5 }}>
                     <FoodCard
-                      id={item.id.$oid}
+                      id={item._id}
                       screenWidth={SCREEN_WIDTH * 0.8}
-                      images={item.images}
+                      image={item.image}
                       shopName={item.ShopName}
                       farAway={item.farAway}
                       businessAddress={item.businessAddress}
                       rating={item.rating}
-                      numReview={item.numReviews}
-                      countInStock={item.productData[0].countInStock}
-                      price={item.productData[0].price}
-                      description={item.productData[0].description}
+                      numReviews={item.numReviews}
+                      discount={item.discount}
+                      collectTimes={item.collectTimes}
+                      deliveryTimes={item.deliveryTimes}
+                      foodType={item.foodType}
+                      countInStock={
+                        item.productData ? item.productData.countInStock : 0
+                      }
+                      price={item.productData ? item.productData.price : 0}
+                      description={
+                        item.productData ? item.productData.description : ""
+                      }
                       navigation={navigation}
                       item={item}
                     />
@@ -407,7 +471,6 @@ const HomeScreen = ({ navigation }, props) => {
                 )}
               />
             </View>
-
             {/* Promotions Available section
         <View style={styles.categoryHeader}>
           <Text style={styles.categoryHeaderText}>Promotions Available</Text>
@@ -435,7 +498,6 @@ const HomeScreen = ({ navigation }, props) => {
             )}
           />
         </View> */}
-
             {/* Shop Product section */}
             <View style={styles.categoryHeader}>
               <Text style={styles.categoryHeaderText}>Featured Products</Text>
@@ -446,18 +508,18 @@ const HomeScreen = ({ navigation }, props) => {
               scrollEnabled={false}
               style={{ marginTop: 10, marginBottom: 10 }}
               data={products}
-              keyExtractor={(item, index) => index.toString()}
+              keyExtractor={(item, index) => item._id}
               renderItem={({ item, index }) => (
                 <View style={{ margin: 5 }}>
                   <ProductList
                     index={index}
                     item={item}
                     navigation={navigation}
-                    key={item.productData[0].id}
-                    name={item.productData[0].name}
-                    price={item.productData[0].price}
-                    image={item.productData[0].image}
-                    countInStock={item.productData[0].countInStock}
+                    key={item._id}
+                    name={item.name}
+                    price={item.price}
+                    image={item.image}
+                    countInStock={item.countInStock}
                     onAddToCart={(x) => {
                       dispatch(addItemToCart(x));
                     }}
@@ -465,25 +527,22 @@ const HomeScreen = ({ navigation }, props) => {
                 </View>
               )}
             />
-
             {/* Restaurant in your Area Section */}
             <View style={styles.categoryHeader}>
-              <Text style={styles.categoryHeaderText}>
-                Restaurants in Your Area
-              </Text>
+              <Text style={styles.categoryHeaderText}>Stores in Your Area</Text>
             </View>
-
             <View style={{ paddingTop: 10, width: SCREEN_WIDTH }}>
-              {products.map((item) => (
-                <View key={item.id.$oid} style={{ paddingBottom: 20 }}>
+              {shopData.map((item) => (
+                <View key={item._id} style={{ paddingBottom: 20 }}>
                   <FoodCard
                     screenWidth={SCREEN_WIDTH * 0.95}
-                    images={item.images}
+                    image={item.image}
                     shopName={item.ShopName}
                     farAway={item.farAway}
                     businessAddress={item.businessAddress}
                     rating={item.rating}
                     numReview={item.numReviews}
+                    navigation={navigation}
                   />
                 </View>
               ))}
@@ -493,22 +552,18 @@ const HomeScreen = ({ navigation }, props) => {
           {delivery && (
             <View style={styles.floatButton}>
               <TouchableOpacity
-                onPress={() => navigation.navigate("ShopMapScreen")}
+                onPress={() => navigation.navigate("ChatScreen")}
               >
                 <Icon
                   type="material"
-                  name="place"
+                  name="chat"
                   color={colors.buttons}
                   size={32}
+                  style={{ marginTop: 10 }}
                 />
               </TouchableOpacity>
             </View>
           )}
-        </View>
-      ) : (
-        //loading
-        <View style={[styles.container, { backgroundColor: "#f2f2f2" }]}>
-          <ActivityIndicator size="large" color="red" />
         </View>
       )}
     </>
@@ -554,7 +609,7 @@ const styles = StyleSheet.create({
     paddingVertical: 5,
   },
   categoryHeader: {
-    backgroundColor: colors.gray5,
+    backgroundColor: colors.secondary,
     paddingVertical: 3,
     marginBottom: SIZES.medium,
   },
@@ -597,7 +652,9 @@ const styles = StyleSheet.create({
     right: 15,
     bottom: 10,
     elevation: 10,
-    borderRadius: 30,
+    width: 50,
+    height: 50,
+    borderRadius: 20,
     backgroundColor: colors.CardBackground,
     alignContent: "center",
   },
@@ -632,6 +689,11 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: colors.primary,
+  },
+  spinner: {
+    height: height / 2,
+    alignItems: "center",
+    justifyContent: "center",
   },
 });
 

@@ -25,7 +25,14 @@ const Profile = ({ navigation }) => {
 
   //   update profile
   const handleUpdate = () => {
-    if (!email || !password || !name || !address || !city || !contact) {
+    if (
+      !email || 
+      !password || 
+      !name || 
+      !address ||
+      !city || 
+      !contact
+      ) {
       return alert("Please provide all fields");
     }
     alert("profile update Successfully");

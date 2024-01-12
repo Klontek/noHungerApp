@@ -1,6 +1,7 @@
 import {
   FlatList,
   StyleSheet,
+  ActivityIndicator,
   Text,
   TouchableOpacity,
   View,
@@ -13,22 +14,50 @@ import { getShopData } from "../../../assets/Data/data";
 import { useNavigation } from "@react-navigation/native";
 import { useDispatch, useSelector } from "react-redux";
 import { addItemToCart } from "../../Redux/Actions";
+import axios from "axios";
+import baseUrl from "../../../assets/Common/baseUrl";
+import { Icon, Image } from "react-native-elements";
 
-const dataset = getShopData();
+// const dataset = getShopData();
 
 const ProductsComponent = () => {
   const navigation = useNavigation();
   const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   const dispatch = useDispatch();
 
+  // useEffect(() => {
+  //   // Concatenate products from all shops in the dataset
+  //   const allProducts = dataset.reduce(
+  //     (allProds, shop) => allProds.concat(shop.productData),
+  //     []
+  //   );
+  //   setProducts(allProducts);
+
+  //   return () => {
+  //     setProducts([]);
+  //   };
+  // }, []);
+
+  const getProduct = () => {
+    axios
+      .get(`${baseUrl}productDatas`)
+      .then((res) => {
+        setProducts(res.data);
+        // console.log(res.data.image);
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.log({
+          error: error,
+          msg: "Api call error",
+        });
+      });
+  };
+
   useEffect(() => {
-    // Concatenate products from all shops in the dataset
-    const allProducts = dataset.reduce(
-      (allProds, shop) => allProds.concat(shop.productData),
-      []
-    );
-    setProducts(allProducts);
+    getProduct();
 
     return () => {
       setProducts([]);
@@ -36,12 +65,12 @@ const ProductsComponent = () => {
   }, []);
 
   const items = useSelector((state) => state);
-  console.log(items);
+  // console.log(items.image);
   return (
     <View style={styles.container}>
       <FlatList
         data={products}
-        keyExtractor={(item) => item.id.$oid}
+        keyExtractor={(item) => item._id}
         showsHorizontalScrollIndicator={false}
         renderItem={({ item, index }) => (
           <ProductCardView
@@ -52,6 +81,7 @@ const ProductsComponent = () => {
             countInStock={item.countInStock}
             index={index}
             navigation={navigation}
+            description={item.description}
             onAddToCart={(x) => {
               dispatch(addItemToCart(x));
             }} // Pass the navigation prop to ProductCardView

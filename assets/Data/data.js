@@ -907,6 +907,85 @@ export const menuDetailedData = [
   },
 ];
 
+export const productCategories = [
+  {
+    _id: 1,
+    name: "Local Delicacies",
+    icon: "local-delicacy-icon",
+    color: "#color",
+    description: `
+      Jollof Rice
+      Egusi Soup,
+      Banga Soup,
+      Draw Soup
+      Puff-Puff
+      Akara
+      Suya
+      Moi Moi
+    `,
+  },
+  {
+    _id: 2,
+    name: "Rice Dishes",
+    icon: "Rice-Dishes-icon",
+    color: "#color",
+    description: `
+      Fried Rice
+      Coconut Rice
+      Ofada Rice and Ayamase Sauce
+      Native Rice
+      Abak Atama (Palm Fruit Rice)
+    `,
+  },
+  {
+    _id: 3,
+    name: "Staple Food",
+    icon: "staple-food-icon",
+    color: "#color",
+    description: `
+      Raw rice,
+      Raw beans,
+      yam,
+      raw garri,
+      other
+    `,
+  },
+  {
+    _id: 4,
+    name: "Sweeteners",
+    icon: "sweetener-icon",
+    color: "#color",
+    description: `
+      Sugar,
+      Groundnut,
+      kulikuli,
+      coconut,
+    `,
+  },
+  {
+    _id: 6,
+    name: "Other",
+    icon: "other-icon",
+    color: "#color",
+    description: `
+      Biscuits,
+      Package goods,
+      miscellenous
+    `,
+  },
+  {
+    _id: 7,
+    name: "Beverage",
+    icon: "beverage-icon",
+    color: "#color",
+    description: `
+      Kunu,
+      Zobo,
+      other drinks
+    `,
+  },
+];
+
 export const customerOrders = [
   {
     id: 1,

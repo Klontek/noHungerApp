@@ -11,7 +11,7 @@ const ProductDetail = ({ route, navigation, navigation: { goBack } }) => {
   const [count, setCount] = useState(1);
   const [item, setItem] = useState(route.params.item);
   const [availability, setAvailability] = useState(null);
-  const { index, name, price, images, countInStock, description } =
+  const { index, name, price, image, countInStock, description } =
     route.params.item;
   const [availabilityText, setAvailabilityText] = useState("");
 
@@ -56,7 +56,7 @@ const ProductDetail = ({ route, navigation, navigation: { goBack } }) => {
         </TouchableOpacity>
       </View>
 
-      <Image key={index} source={images} style={styles.image} />
+      <Image key={index} source={{ uri: image }} style={styles.image} />
 
       <View style={styles.details}>
         <View style={styles.titleRow}>
@@ -123,7 +123,7 @@ const ProductDetail = ({ route, navigation, navigation: { goBack } }) => {
           <View style={styles.location}>
             <View style={{ flexDirection: "row" }}>
               <Icon name="place" type="material" size={20} />
-              <Text> Iddo street</Text>
+              <Text> Location</Text>
             </View>
 
             <View style={{ flexDirection: "row" }}>
@@ -132,16 +132,29 @@ const ProductDetail = ({ route, navigation, navigation: { goBack } }) => {
                 type="material-community"
                 size={20}
               />
-              <Text> Free Delivery</Text>
+              <Text>
+                {" "}
+                Free Delivery{" "}
+                <Text style={{ fontSize: 10, color: colors.buttons }}>
+                  {" "}
+                  Coming Soon!
+                </Text>
+              </Text>
             </View>
           </View>
         </View>
 
         <View style={styles.cartRow}>
-          <TouchableOpacity onPress={() => {}} style={styles.cartBtn}>
+          <TouchableOpacity
+            onPress={() => navigation.navigate("Checkout")}
+            style={styles.cartBtn}
+          >
             <Text style={styles.cartTitle}>BUY NOW</Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => {}} style={styles.addCart}>
+          <TouchableOpacity
+            onPress={() => navigation.navigate("CartScreen")}
+            style={styles.addCart}
+          >
             <Icon
               type="material-community"
               name="basket"
