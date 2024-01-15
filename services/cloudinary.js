@@ -1,12 +1,6 @@
 import { v2 as cloudinary } from "cloudinary";
 import dotenv from "dotenv";
 
-// Configure Cloudinary
-// cloudinary.config({
-//   cloud_name: "dzf4sqvow",
-//   api_key: "692992372292581",
-//   api_secret: "UMcY9Gk_ANhraHPGjQY9ge16bYw",
-// });
 dotenv.config();
 cloudinary.config({
   cloud_name: process.env.CLOUD_NAME,
@@ -14,7 +8,6 @@ cloudinary.config({
   api_secret: process.env.API_SECRET,
 });
 
-// Cloudinary upload function
 // Cloudinary upload function
 export const uploadToCloudinary = (buffer, folder) => {
   return new Promise((resolve, reject) => {

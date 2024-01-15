@@ -24,16 +24,16 @@ function authJwt() {
       {
         url: /\/api\/v1\/shopDatas(.*)/,
         methods: ["GET", "OPTIONS"],
-      }, // to exclude productData GET api as protected route
+      }, // to exclude shopData GET api as protected route
       {
         url: /\/api\/v1\/categories(.*)/,
         methods: ["GET", "OPTIONS"],
       },
-      // the orders route is a protected route so the below exclusion is temporary
-      {
-        url: /\/api\/v1\/orders(.*)/,
-        methods: ["GET", "OPTIONS"],
-      },
+      // // the orders route is a protected route so the below exclusion is temporary
+      // {
+      //   url: /\/api\/v1\/orders(.*)/,
+      //   methods: ["GET", "OPTIONS"],
+      // },
       `${api}/users/login`, //to exclude login api as protected route
       `${api}/users/register`, //to exclude signup api as protected route
     ],
