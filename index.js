@@ -54,9 +54,10 @@ app.use(`${api}/users`, isAuthorize, userRoutes);
 app.use(`${api}/orders`, orderRoutes);
 app.use(`${api}/shopDatas`, shopDataRoutes);
 app.use(`${api}/productDatas`, productDataRoutes);
-app.use(`${api}/upload-profile`, isAuthorize, uploadProfile);
+app.use(`${api}/upload-profile`, uploadProfile);
 app.use(`${api}/sign-out`, isAuthorize, signOut);
 // app.use(`${api}/profile`, isAuthorize, getProfile);
+// app.use(`${api}/upload-profile`, isAuthorize, uploadProfile);
 
 app.get("/", (req, res) => {
   res.send("Welcome to Restful API!");
