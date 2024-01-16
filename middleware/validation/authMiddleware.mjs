@@ -12,8 +12,9 @@ export const isAuthorize = async (req, res, next) => {
 
     try {
       const decode = jwt.verify(token, jwt_secret);
+      console.log("Decoded Token:", decode);
 
-      const user = await userModel.findById(decode.userId);
+      const user = await userModel.findById(decode.userId).select("+token");
       if (!user) {
         return res.status(400).json({
           success: false,

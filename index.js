@@ -50,7 +50,7 @@ const api = process.env.API;
 
 app.use(`${api}/products`, productRoutes);
 app.use(`${api}/categories`, categoryRoutes);
-app.use(`${api}/users`, isAuthorize, userRoutes);
+app.use(`${api}/users`, userRoutes);
 app.use(`${api}/orders`, orderRoutes);
 app.use(`${api}/shopDatas`, shopDataRoutes);
 app.use(`${api}/productDatas`, productDataRoutes);
