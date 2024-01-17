@@ -17,7 +17,9 @@ import {
 import { Avatar, Button, Icon } from "react-native-elements";
 import { colors } from "../global/styles";
 import AuthGlobal from "../contexts/store/AuthGlobal";
-import { LogoutUser } from "../contexts/actions/Auth.action";
+// import { logOut } from "../../assets/Common/user";
+// import { useLogin } from "../contexts/LoginProvider";
+// import { LogoutUser } from "../contexts/actions/Auth.action";
 import { userData } from "../../assets/Data/userData";
 // import {FIREBASE_AUTH} from '../../db/firestore'
 // import {SignInContext} from "../contexts/authContext"
@@ -25,6 +27,7 @@ import { userData } from "../../assets/Data/userData";
 export default function DrawerContent(props) {
   const { dispatch } = useContext(AuthGlobal);
   const [profilePic, setProfilePic] = useState(userData.profilePic);
+  // const { setIsLoggedIn, profile, setLoginPending } = useLogin();
 
   async function signOut() {
     try {
@@ -33,22 +36,22 @@ export default function DrawerContent(props) {
     } catch (error) {
       console.error("Sign out error:", error);
     }
+    // }
+    // const auth = FIREBASE_AUTH;
+
+    // const {dispatchSignedIn} = useContext(SignInContext)
+
+    // async function signOut() {
+    //   try{
+    //     auth.signOut().then(() => {
+    //       console.log('USER SUCCESSFULLY SIGNED OUT')
+    //       dispatchSignedIn({type: 'UPDATE_SIGN_IN', payload: {userToken: null}})
+    //     })
+
+    //   }catch(error){
+    //     Alert.alert(error.code)
+    //   }
   }
-  // const auth = FIREBASE_AUTH;
-
-  // const {dispatchSignedIn} = useContext(SignInContext)
-
-  // async function signOut() {
-  //   try{
-  //     auth.signOut().then(() => {
-  //       console.log('USER SUCCESSFULLY SIGNED OUT')
-  //       dispatchSignedIn({type: 'UPDATE_SIGN_IN', payload: {userToken: null}})
-  //     })
-
-  //   }catch(error){
-  //     Alert.alert(error.code)
-  //   }
-  // }
 
   return (
     <View style={styles.container}>
@@ -203,7 +206,15 @@ export default function DrawerContent(props) {
       {/* Drawer Sign Out section */}
       <TouchableOpacity>
         <DrawerItem
-          onPress={signOut}
+          onPress={() => signOut()}
+          // onPress={async () => {
+          //   setLoginPending(true);
+          //   const isLoggedOut = await logOut();
+          //   if (isLoggedOut) {
+          //     setIsLoggedIn(false);
+          //   }
+          //   setLoginPending(false);
+          // }}
           label="Log Out"
           icon={({ color, size }) => (
             <Icon

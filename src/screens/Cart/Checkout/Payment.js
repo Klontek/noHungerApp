@@ -145,9 +145,9 @@ const Payment = (props) => {
           <Button
             mode="contained"
             style={styles.button}
-            onPress={() =>
-              props.navigation.navigate("Confirm", { order: order })
-            }
+            // onPress={() =>
+            //   props.navigation.navigate("Confirm", { order: order })
+            // }
           >
             Confirm
           </Button>

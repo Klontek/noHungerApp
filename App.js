@@ -13,6 +13,7 @@ import { store } from "./store";
 
 //Context Api
 import Auth from "./src/contexts/store/Auth";
+// import LoginProvider from "./src/contexts/LoginProvider";
 
 export default function App() {
   return (

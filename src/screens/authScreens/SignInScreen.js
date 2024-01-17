@@ -1,6 +1,13 @@
 import React, { useRef, useState, useContext, useEffect } from "react";
 
-import { View, Text, StyleSheet, Dimension, TextInput } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Dimension,
+  TextInput,
+  Touchable,
+} from "react-native";
 import * as Animatable from "react-native-animatable";
 
 import { colors, parameters, title } from "../../global/styles";
@@ -9,192 +16,269 @@ import { Button, Icon, SocialIcon } from "react-native-elements";
 
 import { Formik } from "formik";
 import Toast from "react-native-toast-message";
-import { Error } from "../../Shared/Error";
 
 // Context
 import AuthGlobal from "../../contexts/store/AuthGlobal";
 import { loginUser } from "../../contexts/actions/Auth.action";
 
+import * as Yup from "yup";
+import FormSubmitButton from "../../components/AuthComponent/FormSubmitButton";
+import Error from "../../components/AuthComponent/Error";
+import axios from "axios";
+import baseUrl from "../../../assets/Common/baseUrl";
+import { TouchableOpacity } from "react-native-gesture-handler";
+import AppLoader from "../../components/AppLoader";
+import { signIn } from "../../../assets/Common/user";
+// import { useLogin } from "../../contexts/LoginProvider";
+
+const validationSchema = Yup.object({
+  email: Yup.string().email("Invalid email").required("Email is required"),
+  password: Yup.string()
+    .trim()
+    .min(8, "Password is too short!")
+    .required("password is required!"),
+});
+
 export default function SignInScreen({ navigation }) {
-  // from Context
+  // const { setIsLoggedIn, setProfile } = useLogin();
   const context = useContext(AuthGlobal);
-
   const [textInput2Focused, setTextInput2focused] = useState(false);
-  const textInput1 = useRef(1);
-  const textInput2 = useRef(2);
-  const [error, setError] = useState("");
+  const [userInfo, setUserInfo] = useState({
+    email: "",
+    password: "",
+  });
+  // const { setLoginPending } = useLogin();
+  // const [error, setError] = useState("");
+  // const { email, password } = userInfo;
 
-  // useEffect for Context
-  useEffect(() => {
-    if (context.stateUser.isAuthenticated === true) {
-      props.navigation.navigate("UserProfile");
-    }
-  }, [context.stateUser.isAuthenticated]);
+  async function SignIn(values, formikActions) {
+    // setLoginPending(true);
 
-  async function signIn(data) {
     try {
-      const { email, password } = data;
+      // console.log("Request Payload:", { email, password });
+      // const response = await signIn(userInfo.email, userInfo.password);
 
-      if (email === "" || password === "") {
-        setError("please fill in your credentials");
-      } else {
-        loginUser(data, context.dispatch);
+      const response = await loginUser({ ...values }, context.dispatch);
+      console.log("USER LOGGED IN", response);
+
+      if (response && response.status === 201 && response.data.success) {
         Toast.show({
-          topOffset: 50,
+          topOffset: 60,
           type: "success",
-          text1: `User Signed In`,
-          text2: "Loading...",
+          text1: `Welcome ${response.data.name}`,
+          text2: "Please log in to your account",
         });
+        formikActions.resetForm();
+        formikActions.setSubmitting(false);
+        // setLoginPending(false);
       }
     } catch (error) {
-      Toast.show({
-        topOffset: 50,
-        type: "error",
-        text1: `Invalid entry`,
-        text2: "Please Fill in the form correctly",
-      });
+      console.error("Error in SignInScreen:", error);
+
+      let errorMessage = "An unexpected error occurred. Please try again.";
+
+      if (error.response) {
+        // The request was made, but the server responded with a non-2xx status
+        console.error(
+          "Server responded with error status:",
+          error.response.status
+        );
+        errorMessage =
+          "Invalid credentials. Please check your email and password.";
+      } else if (error.request) {
+        // The request was made but no response was received
+        console.error("No response received from the server");
+        errorMessage =
+          "No response received from the server. Please try again.";
+      } else {
+        // Something happened in setting up the request that triggered an Error
+        console.error("Error setting up the request:", error.message);
+      }
+
+      // Toast.show({
+      //   topOffset: 60,
+      //   type: "error",
+      //   text1: "Sign-In Failed",
+      //   text2: errorMessage,
+      // });
+    } finally {
+      formikActions.resetForm();
+      formikActions.setSubmitting(false);
+      // setLoginPending(false);
     }
   }
 
   return (
-    <View style={styles.container}>
-      <Header title="MY ACCOUNT" type="arrow-left" navigation={navigation} />
+    <>
+      <View style={styles.container}>
+        <Header title="MY ACCOUNT" type="arrow-left" navigation={navigation} />
 
-      <View style={{ marginLeft: 20, marginTop: 10 }}>
-        <Text style={title}>Sign-In</Text>
-      </View>
+        <View style={{ marginLeft: 20, marginTop: 10 }}>
+          <Text style={title}>Sign-In</Text>
+        </View>
 
-      <View style={{ alignItems: "center", marginTop: 10 }}>
-        <Text style={styles.text1}>Please enter your email and password</Text>
-        <Text style={styles.text1}>Register with your account</Text>
-      </View>
+        <View style={{ alignItems: "center", marginTop: 10 }}>
+          <Text style={styles.text1}>Please enter your email and password</Text>
+          <Text style={styles.text1}>Register with your account</Text>
+        </View>
 
-      <Formik
-        initialValues={{ email: "", password: "" }}
-        onSubmit={(values) => {
-          signIn(values);
-        }}
-      >
-        {(props) => (
-          <View>
-            <View style={{ marginTop: 20 }}>
+        <Formik
+          initialValues={userInfo}
+          validationSchema={validationSchema}
+          onSubmit={SignIn}
+        >
+          {({
+            values,
+            errors,
+            touched,
+            isSubmitting,
+            handleChange,
+            handleBlur,
+            handleSubmit,
+          }) => {
+            const { email, password } = values;
+            return (
               <View>
-                <TextInput
-                  style={styles.TextInput1}
-                  placeholder="Email"
-                  ref={textInput1}
-                  onChangeText={props.handleChange("email")}
-                  value={props.values.email}
-                />
-              </View>
+                <View style={{ marginTop: 10 }}>
+                  <View style={{ flexDirection: "column" }}>
+                    <View style={styles.fieldLabelContainer}>
+                      <Text>Email/Username</Text>
+                      {touched.name && errors.name && (
+                        <Error message={errors.name} />
+                      )}
+                    </View>
+                    <View>
+                      <TextInput
+                        style={styles.TextInput1}
+                        placeholder="Email"
+                        // ref={textInput1}
+                        onChangeText={handleChange("email")}
+                        autoFocus={false}
+                        value={email}
+                        error={touched.email && errors.email}
+                        onBlur={handleBlur("email")}
+                      />
+                    </View>
+                  </View>
 
-              <View style={styles.TextInput2}>
-                <Animatable.View
-                  animation={textInput2Focused ? "" : "fadeInRight"}
-                  duration={400}
-                >
-                  <Icon
-                    name="lock"
-                    iconStyle={{ color: colors.gray4 }}
-                    type="material"
-                    style={{ marginRight: 10 }}
+                  <View style={{ flexDirection: "column" }}>
+                    <View style={styles.fieldLabelContainer}>
+                      <Text>Password</Text>
+                      {touched.password && errors.password && (
+                        <Error message={errors.password} />
+                      )}
+                    </View>
+
+                    <View style={styles.TextInput2}>
+                      <Animatable.View
+                        animation={textInput2Focused ? "" : "fadeInRight"}
+                        duration={400}
+                      >
+                        <Icon
+                          name="lock"
+                          iconStyle={{ color: colors.gray4 }}
+                          type="material"
+                          style={{ marginRight: 10 }}
+                        />
+                      </Animatable.View>
+
+                      <TextInput
+                        style={{ width: "80%" }}
+                        placeholder="********"
+                        // ref={textInput2}
+                        secureTextEntry={true}
+                        autoFocus={false}
+                        onBlur={handleBlur("password")}
+                        onChangeText={handleChange("password")}
+                        value={password}
+                        error={touched.password && errors.password}
+                      />
+
+                      <Animatable.View
+                        animation={textInput2Focused ? "" : "fadeInLeft"}
+                        duration={400}
+                      >
+                        <Icon
+                          name="visibility-off"
+                          iconStyle={{ color: colors.gray4 }}
+                          type="material"
+                          style={{ marginRight: 10 }}
+                        />
+                      </Animatable.View>
+                    </View>
+                  </View>
+                </View>
+
+                {/* <View>{error ? <Error message={error} /> : null}</View> */}
+
+                <View style={{ marginHorizontal: 20, marginTop: 30 }}>
+                  <FormSubmitButton
+                    title="Sign-in my account"
+                    onPress={handleSubmit}
+                    submitting={isSubmitting}
                   />
-                </Animatable.View>
-
-                <TextInput
-                  style={{ width: "80%" }}
-                  placeholder="Password"
-                  ref={textInput2}
-                  secureTextEntry={true}
-                  onFocus={() => {
-                    setTextInput2focused(false);
-                  }}
-                  onBlur={() => {
-                    setTextInput2focused(true);
-                  }}
-                  onChangeText={props.handleChange("password")}
-                  value={props.values.password}
-                />
-
-                <Animatable.View
-                  animation={textInput2Focused ? "" : "fadeInLeft"}
-                  duration={400}
-                >
-                  <Icon
-                    name="visibility-off"
-                    iconStyle={{ color: colors.gray4 }}
-                    type="material"
-                    style={{ marginRight: 10 }}
-                  />
-                </Animatable.View>
+                </View>
               </View>
-            </View>
-
-            <View>{error ? <Error message={error} /> : null}</View>
-
-            <View style={{ marginHorizontal: 20, marginTop: 30 }}>
-              <Button
-                title="SIGN IN"
-                buttonStyle={parameters.styledButton}
-                titleStyle={parameters.buttonTitle}
-                onPress={props.handleSubmit}
-              />
-            </View>
-          </View>
-        )}
-      </Formik>
-
-      <View style={{ alignItems: "center", marginTop: 15 }}>
-        <Text style={{ ...styles.text1, textDecorationLine: "underline" }}>
-          Forgot Password?
-        </Text>
-      </View>
-
-      <View style={{ alignItems: "center", marginTop: 20, marginBottom: 20 }}>
-        <Text style={{ fontSize: 20, fontWeight: "900" }}>OR</Text>
-      </View>
-
-      <View style={{ marginHorizontal: 10, marginTop: 10 }}>
-        <SocialIcon
-          title="Sign In With Facebook"
-          button
-          type="facebook"
-          style={styles.SocialIcon}
-          onPress={() => {}}
-        />
-      </View>
-
-      <View style={{ marginHorizontal: 10, marginTop: 10 }}>
-        <SocialIcon
-          title="Sign In With Google"
-          button
-          type="google"
-          style={styles.SocialIcon}
-          onPress={() => {}}
-        />
-      </View>
-
-      <View
-        style={{
-          flexDirection: "row",
-          alignItems: "center",
-          justifyContent: "center",
-          marginTop: 25,
-          marginLeft: 20,
-          justifyContent: "space-evenly",
-        }}
-      >
-        <Text style={{ ...styles.text1 }}>New on noHungerApp?</Text>
-        <Button
-          title="Create an Account"
-          buttonStyle={styles.createButton}
-          titleStyle={styles.createButtonTitle}
-          onPress={() => {
-            navigation.navigate("SignUpScreen");
+            );
           }}
-        />
+        </Formik>
+
+        <View style={{ alignItems: "center", marginTop: 15 }}>
+          <TouchableOpacity
+            onPress={() => navigation.navigate("ForgotPassword")}
+          >
+            <Text style={{ ...styles.text1, textDecorationLine: "underline" }}>
+              Forgot Password?
+            </Text>
+          </TouchableOpacity>
+        </View>
+
+        <View style={{ alignItems: "center", marginTop: 20, marginBottom: 20 }}>
+          <Text style={{ fontSize: 20, fontWeight: "900" }}>OR</Text>
+        </View>
+
+        <View style={{ marginHorizontal: 10, marginTop: 10 }}>
+          <SocialIcon
+            title="Sign In With Facebook"
+            button
+            type="facebook"
+            style={styles.SocialIcon}
+            onPress={() => {}}
+          />
+        </View>
+
+        <View style={{ marginHorizontal: 10, marginTop: 10 }}>
+          <SocialIcon
+            title="Sign In With Google"
+            button
+            type="google"
+            style={styles.SocialIcon}
+            onPress={() => {}}
+          />
+        </View>
+
+        <View
+          style={{
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "center",
+            marginTop: 25,
+            marginLeft: 20,
+            justifyContent: "space-evenly",
+          }}
+        >
+          <Text style={{ ...styles.text1 }}>New on noHungerApp?</Text>
+          <Button
+            title="Create an Account"
+            buttonStyle={styles.createButton}
+            titleStyle={styles.createButtonTitle}
+            onPress={() => {
+              navigation.navigate("SignUpScreen");
+            }}
+          />
+        </View>
       </View>
-    </View>
+    </>
   );
 }
 
@@ -250,4 +334,55 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     marginTop: 0,
   },
+  fieldLabelContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginBottom: 5,
+    marginTop: 10,
+    marginHorizontal: 25,
+  },
 });
+
+// LOG  USER LOGGED IN undefined
+//  ERROR  SignIn Error: [TypeError: Cannot read property 'success' of undefined]
+//  ERROR  Error setting up the request: Cannot read property 'success' of undefined
+
+// // from Context
+// const context = useContext(AuthGlobal);
+
+// const [textInput2Focused, setTextInput2focused] = useState(false);
+// const textInput1 = useRef(1);
+// const textInput2 = useRef(2);
+// const [error, setError] = useState("");
+
+// // useEffect for Context
+// useEffect(() => {
+//   if (context.stateUser.isAuthenticated === true) {
+//     props.navigation.navigate("UserProfile");
+//   }
+// }, [context.stateUser.isAuthenticated]);
+
+// async function signIn(data) {
+//   try {
+//     const { email, password } = data;
+
+//     if (email === "" || password === "") {
+//       setError("please fill in your credentials");
+//     } else {
+//       loginUser(data, context.dispatch);
+//       Toast.show({
+//         topOffset: 50,
+//         type: "success",
+//         text1: `User Signed In`,
+//         text2: "Loading...",
+//       });
+//     }
+//   } catch (error) {
+//     Toast.show({
+//       topOffset: 50,
+//       type: "error",
+//       text1: `Invalid entry`,
+//       text2: "Please Fill in the form correctly",
+//     });
+//   }
+// }

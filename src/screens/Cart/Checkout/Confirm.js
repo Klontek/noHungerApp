@@ -196,11 +196,11 @@ const Confirm = (props) => {
         <View style={{ alignItems: "center", margin: 20 }}>
           <Button
             mode="contained"
-            onPress={
-              {
-                /*confirmOrder*/
-              }
-            }
+            // onPress={
+            //   {
+            //     /*confirmOrder*/
+            //   }
+            // }
           >
             Place Order
           </Button>

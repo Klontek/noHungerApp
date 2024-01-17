@@ -316,7 +316,7 @@ const HomeScreen = ({ navigation }, props) => {
                     type="material-community"
                     size={SIZES.xLarge}
                     // color={colors.offWhite}
-                    onPress={() => navigation.navigate("UploadForm")}
+                    onPress={() => navigation.navigate("ProductUpload")}
                   />
                 </TouchableOpacity>
               </View>

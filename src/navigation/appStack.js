@@ -15,6 +15,7 @@ import { BannerSingleProduct } from "../screens/Products/BannerSingleProduct";
 import ProductDetail from "../screens/Products/ProductDetail";
 import CheckoutNavigator from "./CheckoutNavigator";
 import ChatScreen from "../screens/Chat/ChatScreen";
+import ProductUpload from "../screens/upload/ProductUpload";
 // import AdminNavigator from "./AdminNavigator";
 // import CategoriesRestaurantScreen from "../screens/CategoriesRestaurantScreen"
 
@@ -44,6 +45,15 @@ export const AppStackFunction = () => {
       <App.Screen
         name="ChatScreen"
         component={ChatScreen}
+        options={() => ({
+          headerShown: true,
+          ...TransitionPresets.RevealFromBottomAndroid,
+        })}
+      />
+
+      <App.Screen
+        name="ProductUpload"
+        component={ProductUpload}
         options={() => ({
           headerShown: true,
           ...TransitionPresets.RevealFromBottomAndroid,

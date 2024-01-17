@@ -3,10 +3,12 @@ import { NavigationContainer } from "@react-navigation/native";
 import { AuthStackFunction } from "./authNavigators";
 import { AppStackFunction } from "./appStack";
 import AuthGlobal from "../contexts/store/AuthGlobal";
+// import { useLogin } from "../contexts/LoginProvider";
 
 export default function RootNavigator() {
-  const { stateUser } = useContext(AuthGlobal);
+  // const { isLoggedIn } = useLogin();
 
+  const { stateUser } = useContext(AuthGlobal);
   return (
     <NavigationContainer>
       {!stateUser.isAuthenticated ? (
