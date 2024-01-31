@@ -19,7 +19,7 @@ import {
 const router = express.Router();
 
 router.post("/register", validatorUserSignUp, userValidation, addUser);
-router.post("/register", addUser);
+// router.post("/register", addUser);
 router.get("/", getUsers);
 router.get("/get/count", getUserCount);
 router.get("/:userId", getUser);
