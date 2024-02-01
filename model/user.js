@@ -47,9 +47,9 @@ const userSchema = mongoose.Schema({
     default: "",
   },
   avatar: String,
-  tokens: [{
-    type: Object
-  }]
+  // tokens: [{
+  //   type: Object
+  // }]
 });
 
 //function to hash password

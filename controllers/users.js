@@ -214,21 +214,21 @@ export const loginUser = async (req, res) => {
         }
       );
 
-      // to remove old tokens from the database
-      let oldTokens = user.token || [];
+      // // to remove old tokens from the database
+      // let oldTokens = user.token || [];
 
-      if (oldTokens.length) {
-        oldTokens = oldTokens.filter((t) => {
-          const timeDifference = (Date.now() - parseInt(t.signedAt)) / 1000;
-          if (timeDifference < 86400) {
-            return;
-          }
-        });
-      }
+      // if (oldTokens.length) {
+      //   oldTokens = oldTokens.filter((t) => {
+      //     const timeDifference = (Date.now() - parseInt(t.signedAt)) / 1000;
+      //     if (timeDifference < 86400) {
+      //       return;
+      //     }
+      //   });
+      // }
 
-      await userModel.findByIdAndUpdate(user._id, {
-        token: [...oldTokens, { token, signedAt: Date.now().toString() }],
-      }); // whenever user is signed in add the tokens and time to the database
+      // await userModel.findByIdAndUpdate(user._id, {
+      //   token: [...oldTokens, { token, signedAt: Date.now().toString() }],
+      // }); // whenever user is signed in add the tokens and time to the database
 
       const userInfo = {
         name: user.name,
@@ -239,7 +239,7 @@ export const loginUser = async (req, res) => {
       return res.status(200).json({
         success: true,
         user: userInfo,
-        token,
+        // token,
       });
     } else {
       return res.status(404).json({ msg: "Authentication failed" });
