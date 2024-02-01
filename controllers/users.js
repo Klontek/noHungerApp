@@ -234,6 +234,7 @@ export const loginUser = async (req, res) => {
         name: user.name,
         email: user.email,
         avatar: user.avatar ? user.avatar : "",
+        token,
       };
 
       return res.status(200).json({
