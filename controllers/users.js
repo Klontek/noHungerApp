@@ -239,7 +239,7 @@ export const loginUser = async (req, res) => {
       return res.status(200).json({
         success: true,
         user: userInfo,
-        // token,
+        token,
       });
     } else {
       return res.status(404).json({ msg: "Authentication failed" });
