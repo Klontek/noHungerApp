@@ -48,11 +48,11 @@ const validatorUserSignUp = [
     .isLength({ min: 1, max: 11 })
     .withMessage("Phone number must be 1 to 11 characters long"),
 
-  check("apartment")
+  check("street")
     .trim()
     .not()
     .isEmpty()
-    .withMessage("Apartment field cannot be empty"),
+    .withMessage("Street field cannot be empty"),
 
   check("city")
     .trim()
@@ -60,13 +60,13 @@ const validatorUserSignUp = [
     .isEmpty()
     .withMessage("City field cannot be empty"),
 
-  check("zip").trim().not().isEmpty().withMessage("Zip field cannot be empty"),
+  // check("zip").trim().not().isEmpty().withMessage("Zip field cannot be empty"),
 
-  check("country")
-    .trim()
-    .not()
-    .isEmpty()
-    .withMessage("Country field cannot be empty"),
+  // check("country")
+  //   .trim()
+  //   .not()
+  //   .isEmpty()
+  //   .withMessage("Country field cannot be empty"),
 ];
 
 // sign-in validation
