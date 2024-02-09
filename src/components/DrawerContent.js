@@ -17,40 +17,55 @@ import {
 import { Avatar, Button, Icon } from "react-native-elements";
 import { colors } from "../global/styles";
 import AuthGlobal from "../contexts/store/AuthGlobal";
-// import { logOut } from "../../assets/Common/user";
-// import { useLogin } from "../contexts/LoginProvider";
-// import { LogoutUser } from "../contexts/actions/Auth.action";
+import { LogoutUser } from "../contexts/actions/Auth.action";
 import { userData } from "../../assets/Data/userData";
-// import {FIREBASE_AUTH} from '../../db/firestore'
-// import {SignInContext} from "../contexts/authContext"
+import { BackHandler } from "react-native";
 
 export default function DrawerContent(props) {
   const { dispatch } = useContext(AuthGlobal);
   const [profilePic, setProfilePic] = useState(userData.profilePic);
-  // const { setIsLoggedIn, profile, setLoginPending } = useLogin();
+  // const [userProfile, setUserProfile] = useState();
+  // const [orders, setOrders] = useState();
+
+  // useFocusEffect(
+  //   useCallback(() => {
+
+  //     AsyncStorage.getItem("jwt")
+  //       .then((res) => {
+  //         axios
+  //           .get(`${baseUrl}users/${context.stateUser.user.sub}`, {
+  //             headers: { Authorization: `Bearer ${res}` },
+  //           })
+  //           .then((user) => setUserProfile(user.data));
+  //       })
+  //       .catch((error) => console.log(error));
+
+  //     axios
+  //       .get(`${baseUrl}orders`)
+  //       .then((res) => {
+  //         const data = res.data;
+  //         const userOrders = data.filter(
+  //           (order) => order.user._id === context.stateUser.user.sub
+  //         );
+  //         setOrders(userOrders);
+  //       })
+  //       .catch((error) => console.log(error));
+
+  //     return () => {
+  //       setUserProfile();
+  //       setOrders();
+  //     };
+  //   }, [context.stateUser.isAuthenticated])
+  // );
 
   async function signOut() {
     try {
-      // console.log("sign Out");
       LogoutUser(dispatch); // Call the LogoutUser function
+      console.log("sign Out");
+      BackHandler.exitApp();
     } catch (error) {
       console.error("Sign out error:", error);
     }
-    // }
-    // const auth = FIREBASE_AUTH;
-
-    // const {dispatchSignedIn} = useContext(SignInContext)
-
-    // async function signOut() {
-    //   try{
-    //     auth.signOut().then(() => {
-    //       console.log('USER SUCCESSFULLY SIGNED OUT')
-    //       dispatchSignedIn({type: 'UPDATE_SIGN_IN', payload: {userToken: null}})
-    //     })
-
-    //   }catch(error){
-    //     Alert.alert(error.code)
-    //   }
   }
 
   return (
@@ -207,14 +222,6 @@ export default function DrawerContent(props) {
       <TouchableOpacity>
         <DrawerItem
           onPress={() => signOut()}
-          // onPress={async () => {
-          //   setLoginPending(true);
-          //   const isLoggedOut = await logOut();
-          //   if (isLoggedOut) {
-          //     setIsLoggedIn(false);
-          //   }
-          //   setLoginPending(false);
-          // }}
           label="Log Out"
           icon={({ color, size }) => (
             <Icon
@@ -260,3 +267,33 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
 });
+
+// import { logOut } from "../../assets/Common/user";
+// import { useLogin } from "../contexts/LoginProvider";
+// import {FIREBASE_AUTH} from '../../db/firestore'
+// import {SignInContext} from "../contexts/authContext"
+
+// onPress={async () => {
+//   setLoginPending(true);
+//   const isLoggedOut = await logOut();
+//   if (isLoggedOut) {
+//     setIsLoggedIn(false);
+//   }
+//   setLoginPending(false);
+// }}
+
+// }
+// const auth = FIREBASE_AUTH;
+
+// const {dispatchSignedIn} = useContext(SignInContext)
+
+// async function signOut() {
+//   try{
+//     auth.signOut().then(() => {
+//       console.log('USER SUCCESSFULLY SIGNED OUT')
+//       dispatchSignedIn({type: 'UPDATE_SIGN_IN', payload: {userToken: null}})
+//     })
+
+//   }catch(error){
+//     Alert.alert(error.code)
+//   }

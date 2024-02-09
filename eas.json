@@ -20,9 +20,11 @@
       "env": {
         "EXPO_PUBLIC_API_URL": "https://no-hunger-app.onrender.com/api/v1/"
       }
-    }
+    }    
   },
   "submit": {
     "production": {}
   }
 }
+
+

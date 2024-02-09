@@ -18,7 +18,7 @@ import AuthGlobal from "../contexts/store/AuthGlobal";
 const ClientTabs = createBottomTabNavigator();
 
 export default function RootClientTabs() {
-  // const context = useContext(AuthGlobal);
+  const context = useContext(AuthGlobal);
 
   return (
     <ClientTabs.Navigator
@@ -76,7 +76,6 @@ export default function RootClientTabs() {
         />
       ) : null} */}
 
-      {}
       <ClientTabs.Screen
         name="Dashboard"
         component={AdminNavigator}

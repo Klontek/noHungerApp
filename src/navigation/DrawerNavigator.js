@@ -5,17 +5,16 @@ import { Icon } from "react-native-elements";
 import { colors } from "../global/styles";
 import DrawerContent from "../components/DrawerContent";
 import BusinessConsoleScreen from "../screens/BusinessScreen/BusinessConsoleScreen";
-// import { useLogin } from "../contexts/LoginProvider";
 
 const Drawer = createDrawerNavigator();
 
-export default function DrawerNavigator() {
-  // const { isLoggedIn, loginPending } = useLogin();
-
+export default function DrawerNavigator({ navigation }) {
   return (
     <Drawer.Navigator
       screenOptions={{ headerShown: false }}
-      drawerContent={(props) => <DrawerContent {...props} />}
+      drawerContent={(props) => (
+        <DrawerContent navigation={navigation} {...props} />
+      )}
     >
       <Drawer.Screen
         name="RootClientTabs"
@@ -48,13 +47,6 @@ export default function DrawerNavigator() {
           ),
         }}
       />
-
-      {/* <Drawer.Screen
-   name="Products"
-   options={{
-    title: "produc
-   }}
-   /> */}
     </Drawer.Navigator>
   );
 }

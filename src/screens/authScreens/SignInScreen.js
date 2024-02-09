@@ -1,112 +1,130 @@
 import React, { useRef, useState, useContext, useEffect } from "react";
-
 import {
   View,
   Text,
   StyleSheet,
-  Dimension,
+  Dimensions,
   TextInput,
-  Touchable,
+  ActivityIndicator,
+  TouchableOpacity,
 } from "react-native";
 import * as Animatable from "react-native-animatable";
-
 import { colors, parameters, title } from "../../global/styles";
-import Header from "../../components/Header";
 import { Button, Icon, SocialIcon } from "react-native-elements";
-
 import { Formik } from "formik";
 import Toast from "react-native-toast-message";
-
-// Context
 import AuthGlobal from "../../contexts/store/AuthGlobal";
 import { loginUser } from "../../contexts/actions/Auth.action";
-
 import * as Yup from "yup";
 import FormSubmitButton from "../../components/AuthComponent/FormSubmitButton";
 import Error from "../../components/AuthComponent/Error";
-import axios from "axios";
-import baseUrl from "../../../assets/Common/baseUrl";
-import { TouchableOpacity } from "react-native-gesture-handler";
-import AppLoader from "../../components/AppLoader";
-import { signIn } from "../../../assets/Common/user";
-// import { useLogin } from "../../contexts/LoginProvider";
+import Header from "../../components/Header";
+import * as WebBrowser from "expo-web-browser";
+import * as Google from "expo-auth-session/providers/google";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
+WebBrowser.maybeCompleteAuthSession();
 
 const validationSchema = Yup.object({
   email: Yup.string().email("Invalid email").required("Email is required"),
   password: Yup.string()
     .trim()
     .min(8, "Password is too short!")
-    .required("password is required!"),
+    .required("Password is required"),
 });
 
+const { height } = Dimensions.get("window");
+
 export default function SignInScreen({ navigation }) {
-  // const { setIsLoggedIn, setProfile } = useLogin();
   const context = useContext(AuthGlobal);
+  const [userGoogleData, setUserGoogleData] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
   const [textInput2Focused, setTextInput2focused] = useState(false);
+  const [isPasswordVisible, setIsPasswordVisible] = useState(true);
   const [userInfo, setUserInfo] = useState({
     email: "",
     password: "",
   });
-  // const { setLoginPending } = useLogin();
-  // const [error, setError] = useState("");
-  // const { email, password } = userInfo;
 
-  async function SignIn(values, formikActions) {
-    // setLoginPending(true);
+  const [request, response, promptAsync] = Google.useAuthRequest({
+    androidClientId:
+      "65304516459-ff1cogeil46ips3oqc7icaeendkb8j9r.apps.googleusercontent.com",
+    webClientId:
+      "65304516459-g1d0uo7quce3gsqiil4ifmtvt36bksb4.apps.googleusercontent.com",
+    redirectUri: "https://nohungerapp.com",
+  });
 
-    try {
-      // console.log("Request Payload:", { email, password });
-      // const response = await signIn(userInfo.email, userInfo.password);
+  useEffect(() => {
+    if (context.stateUser.isAuthenticated === true) {
+      navigation.navigate("UserProfile");
+    }
+    handleSignInWithGoogle();
+  }, [context.stateUser.isAuthenticated, response]);
 
-      const response = await loginUser({ ...values }, context.dispatch);
-      console.log("USER LOGGED IN", response);
+  const togglePasswordVisibility = () => {
+    setIsPasswordVisible((prev) => !prev);
+  };
 
-      if (response && response.status === 201 && response.data.success) {
-        Toast.show({
-          topOffset: 60,
-          type: "success",
-          text1: `Welcome ${response.data.name}`,
-          text2: "Please log in to your account",
-        });
-        formikActions.resetForm();
-        formikActions.setSubmitting(false);
-        // setLoginPending(false);
+  async function handleSignInWithGoogle() {
+    const user = await AsyncStorage.getItem("jwt");
+    if (!user) {
+      if (response?.type === "success") {
+        await getUserGoogleData(response.authentication.accessToken);
       }
-    } catch (error) {
-      console.error("Error in SignInScreen:", error);
-
-      let errorMessage = "An unexpected error occurred. Please try again.";
-
-      if (error.response) {
-        // The request was made, but the server responded with a non-2xx status
-        console.error(
-          "Server responded with error status:",
-          error.response.status
-        );
-        errorMessage =
-          "Invalid credentials. Please check your email and password.";
-      } else if (error.request) {
-        // The request was made but no response was received
-        console.error("No response received from the server");
-        errorMessage =
-          "No response received from the server. Please try again.";
-      } else {
-        // Something happened in setting up the request that triggered an Error
-        console.error("Error setting up the request:", error.message);
-      }
-
-      // Toast.show({
-      //   topOffset: 60,
-      //   type: "error",
-      //   text1: "Sign-In Failed",
-      //   text2: errorMessage,
-      // });
-    } finally {
-      formikActions.resetForm();
-      formikActions.setSubmitting(false);
-      // setLoginPending(false);
+    } else {
+      setUserGoogleData(JSON.parse(user));
     }
   }
+
+  const getUserGoogleData = async (token) => {
+    if (!token) return;
+
+    try {
+      const response = await fetch(
+        "https://www.googleapis.com/userinfo/v2/me",
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+
+      const user = await response.json();
+      await AsyncStorage.setItem("jwt", JSON.stringify(user));
+      setUserGoogleData(user);
+    } catch (error) {
+      console.log("Google login error", error.message);
+    }
+  };
+
+  const SignIn = async (values, formikActions) => {
+    setIsLoading(true);
+
+    try {
+      await validationSchema.validateSync(values, { abortEarly: false });
+
+      loginUser(values, context.dispatch);
+
+      // Move the toast notification inside the success block
+      formikActions.resetForm();
+      formikActions.setSubmitting(false);
+      setIsLoading(false);
+
+      Toast.show({
+        topOffset: 60,
+        type: "success",
+        text1: `Login Successful`,
+        text2: "",
+      });
+    } catch (error) {
+      Toast.show({
+        topOffset: 60,
+        type: "error",
+        text1: `Please fill in your credentials`,
+        text2: "",
+      });
+
+      setIsLoading(false);
+    }
+  };
 
   return (
     <>
@@ -151,7 +169,6 @@ export default function SignInScreen({ navigation }) {
                       <TextInput
                         style={styles.TextInput1}
                         placeholder="Email"
-                        // ref={textInput1}
                         onChangeText={handleChange("email")}
                         autoFocus={false}
                         value={email}
@@ -185,8 +202,7 @@ export default function SignInScreen({ navigation }) {
                       <TextInput
                         style={{ width: "80%" }}
                         placeholder="********"
-                        // ref={textInput2}
-                        secureTextEntry={true}
+                        secureTextEntry={!isPasswordVisible}
                         autoFocus={false}
                         onBlur={handleBlur("password")}
                         onChangeText={handleChange("password")}
@@ -194,29 +210,44 @@ export default function SignInScreen({ navigation }) {
                         error={touched.password && errors.password}
                       />
 
-                      <Animatable.View
-                        animation={textInput2Focused ? "" : "fadeInLeft"}
-                        duration={400}
+                      <TouchableOpacity
+                        onPress={togglePasswordVisibility}
+                        style={{ position: "absolute", right: 10 }}
                       >
-                        <Icon
-                          name="visibility-off"
-                          iconStyle={{ color: colors.gray4 }}
-                          type="material"
-                          style={{ marginRight: 10 }}
-                        />
-                      </Animatable.View>
+                        <Animatable.View
+                          animation={textInput2Focused ? "" : "fadeInLeft"}
+                          duration={400}
+                        >
+                          <Icon
+                            name={
+                              isPasswordVisible
+                                ? "visibility-off"
+                                : "visibility"
+                            }
+                            iconStyle={{ color: colors.gray4 }}
+                            type="material"
+                            style={{ marginRight: 10 }}
+                          />
+                        </Animatable.View>
+                      </TouchableOpacity>
                     </View>
                   </View>
                 </View>
 
-                {/* <View>{error ? <Error message={error} /> : null}</View> */}
-
                 <View style={{ marginHorizontal: 20, marginTop: 30 }}>
-                  <FormSubmitButton
-                    title="Sign-in my account"
-                    onPress={handleSubmit}
-                    submitting={isSubmitting}
-                  />
+                  {isLoading ? (
+                    <View
+                      style={[styles.spinner, { backgroundColor: "#f2f2f2" }]}
+                    >
+                      <ActivityIndicator size="large" color="red" />
+                    </View>
+                  ) : (
+                    <FormSubmitButton
+                      title="Sign-in my account"
+                      onPress={handleSubmit}
+                      submitting={isSubmitting}
+                    />
+                  )}
                 </View>
               </View>
             );
@@ -253,7 +284,7 @@ export default function SignInScreen({ navigation }) {
             button
             type="google"
             style={styles.SocialIcon}
-            onPress={() => {}}
+            onPress={() => promptAsync()}
           />
         </View>
 
@@ -283,6 +314,11 @@ export default function SignInScreen({ navigation }) {
 }
 
 const styles = StyleSheet.create({
+  spinner: {
+    height: height / 2,
+    alignItems: "center",
+    justifyContent: "center",
+  },
   container: {
     flex: 1,
   },
@@ -350,6 +386,10 @@ const styles = StyleSheet.create({
 // // from Context
 // const context = useContext(AuthGlobal);
 
+// const { setLoginPending } = useLogin();
+// const [error, setError] = useState("");
+// const { email, password } = userInfo;
+
 // const [textInput2Focused, setTextInput2focused] = useState(false);
 // const textInput1 = useRef(1);
 // const textInput2 = useRef(2);
@@ -386,3 +426,28 @@ const styles = StyleSheet.create({
 //     });
 //   }
 // }
+
+// const SignIn = (values, formikActions) => {
+//   setIsLoading(true);
+//   if (validationSchema) {
+//     Toast.show({
+//       topOffset: 60,
+//       type: "error",
+//       text1: `Please fill in your credentials`,
+//       text2: "",
+//     });
+//   } else {
+//     loginUser(values, context.dispatch);
+
+//     Toast.show({
+//       topOffset: 60,
+//       type: "success",
+//       text1: `Login Successful`,
+//       text2: "",
+//     });
+
+//     formikActions.resetForm();
+//     formikActions.setSubmitting(false);
+//     setIsLoading(false);
+//   }
+// };

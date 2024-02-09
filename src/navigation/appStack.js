@@ -16,6 +16,8 @@ import ProductDetail from "../screens/Products/ProductDetail";
 import CheckoutNavigator from "./CheckoutNavigator";
 import ChatScreen from "../screens/Chat/ChatScreen";
 import ProductUpload from "../screens/upload/ProductUpload";
+import { AuthStackFunction } from "./authNavigators";
+import SignInScreen from "../screens/authScreens/SignInScreen";
 // import AdminNavigator from "./AdminNavigator";
 // import CategoriesRestaurantScreen from "../screens/CategoriesRestaurantScreen"
 
@@ -32,7 +34,6 @@ export const AppStackFunction = () => {
           ...TransitionPresets.RevealFromBottomAndroid,
         }}
       />
-
       <App.Screen
         name="CartScreen"
         component={CartScreen}

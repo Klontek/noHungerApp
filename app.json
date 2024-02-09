@@ -28,6 +28,7 @@
     "web": {
       "favicon": "./assets/favicon.png"
     },
+    "scheme": "noHungerApp",
     "extra": {
       "eas": {
         "projectId": "812d176a-d558-47a0-ae4e-3f092a7270a1"

@@ -8,8 +8,7 @@ const ForgotPassword = () => {
 
   const handleResetPassword = () => {
     // Perform password reset logic here
-    // You may want to send a password reset email to the provided email address
-
+    // You may want to send a password reset email to the provided email addres
     // For the purpose of this example, just show a snackbar
     setSnackbarVisible(true);
   };

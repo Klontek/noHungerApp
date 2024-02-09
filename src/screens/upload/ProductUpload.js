@@ -1,21 +1,16 @@
 import { Image, StyleSheet, Text, View } from "react-native";
 import React, { useState } from "react";
 import { TouchableOpacity } from "react-native-gesture-handler";
-// import { colors } from "../global/styles";
 import * as ImagePicker from "expo-image-picker";
 import axios from "axios";
-// import baseUrl from "../../assets/Common/baseUrl.js";
-// import UploadProgress from "./UploadProgress";
 import { colors } from "../../global/styles.js";
 import baseUrl from "../../../assets/Common/baseUrl";
 import UploadProgress from "../../components/UploadProgress.js";
 import FormSubmitButton from "../../components/AuthComponent/FormSubmitButton.js";
-// import baseUrl from "noHungerTest/assets/Common/baseUrl.js";
 
 const ProductUpload = (props) => {
   const [profileImage, setProfileImage] = useState("");
   const [progress, setProgress] = useState(0);
-  // const { token } = props.route.params;
 
   const openImageLibrary = async () => {
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -51,10 +46,6 @@ const ProductUpload = (props) => {
         },
         onUploadProgress: ({ loaded, total }) => setProgress(loaded / total),
       });
-
-      // if (res.data.success) {
-      //   props.navigation.dispatch(StackActions.replace("SignInScreen"));
-      // }
     } catch (error) {
       console.log(error.message);
     }
@@ -78,33 +69,23 @@ const ProductUpload = (props) => {
             )}
           </TouchableOpacity>
 
-          {/* {progress ? <Text>{progress}</Text>: null}  */}
           <Text style={styles.skip}>Skip</Text>
 
           {profileImage ? (
-            <Text
+            <TouchableOpacity
               onPress={uploadProfileImage}
-              style={[
-                styles.skip,
-                {
-                  backgroundColor: colors.buttons,
-                  color: "white",
-                  borderRadius: 8,
-                },
-              ]}
+              style={styles.uploadButton}
             >
-              Upload
-            </Text>
+              <Text style={styles.uploadButtonText}>Upload</Text>
+            </TouchableOpacity>
           ) : null}
         </View>
       </View>
       {progress ? <UploadProgress process={progress} /> : null}
 
-      <FormSubmitButton
-        title="Submit"
-        // onPress={handleSubmit}
-        // submitting={isSubmitting}
-      />
+      <View style={styles.formSubmitButtonContainer}>
+        <FormSubmitButton title="Submit" />
+      </View>
     </>
   );
 };
@@ -138,8 +119,24 @@ const styles = StyleSheet.create({
     padding: 10,
     fontSize: 16,
     fontWeight: "bold",
-    testTransform: "uppercase",
+    textTransform: "uppercase",
     letterSpacing: 2,
     opacity: 0.5,
+  },
+  uploadButton: {
+    backgroundColor: colors.buttons,
+    padding: 10,
+    borderRadius: 8,
+    marginTop: 20,
+  },
+  uploadButtonText: {
+    textAlign: "center",
+    color: "white",
+    fontWeight: "bold",
+  },
+  formSubmitButtonContainer: {
+    marginHorizontal: 125,
+    flex: 1,
+    width: 150,
   },
 });

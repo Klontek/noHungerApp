@@ -6,6 +6,7 @@ import {
   TextInput,
   Alert,
   TouchableOpacity,
+  Dimensions,
 } from "react-native";
 import React, { useContext, useState } from "react";
 import { colors } from "../../global/styles";
@@ -21,10 +22,12 @@ import axios from "axios";
 import baseUrl from "../../../assets/Common/baseUrl";
 import FormSubmitButton from "../../components/AuthComponent/FormSubmitButton";
 import Error from "../../components/AuthComponent/Error";
-import { StackActions } from "@react-navigation/native";
-import AppLoader from "../../components/AppLoader";
-import { signIn } from "../../../assets/Common/user";
+// import { StackActions } from "@react-navigation/native";
+// import AppLoader from "../../components/AppLoader";
+// import { signIn } from "../../../assets/Common/user";
 import AuthGlobal from "../../contexts/store/AuthGlobal";
+import { ActivityIndicator } from "react-native-paper";
+// import AuthContext from "../../contexts/store/Auth";
 // import { useLogin } from "../../contexts/LoginProvider";
 
 const phoneRegExp =
@@ -60,21 +63,26 @@ const userInfo = {
   city: "",
 };
 
+const { height } = Dimensions.get("window");
+
 export default function SignUpScreen({ navigation }) {
-  // const [passwordBlurred, setPasswordBlurred] = useState(false);
-  // const [passwordFocused, setPasswordFocused] = useState(false);
-  // const [error, setError] = useState("");
-  // const { setLoginPending } = useLogin();
   const context = useContext(AuthGlobal);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isPasswordVisible, setIsPasswordVisible] = useState(true);
+  const [textInput2Focused, setTextInput2focused] = useState(true);
+
+  const togglePasswordVisibility = () => {
+    setIsPasswordVisible((prev) => !prev);
+  };
 
   async function SignUp(values, formikActions) {
     try {
-      const response = await axios.post(`${baseUrl}users/register`, {
-        ...values,
-      });
-      console.log("USER ACCOUNT CREATED", response.data);
+      setIsLoading(true);
+      console.log(values);
+      const response = await axios.post(`${baseUrl}users/register`, values);
+      console.log("response from server", response);
 
-      if (response.status === 200) {
+      if (response.status === 200 || response.status === 201) {
         navigation.navigate("SignInScreen");
         Toast.show({
           topOffset: 60,
@@ -82,6 +90,8 @@ export default function SignUpScreen({ navigation }) {
           text1: "Registration Successful",
           text2: "Please log in to your account",
         });
+
+        console.log("USER ACCOUNT CREATED", response.data);
 
         formikActions.resetForm();
         formikActions.setSubmitting(false);
@@ -132,88 +142,12 @@ export default function SignUpScreen({ navigation }) {
           text2: "Error setting up the request",
         });
       }
+    } finally {
+      setIsLoading(false);
+      formikActions.resetForm();
+      formikActions.setSubmitting(false);
+      // setLoginPending(false);
     }
-
-    // setLoginPending(true);
-    // try {
-    //   const response = await axios.post(`${baseUrl}users/register`, values);
-    //   console.log("USER ACCOUNT CREATED", response.data);
-
-    //   if (response.status === 201 || response.data.success) {
-    //     // navigation.navigate("ImageUpload");
-
-    //     const signInResponse = await signIn({
-    //       values: email,
-    //       values: password,
-    //     });
-
-    //     console.log(signInResponse);
-    //     if (signInResponse.data.success) {
-    //       navigation.dispatch(
-    //         StackActions.replace("ImageUpload", {
-    //           token: signInResponse.data.token,
-    //         })
-    //       );
-    //     }
-
-    //     Toast.show({
-    //       topOffset: 60,
-    //       type: "success",
-    //       text1: "Registration Successful",
-    //       text2: "Please log in to your account",
-    //     });
-
-    //     formikActions.resetForm();
-    //     formikActions.setSubmitting(false);
-    //     // setLoginPending(false);
-    //   } else {
-    //     // Handle unexpected response status
-    //     console.error("Unexpected response status:", response.status);
-    //     Toast.show({
-    //       topOffset: 60,
-    //       type: "error",
-    //       text1: "Signup Failed",
-    //       text2: "Unexpected response status",
-    //     });
-    //   }
-    // } catch (error) {
-    //   console.error("Signup Error:", error);
-
-    //   if (error.response) {
-    //     // The request was made, but the server responded with a non-2xx status
-    //     console.error(
-    //       "Server responded with error status:",
-    //       error.response.status
-    //     );
-    //     console.error("Server response data:", error.response.data);
-
-    //     const errorMessage = handleSignUpError(error.response.data);
-    //     Toast.show({
-    //       topOffset: 60,
-    //       type: "error",
-    //       text1: "Signup Failed",
-    //       text2: errorMessage,
-    //     });
-    //   } else if (error.request) {
-    //     // The request was made but no response was received
-    //     console.error("No response received from the server");
-    //     Toast.show({
-    //       topOffset: 60,
-    //       type: "error",
-    //       text1: "Signup Failed",
-    //       text2: "No response received from the server",
-    //     });
-    //   } else {
-    //     // Something happened in setting up the request that triggered an Error
-    //     console.error("Error setting up the request:", error.message);
-    //     Toast.show({
-    //       topOffset: 60,
-    //       type: "error",
-    //       text1: "Signup Failed",
-    //       text2: "Error setting up the request",
-    //     });
-    //   }
-    // }
   }
 
   return (
@@ -267,7 +201,7 @@ export default function SignUpScreen({ navigation }) {
                         style={styles.input1}
                         onChangeText={handleChange("name")}
                         onBlur={handleBlur("name")}
-                        value={values.name}
+                        value={name}
                       />
                     </View>
                   </View>
@@ -331,16 +265,28 @@ export default function SignUpScreen({ navigation }) {
                         onBlur={handleBlur("password")}
                         error={touched.password && errors.password}
                         value={password}
-                        secureTextEntry={true}
+                        secureTextEntry={!isPasswordVisible}
                       />
-                      <Animatable.View animation="fadeInLeft" duration={400}>
-                        <Icon
-                          name="visibility"
-                          color={colors.gray4}
-                          type="material"
-                          style={{ marginRight: 10 }}
-                        />
-                      </Animatable.View>
+                      <TouchableOpacity
+                        onPress={togglePasswordVisibility}
+                        style={{ position: "absolute", right: 10 }}
+                      >
+                        <Animatable.View
+                          animation={textInput2Focused ? "" : "fadeInLeft"}
+                          duration={400}
+                        >
+                          <Icon
+                            name={
+                              isPasswordVisible
+                                ? "visibility-off"
+                                : "visibility"
+                            }
+                            iconStyle={{ color: colors.gray4 }}
+                            type="material"
+                            style={{ marginRight: 10 }}
+                          />
+                        </Animatable.View>
+                      </TouchableOpacity>
                     </View>
                   </View>
 
@@ -373,16 +319,28 @@ export default function SignUpScreen({ navigation }) {
                           touched.confirmPassword && errors.confirmPassword
                         }
                         value={confirmPassword}
-                        secureTextEntry={true}
+                        secureTextEntry={!isPasswordVisible}
                       />
-                      <Animatable.View animation="fadeInLeft" duration={400}>
-                        <Icon
-                          name="visibility"
-                          color={colors.gray4}
-                          type="material"
-                          style={{ marginRight: 10 }}
-                        />
-                      </Animatable.View>
+                      <TouchableOpacity
+                        onPress={togglePasswordVisibility}
+                        style={{ position: "absolute", right: 10 }}
+                      >
+                        <Animatable.View
+                          animation={textInput2Focused ? "" : "fadeInLeft"}
+                          duration={400}
+                        >
+                          <Icon
+                            name={
+                              isPasswordVisible
+                                ? "visibility-off"
+                                : "visibility"
+                            }
+                            iconStyle={{ color: colors.gray4 }}
+                            type="material"
+                            style={{ marginRight: 10 }}
+                          />
+                        </Animatable.View>
+                      </TouchableOpacity>
                     </View>
                   </View>
 
@@ -474,11 +432,20 @@ export default function SignUpScreen({ navigation }) {
                   </View>
 
                   <View style={styles.view17}>
-                    <FormSubmitButton
-                      title="Create my account"
-                      onPress={handleSubmit}
-                      submitting={isSubmitting}
-                    />
+                    {isLoading ? (
+                      // <AppLoader />
+                      <View
+                        style={[styles.spinner, { backgroundColor: "#f2f2f2" }]}
+                      >
+                        <ActivityIndicator size="large" color="red" />
+                      </View>
+                    ) : (
+                      <FormSubmitButton
+                        title="Create my account"
+                        onPress={handleSubmit}
+                        submitting={isSubmitting}
+                      />
+                    )}
                   </View>
                 </View>
               );
@@ -513,6 +480,11 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "white",
+  },
+  spinner: {
+    height: height / 2,
+    alignItems: "center",
+    justifyContent: "center",
   },
   view1: {
     justifyContent: "center",
@@ -762,6 +734,87 @@ const styles = StyleSheet.create({
 //       type: "error",
 //       text1: "Invalid Entry",
 //       text2: "Please Fill in the form correctly"
+//     });
+//   }
+// }
+
+// setLoginPending(true);
+// try {
+//   const response = await axios.post(`${baseUrl}users/register`, values);
+//   console.log("USER ACCOUNT CREATED", response.data);
+
+//   if (response.status === 201 || response.data.success) {
+//     // navigation.navigate("ImageUpload");
+
+//     const signInResponse = await signIn({
+//       values: email,
+//       values: password,
+//     });
+
+//     console.log(signInResponse);
+//     if (signInResponse.data.success) {
+//       navigation.dispatch(
+//         StackActions.replace("ImageUpload", {
+//           token: signInResponse.data.token,
+//         })
+//       );
+//     }
+
+//     Toast.show({
+//       topOffset: 60,
+//       type: "success",
+//       text1: "Registration Successful",
+//       text2: "Please log in to your account",
+//     });
+
+//     formikActions.resetForm();
+//     formikActions.setSubmitting(false);
+//     // setLoginPending(false);
+//   } else {
+//     // Handle unexpected response status
+//     console.error("Unexpected response status:", response.status);
+//     Toast.show({
+//       topOffset: 60,
+//       type: "error",
+//       text1: "Signup Failed",
+//       text2: "Unexpected response status",
+//     });
+//   }
+// } catch (error) {
+//   console.error("Signup Error:", error);
+
+//   if (error.response) {
+//     // The request was made, but the server responded with a non-2xx status
+//     console.error(
+//       "Server responded with error status:",
+//       error.response.status
+//     );
+//     console.error("Server response data:", error.response.data);
+
+//     const errorMessage = handleSignUpError(error.response.data);
+//     Toast.show({
+//       topOffset: 60,
+//       type: "error",
+//       text1: "Signup Failed",
+//       text2: errorMessage,
+//     });
+//   } else if (error.request) {
+//     // The request was made but no response was received
+//     console.error("No response received from the server");
+//     Toast.show({
+//       topOffset: 60,
+//       type: "error",
+//       text1: "Signup Failed",
+//       text2: "No response received from the server",
+//     });
+//   } else {
+//     // Something happened in setting up the request that triggered an Error
+//     console.error("Error setting up the request:", error.message);
+//     Toast.show({
+//       topOffset: 60,
+//       type: "error",
+//       text1: "Signup Failed",
+//       text2: "Error setting up the request",
 //     });
 //   }
 // }

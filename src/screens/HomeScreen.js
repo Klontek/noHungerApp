@@ -17,7 +17,7 @@ import CountDown from "react-native-countdown-component";
 import { Icon } from "react-native-elements";
 import HomeHeader from "../components/HomeHeader";
 import { colors, SIZES } from "../global/styles";
-// import { getShopData, productFilter } from "../../assets/Data/data";
+
 import { Image } from "react-native-elements";
 import FoodCard from "../components/FoodCard";
 import ProductList from "./Products/ProductList";
@@ -28,19 +28,16 @@ import { CarouselComponent } from "../components/CarouselComponent";
 import Heading from "../components/Heading";
 import ProductsComponent from "../components/Products/ProductsComponent";
 import { addItemToCart } from "../Redux/Actions";
-// import CategoryFilter from "../components/CategoryFilter";
+import CategoriesComponent from "../components/CategoriesComponent";
 
 import axios from "axios";
 import baseUrl from "../../assets/Common/baseUrl";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import CategoriesComponent from "../components/CategoriesComponent";
 
 const SCREEN_WIDTH = Dimensions.get("window").width;
 
 const { height } = Dimensions.get("window");
 
 const HomeScreen = ({ navigation }, props) => {
-  // const data = getShopData();
   const [indexCheck, setIndexCheck] = useState("");
   const [delivery, setDelivery] = useState(true);
   const [products, setProducts] = useState([]);
@@ -56,31 +53,19 @@ const HomeScreen = ({ navigation }, props) => {
 
   const dispatch = useDispatch();
 
-  // const getToken = async () => {
-  //   try {
-  //     const token = await AsyncStorage.getItem("jwt");
-  //     return token;
-  //   } catch (error) {
-  //     console.error("Error getting token:", error);
-  //     return null;
-  //   }
-  // };
-
-  const getProduct = () => {
+  const getProduct = async () => {
     axios
       .get(`${baseUrl}products`)
       .then((res) => {
         setProducts(res.data);
         setLoading(false);
-        // setInitialState(res.data);
-        // console.log(res.data);
       })
       .catch((error) => {
         console.log({ error: error, msg: "getProduct Api call error" });
       });
   };
 
-  const getProductData = () => {
+  const getProductData = async () => {
     axios
       .get(`${baseUrl}productDatas`)
       .then((res) => {
@@ -93,7 +78,6 @@ const HomeScreen = ({ navigation }, props) => {
   };
 
   const getShopData = async () => {
-    // const token = await getToken();
     axios
       .get(`${baseUrl}shopDatas`)
       .then((res) => {
@@ -103,109 +87,61 @@ const HomeScreen = ({ navigation }, props) => {
       .catch((error) => {
         console.log({ error: error, msg: "shop Data Api call error" });
       });
-    // if (token) {
-    //   try {
-    //     const response = await axios.get(`${baseUrl}shopDatas`, {
-    //       headers: { Authorization: `Bearer ${token}` },
-    //     });
-    //     console.log("Shop Data Response:", response.data);
-    //     setShopData(response.data);
-    //   } catch (error) {
-    //     console.error("Shop Data API Error:", error);
-    //   }
-    // }
   };
 
   // Products Api
   useFocusEffect(
     useCallback(() => {
-      // setCategories(productFilter);
-      // setActive(-1);
+      const loadData = async () => {
+        try {
+          await getProduct();
+          await getProductData();
+          await getShopData();
+          setLoading(false);
+        } catch (error) {
+          console.error("Error loading data:", error);
+        }
+      };
 
-      getProduct();
-      // setLoading(false);
-      getProductData();
-      getShopData();
-      setFocus(false);
-      // setProductFilter(productData);
+      loadData();
 
       return () => {
         setProducts([]);
         setProductData([]);
         setShopData([]);
         setLoading(true);
-        // setProductFilter([]);
         setFocus();
       };
     }, [])
   );
 
-  // // Products Api
-  // useFocusEffect()
-  // useEffect(() => {
-  //   // setCategories(productFilter);
-  //   //   setActive(-1);
-  //   getProduct();
-  //   setLoading(false);
-  //   getProductData();
-  //   getShopData();
-  //   setFocus(false);
-  //   setProductFilter(productData);
-
-  //   return () => {
-  //     setProducts([]);
-  //     setProductData([]);
-  //     setShopData([]);
-  //     setProductFilter([]);
-  //     setFocus();
-  //     // setCategories([]);
-  //     // setActive();
-  //     // setInitialState();
-  //   };
-  // }, []);
-
-  // search Product
-  // const SearchProduct = (text) => {
-  //   setProductFilter(
-  //     productData.filter((i) =>
-  //       i.name.toLowerCase().includes(text.toLowerCase())
-  //     )
-  //   );
-  // };
-
   const openList = () => {
     setFocus(true);
   };
-  // const openBlur = () => {
-  //   setFocus(false);
-  // };
-  // products categories method
-  // const changeCategories = (category) => {
-  //   category === "all"
-  //     ? setProductsCategories(initialState, setActive(true))
-  //     : [
-  //     setProductsCategories(
-  //         products.filter((item) => item.category.id.$oid === category),
-  //     setActive(true)
-  //       )
-  //     ]
-  // };
+  const openBlur = () => {
+    setFocus(false);
+  };
+
+  const handleAddToCart = () => {
+    // Dispatch an action to add the current item to the cart
+    dispatch(addItemToCart(items));
+  };
+
+  const handleCountdownFinish = () => {
+    console.log("Countdown finished");
+    // Perform any action needed when the countdown finishes
+  };
 
   const items = useSelector((state) => state);
-  // console.log(items);
-
-  // const handleAddToCart = () => {
-  //   // Dispatch an action to add the current item to the cart
-  //   dispatch(addItemToCart(items));
-  // };
   return (
     <>
       {loading ? (
-        //loading
+        // loading
         <View style={[styles.spinner, { backgroundColor: "#f2f2f2" }]}>
           <ActivityIndicator size="large" color="red" />
         </View>
       ) : (
+        // <AppLoader />
         <View style={styles.container}>
           <HomeHeader navigation={navigation} />
 
@@ -320,12 +256,6 @@ const HomeScreen = ({ navigation }, props) => {
                   />
                 </TouchableOpacity>
               </View>
-
-              {/* <Pressable
-          onPress={() => navigation.navigate('Admin')}
-          >
-            <Icon type="material-community" name="tune" color={colors.gray7} size={26} />
-          </Pressable> */}
             </View>
             {/* Search section */}
             <View>
@@ -351,9 +281,6 @@ const HomeScreen = ({ navigation }, props) => {
                 </View>
               </View>
             </View>
-            {/* {focus == true ? (
-            ): ()} */}
-            {/* Carousel section */}
             <View>
               <FlatList
                 showsHorizontalScrollIndicator={false}
@@ -373,36 +300,20 @@ const HomeScreen = ({ navigation }, props) => {
                       rating={item.rating}
                       numReview={item.numReviews}
                       countInStock={item.countInStock}
-                      // price={item.productData.price}
-                      // description={item.productData.description}
-                      // navigation={navigation}
                       item={item}
                     />
                   </View>
                 )}
               />
             </View>
-            {/* <CarouselComponent/> */}
-            {/* category Filter */}
-            {/* <View>
-              <CategoryFilter 
-                categories={categories}
-                categoryFilter={changeCategories}
-                productCategories={productsCategories}
-                active={active}
-                setActive={setActive}
-              />
-            </View> */}
             {/* Categories section */}
             <View style={styles.categoryHeader}>
               <Text style={styles.categoryHeaderText}>Categories</Text>
             </View>
-            {/* categories component */}
             <CategoriesComponent navigation={navigation} />
 
             {/* New Arrival section */}
             <View style={styles.categoryHeader}>
-              {/* <Text style={styles.categoryHeaderProductsComponentText}>New Arrival</Text> */}
               <Heading />
               <ProductsComponent />
             </View>
@@ -425,10 +336,11 @@ const HomeScreen = ({ navigation }, props) => {
                 >
                   Options changing in
                 </Text>
+
                 {/* <CountDown
                   until={86500}
                   size={14}
-                  onFinish={() => console.log("Countdown finished")}
+                  onFinish={handleCountdownFinish}
                   digitStyle={{ backgroundColor: colors.lightGreen }}
                   digitTxtStyle={{ color: colors.CardBackground }}
                   timeToShow={["D", "H", "M", "S"]}
@@ -471,33 +383,7 @@ const HomeScreen = ({ navigation }, props) => {
                 )}
               />
             </View>
-            {/* Promotions Available section
-        <View style={styles.categoryHeader}>
-          <Text style={styles.categoryHeaderText}>Promotions Available</Text>
-        </View>
 
-        <View>
-          <FlatList
-            showsHorizontalScrollIndicator={false}
-            style={{ marginTop: 10, marginBottom: 10 }}
-            horizontal={true}
-            data={products}
-            keyExtractor={(item, index) => index.toString()}
-            renderItem={({ item }) => (
-              <View style={{ margin: 5 }}>
-                <FoodCard
-                  screenWidth={SCREEN_WIDTH * 0.8}
-                  images={item.images}
-                  shopName={item.ShopName}
-                  farAway={item.farAway}
-                  businessAddress={item.businessAddress}
-                  rating={item.rating}
-                  numReview={item.numReviews}
-                />
-              </View>
-            )}
-          />
-        </View> */}
             {/* Shop Product section */}
             <View style={styles.categoryHeader}>
               <Text style={styles.categoryHeaderText}>Featured Products</Text>
@@ -698,3 +584,97 @@ const styles = StyleSheet.create({
 });
 
 export default HomeScreen;
+
+// import { getShopData, productFilter } from "../../assets/Data/data";
+// const data = getShopData();
+
+// // Products Api
+// useFocusEffect(
+//   useCallback(() => {
+//     // setCategories(productFilter);
+//     // setActive(-1);
+
+//     getProduct();
+//     // setLoading(false);
+//     getProductData();
+//     getShopData();
+//     setFocus(false);
+//     // setProductFilter(productData);
+
+//     return () => {
+//       setProducts([]);
+//       setProductData([]);
+//       setShopData([]);
+//       setLoading(true);
+//       // setProductFilter([]);
+//       setFocus();
+//     };
+//   }, [])
+// );
+
+// // Products Api
+// useFocusEffect()
+// useEffect(() => {
+//   // setCategories(productFilter);
+//   //   setActive(-1);
+//   getProduct();
+//   setLoading(false);
+//   getProductData();
+//   getShopData();
+//   setFocus(false);
+//   setProductFilter(productData);
+
+//   return () => {
+//     setProducts([]);
+//     setProductData([]);
+//     setShopData([]);
+//     setProductFilter([]);
+//     setFocus();
+//     // setCategories([]);
+//     // setActive();
+//     // setInitialState();
+//   };
+// }, []);
+
+// search Product
+// const SearchProduct = (text) => {
+//   setProductFilter(
+//     productData.filter((i) =>
+//       i.name.toLowerCase().includes(text.toLowerCase())
+//     )
+//   );
+// };
+
+{
+  /* <CountDown
+                  until={86500}
+                  size={14}
+                  onFinish={() => console.log("Countdown finished")}
+                  digitStyle={{ backgroundColor: colors.lightGreen }}
+                  digitTxtStyle={{ color: colors.CardBackground }}
+                  timeToShow={["D", "H", "M", "S"]}
+                  timeLabels={{ d: "Days", h: "Hours", m: "Min", s: "Sec" }}
+                /> */
+}
+
+// products categories method
+// const changeCategories = (category) => {
+//   category === "all"
+//     ? setProductsCategories(initialState, setActive(true))
+//     : [
+//     setProductsCategories(
+//         products.filter((item) => item.category.id.$oid === category),
+//     setActive(true)
+//       )
+//     ]
+// };
+
+// console.log(items);
+
+// import { CountdownCircleTimer } from "react-countdown";
+// import { CountdownCircleTimer } from "react-countdown";
+// import AsyncStorage from "@react-native-async-storage/async-storage";
+// import CategoryFilter from "../components/CategoryFilter";
+// import CircularCountdownTimer from "../components/CircularCountdownTimer";
+// import AnimatedCountdown from "react-native-animated-countdown";
+// import AppLoader from "../components/AppLoader";

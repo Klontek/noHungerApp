@@ -54,32 +54,9 @@ const UserProfile = (props) => {
     }, [context.stateUser.isAuthenticated])
   );
 
-  // useEffect(() => {
-  //   if (
-  //     context.stateUser.isAuthenticated === false ||
-  //     context.stateUser.isAuthenticated === null
-  //   ) {
-  //     props.navigation.navigate("SignInScreen");
-  //   }
-
-  //   AsyncStorage.getItem("jwt")
-  //     .then((res) => {
-  //       axios
-  //         .get(`${baseUrl}users/${context.stateUser.user.sub}`, {
-  //           headers: { Authorization: `Bearer ${res}` },
-  //         })
-  //         .then((user) => setUserProfile(user.data));
-  //     })
-  //     .catch((error) => console.log(error));
-
-  //   return () => {
-  //     setUserProfile();
-  //   };
-  // }, [context.stateUser.isAuthenticated]);
-
   return (
     <View style={styles.container}>
-      <ScrollView style={styles.subContainer}>
+      <ScrollView contentContainerStyle={styles.subContainer}>
         <Text style={{ marginTop: 30 }}>
           {userProfile ? userProfile.name : ""}
         </Text>
@@ -134,3 +111,26 @@ const styles = StyleSheet.create({
 });
 
 export default UserProfile;
+
+// useEffect(() => {
+//   if (
+//     context.stateUser.isAuthenticated === false ||
+//     context.stateUser.isAuthenticated === null
+//   ) {
+//     props.navigation.navigate("SignInScreen");
+//   }
+
+//   AsyncStorage.getItem("jwt")
+//     .then((res) => {
+//       axios
+//         .get(`${baseUrl}users/${context.stateUser.user.sub}`, {
+//           headers: { Authorization: `Bearer ${res}` },
+//         })
+//         .then((user) => setUserProfile(user.data));
+//     })
+//     .catch((error) => console.log(error));
+
+//   return () => {
+//     setUserProfile();
+//   };
+// }, [context.stateUser.isAuthenticated]);

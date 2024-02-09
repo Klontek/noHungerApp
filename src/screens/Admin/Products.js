@@ -145,7 +145,7 @@ const Products = () => {
   // delete functionality for products
   const deleteProduct = (id) => {
     axios
-      .delete(`${baseUrl}productData/${id}`, {
+      .delete(`${baseUrl}productDatas/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then((res) => {
