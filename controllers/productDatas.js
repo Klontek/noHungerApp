@@ -13,27 +13,6 @@ const MIME_FILE_TYPE = {
   "image/jpg": "jpg",
 };
 
-// //upload image functionality
-// const storage = multer.diskStorage({
-//   destination: function (req, file, cb) {
-//     const isValid = MIME_FILE_TYPE[file.mimetype]; //validate file type
-//     let uploadError = new Error("invalid image type");
-
-//     if (isValid) {
-//       uploadError = null;
-//     }
-
-//     cb(uploadError, "public/productData"); //directory where image will be uploaded
-//   },
-//   filename: function (req, file, cb) {
-//     const fileName = file.originalname.split(" ").join("-");
-//     const extension = MIME_FILE_TYPE[file.mimetype];
-//     cb(null, `${fileName}-${Date.now()}.${extension}`);
-//   },
-// });
-
-// const uploadOptions = multer({ storage: storage });
-
 // Define Multer storage
 const storage = multer.memoryStorage(); // Use memory storage for Cloudinary
 
@@ -209,65 +188,6 @@ export const addProductData = async (req, res) => {
   });
 };
 
-// export const addProductData = async (req, res) => {
-//   uploadOptions.single("image")(req, res, async (uploadError) => {
-//     if (uploadError) {
-//       return res.status(400).json({
-//         msg: "Error uploading image",
-//         error: uploadError.message,
-//       });
-//     }
-
-//     try {
-//       const categoryId = req.body.category;
-//       const category = await categoryModel.findById(categoryId);
-//       const file = req.file; // Check if req.file is defined
-
-//       if (!category) {
-//         return res.status(400).json({ msg: "Invalid Category" });
-//       }
-
-//       if (!file) {
-//         return res.status(400).json({ msg: "Invalid file/image entry" });
-//       }
-
-//       const fileName = file.filename;
-//       const basePath = `${req.protocol}://${req.get(
-//         "host"
-//       )}/public/productData`;
-
-//       const {
-//         name,
-//         price,
-//         brand,
-//         isFeatured,
-//         description,
-//         countInStock,
-//         dateCreated,
-//       } = req.body;
-
-//       const newProductData = await productDataModel.create({
-//         name,
-//         price,
-//         image: `${basePath}/${fileName}`, // Correct the path
-//         brand,
-//         isFeatured,
-//         description,
-//         countInStock,
-//         category: categoryId,
-//         dateCreated,
-//       });
-
-//       res.status(201).json(newProductData);
-//     } catch (error) {
-//       res.status(500).json({
-//         msg: "Internal Server Error",
-//         error: error.message,
-//       });
-//     }
-//   });
-// };
-
 export const updateProductData = async (req, res) => {
   uploadOptions.single("image")(req, res, async (uploadError) => {
     if (uploadError) {
@@ -347,81 +267,6 @@ export const updateProductData = async (req, res) => {
     }
   });
 };
-
-// export const updateProductData = async (req, res) => {
-//   uploadOptions.single("image")(req, res, async (uploadError) => {
-//     if (uploadError) {
-//       return res.status(400).json({
-//         msg: "Error uploading image",
-//         error: uploadError.message,
-//       });
-//     }
-
-//     const categoryId = req.body.category;
-//     const productDataId = req.params.productDataId;
-
-//     const { name, price, brand, isFeatured, description, countInStock } =
-//       req.body;
-
-//     const productData = await productDataModel.findById(productDataId);
-//     if (!productData)
-//       return res.status(400).json({ msg: "Invalid productData!" });
-
-//     const file = req.file;
-//     let imagePath;
-
-//     if (file) {
-//       const fileName = file.filename;
-//       const basePath = `${req.protocol}://${req.get(
-//         "host"
-//       )}/public/productData`;
-//       imagePath = `${basePath}/${fileName}`;
-//     } else {
-//       imagePath = productData.image;
-//     }
-
-//     try {
-//       const category = await categoryModel.findById(categoryId);
-//       if (!category) {
-//         return res.status(400).json({ msg: "Invalid Category" });
-//       }
-
-//       const updateData = {
-//         name,
-//         price,
-//         image: imagePath,
-//         brand,
-//         isFeatured,
-//         description,
-//         countInStock,
-//         category: categoryId,
-//       };
-
-//       // Update the productData and return the updated object
-//       const updatedProductData = await productDataModel.findByIdAndUpdate(
-//         productDataId,
-//         updateData,
-//         {
-//           new: true, // Return the updated productData
-//         }
-//       );
-
-//       if (!updatedProductData) {
-//         return res.status(404).json({ msg: "ProductData cannot be updated" });
-//       }
-
-//       res.status(200).json({
-//         msg: "ProductData has been updated successfully",
-//         productData: updatedProduct,
-//       });
-//     } catch (error) {
-//       res.status(500).json({
-//         err: error,
-//         msg: "Internal Server Error",
-//       });
-//     }
-//   });
-// };
 
 // Remove product data with image from Cloudinary
 export const deleteProductData = async (req, res) => {
@@ -510,6 +355,161 @@ export const updateProductDataGalleryImages = async (req, res) => {
     });
   }
 };
+
+// export const addProductData = async (req, res) => {
+//   uploadOptions.single("image")(req, res, async (uploadError) => {
+//     if (uploadError) {
+//       return res.status(400).json({
+//         msg: "Error uploading image",
+//         error: uploadError.message,
+//       });
+//     }
+
+//     try {
+//       const categoryId = req.body.category;
+//       const category = await categoryModel.findById(categoryId);
+//       const file = req.file; // Check if req.file is defined
+
+//       if (!category) {
+//         return res.status(400).json({ msg: "Invalid Category" });
+//       }
+
+//       if (!file) {
+//         return res.status(400).json({ msg: "Invalid file/image entry" });
+//       }
+
+//       const fileName = file.filename;
+//       const basePath = `${req.protocol}://${req.get(
+//         "host"
+//       )}/public/productData`;
+
+//       const {
+//         name,
+//         price,
+//         brand,
+//         isFeatured,
+//         description,
+//         countInStock,
+//         dateCreated,
+//       } = req.body;
+
+//       const newProductData = await productDataModel.create({
+//         name,
+//         price,
+//         image: `${basePath}/${fileName}`, // Correct the path
+//         brand,
+//         isFeatured,
+//         description,
+//         countInStock,
+//         category: categoryId,
+//         dateCreated,
+//       });
+
+//       res.status(201).json(newProductData);
+//     } catch (error) {
+//       res.status(500).json({
+//         msg: "Internal Server Error",
+//         error: error.message,
+//       });
+//     }
+//   });
+// };
+
+// export const updateProductData = async (req, res) => {
+//   uploadOptions.single("image")(req, res, async (uploadError) => {
+//     if (uploadError) {
+//       return res.status(400).json({
+//         msg: "Error uploading image",
+//         error: uploadError.message,
+//       });
+//     }
+
+//     const categoryId = req.body.category;
+//     const productDataId = req.params.productDataId;
+
+//     const { name, price, brand, isFeatured, description, countInStock } =
+//       req.body;
+
+//     const productData = await productDataModel.findById(productDataId);
+//     if (!productData)
+//       return res.status(400).json({ msg: "Invalid productData!" });
+
+//     const file = req.file;
+//     let imagePath;
+
+//     if (file) {
+//       const fileName = file.filename;
+//       const basePath = `${req.protocol}://${req.get(
+//         "host"
+//       )}/public/productData`;
+//       imagePath = `${basePath}/${fileName}`;
+//     } else {
+//       imagePath = productData.image;
+//     }
+
+//     try {
+//       const category = await categoryModel.findById(categoryId);
+//       if (!category) {
+//         return res.status(400).json({ msg: "Invalid Category" });
+//       }
+
+//       const updateData = {
+//         name,
+//         price,
+//         image: imagePath,
+//         brand,
+//         isFeatured,
+//         description,
+//         countInStock,
+//         category: categoryId,
+//       };
+
+//       // Update the productData and return the updated object
+//       const updatedProductData = await productDataModel.findByIdAndUpdate(
+//         productDataId,
+//         updateData,
+//         {
+//           new: true, // Return the updated productData
+//         }
+//       );
+
+//       if (!updatedProductData) {
+//         return res.status(404).json({ msg: "ProductData cannot be updated" });
+//       }
+
+//       res.status(200).json({
+//         msg: "ProductData has been updated successfully",
+//         productData: updatedProduct,
+//       });
+//     } catch (error) {
+//       res.status(500).json({
+//         err: error,
+//         msg: "Internal Server Error",
+//       });
+//     }
+//   });
+// };
+
+// //upload image functionality
+// const storage = multer.diskStorage({
+//   destination: function (req, file, cb) {
+//     const isValid = MIME_FILE_TYPE[file.mimetype]; //validate file type
+//     let uploadError = new Error("invalid image type");
+
+//     if (isValid) {
+//       uploadError = null;
+//     }
+
+//     cb(uploadError, "public/productData"); //directory where image will be uploaded
+//   },
+//   filename: function (req, file, cb) {
+//     const fileName = file.originalname.split(" ").join("-");
+//     const extension = MIME_FILE_TYPE[file.mimetype];
+//     cb(null, `${fileName}-${Date.now()}.${extension}`);
+//   },
+// });
+
+// const uploadOptions = multer({ storage: storage });
 
 // export const deleteProductData = async (req, res) => {
 //   const productDataId = req.params.productDataId;

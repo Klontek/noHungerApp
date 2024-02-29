@@ -27,6 +27,11 @@ const productDataSchema = new mongoose.Schema({
     type: String,
     default: "",
   },
+  reviews: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "reviews",
+    required: true,
+  },
   countInStock: {
     type: Number,
     default: 0,

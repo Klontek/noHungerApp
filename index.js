@@ -16,8 +16,7 @@ import userRoutes from "./routes/users.js";
 import orderRoutes from "./routes/orders.js";
 import shopDataRoutes from "./routes/shopDatas.js";
 import productDataRoutes from "./routes/productData.js";
-import { isAuthorize } from "./middleware/validation/authMiddleware.mjs";
-import { getProfile, signOut, uploadProfile } from "./controllers/users.js";
+import { uploadProfile } from "./controllers/users.js";
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -55,9 +54,6 @@ app.use(`${api}/orders`, orderRoutes);
 app.use(`${api}/shopDatas`, shopDataRoutes);
 app.use(`${api}/productDatas`, productDataRoutes);
 app.use(`${api}/upload-profile`, uploadProfile);
-app.use(`${api}/sign-out`, isAuthorize, signOut);
-// app.use(`${api}/profile`, isAuthorize, getProfile);
-// app.use(`${api}/upload-profile`, isAuthorize, uploadProfile);
 
 app.get("/", (req, res) => {
   res.send("Welcome to Restful API!");

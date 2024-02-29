@@ -50,6 +50,11 @@ const productSchema = new mongoose.Schema(
       type: Number,
       default: 0,
     },
+    reviews: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "reviews",
+      required: true,
+    },
     numReviews: {
       type: Number,
       default: 0,

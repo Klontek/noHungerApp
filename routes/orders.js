@@ -9,7 +9,10 @@ import {
   getUserOrders,
   updateOrder,
 } from "../controllers/orders.js";
-import { isAuthorize } from "../middleware/validation/authMiddleware.mjs";
+import {
+  isAuthorize,
+  admin,
+} from "../middleware/validation/authMiddleware.mjs";
 
 const router = express.Router();
 

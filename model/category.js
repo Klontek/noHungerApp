@@ -6,6 +6,14 @@ const categorySchema = new mongoose.Schema(
       type: String,
       required: [true, "please provide category name"],
     },
+    publicId: {
+      type: String,
+    },
+    image: {
+      type: String,
+      required: false,
+      default: "",
+    },
     icon: {
       type: String,
       default: "",

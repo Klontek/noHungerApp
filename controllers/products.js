@@ -2,37 +2,18 @@ import mongoose from "mongoose";
 import categoryModel from "../model/category.js";
 import productModel from "../model/product.js";
 import multer from "multer";
+import asyncHandler from "express-async-handler";
 import {
   removeFromCloudinary,
   uploadToCloudinary,
 } from "../services/cloudinary.js";
+import ApiFeatures from "../utility/apiFeatures.js";
 
 const MIME_FILE_TYPE = {
   "image/png": "png",
   "image/jpeg": "jpeg",
   "image/jpg": "jpg",
 };
-
-// //upload image functionality
-// const storage = multer.diskStorage({
-//   destination: function (req, file, cb) {
-//    const isValid = MIME_FILE_TYPE[file.mimetype]; //validate file type
-//    let uploadError = new Error("invalid image type");
-
-//    if(isValid) {
-//     uploadError = null;
-//    }
-
-//     cb(uploadError, 'public/uploads') //directory where image will be uploaded
-//   },
-//   filename: function (req, file, cb) {
-//     const fileName = file.originalname.split(' ').join('-');
-//     const extension = MIME_FILE_TYPE[file.mimetype];
-//     cb(null, `${fileName}-${Date.now()}.${extension}`)
-//   }
-// })
-
-// const uploadOptions = multer({ storage: storage })
 
 // Define Multer storage
 const storage = multer.memoryStorage(); // Use memory storage for Cloudinary
@@ -53,6 +34,9 @@ const uploadOptions = multer({
   fileFilter: fileFilter,
 });
 
+// @desc fetch all products
+// @route GET /api/products
+// @access Public
 export const getProducts = async (req, res) => {
   try {
     let filter = {};
@@ -75,6 +59,37 @@ export const getProducts = async (req, res) => {
   }
 };
 
+// @desc  fetch products for categories page
+// @route GET /api/products/category
+// @access Public
+export const getCategoryProducts = asyncHandler(async (req, res, next) => {
+  const resultPerPage = 3;
+  const productsCount = await productModel.countDocuments();
+
+  const apiFeature = new ApiFeatures(productModel.find(), req.query)
+    .search()
+    .filter();
+
+  let products = await apiFeature.query;
+
+  let filteredProductsCount = products.length;
+
+  apiFeature.pagination(resultPerPage);
+
+  products = await apiFeature.query.clone();
+
+  res.status(200).json({
+    success: true,
+    products,
+    productsCount,
+    resultPerPage,
+    filteredProductsCount,
+  });
+});
+
+// @desc fetch single product
+// @route GET /api/product
+// @access Public
 export const getProduct = async (req, res) => {
   const productId = req.params.productId;
   try {
@@ -100,6 +115,9 @@ export const getProduct = async (req, res) => {
   }
 };
 
+// @desc total number of products
+// @route GET /api/products/get/count
+// @access Private
 export const getCountProduct = async (req, res) => {
   const countProduct = await productModel.countDocuments();
 
@@ -117,6 +135,9 @@ export const getCountProduct = async (req, res) => {
   }
 };
 
+// @desc Find featured products
+// @route GET /api/products/get/featured/:countId
+// @access Private
 export const getFeaturedProduct = async (req, res) => {
   const count = req.params.countId ? req.params.countId : 0;
 
@@ -138,6 +159,9 @@ export const getFeaturedProduct = async (req, res) => {
   }
 };
 
+// @desc register products
+// @route POST /api/products/
+// @access Private
 export const addProduct = async (req, res) => {
   uploadOptions.single("image")(req, res, async (uploadError) => {
     if (uploadError) {
@@ -212,6 +236,9 @@ export const addProduct = async (req, res) => {
   });
 };
 
+// @desc update product
+// @route GET /api/products/:productId
+// @access Private
 export const updateProduct = async (req, res) => {
   uploadOptions.single("image")(req, res, async (uploadError) => {
     if (uploadError) {
@@ -242,15 +269,6 @@ export const updateProduct = async (req, res) => {
     if (!product) return res.status(400).json({ msg: "Invalid product!" });
 
     const file = req.file;
-    // let imagePath;
-
-    // if (file) {
-    //   const fileName = file.filename;
-    //   const basePath = `${req.protocol}://${req.get("host")}/public/uploads`;
-    //   imagePath = `${basePath}/${fileName}`;
-    // } else {
-    //   imagePath = product.image;
-    // }
 
     try {
       const category = await categoryModel.findById(categoryId);
@@ -316,6 +334,9 @@ export const updateProduct = async (req, res) => {
   });
 };
 
+// @desc delete a product
+// @route DELETE /api/products/:productId
+// @access Private/Admin
 export const deleteProduct = async (req, res) => {
   const productId = req.params.productId;
   try {
@@ -337,6 +358,9 @@ export const deleteProduct = async (req, res) => {
   }
 };
 
+// @desc update products images product
+// @route PUT /api/products/gallery-images/:productId
+// @access Private/Admin
 export const updateProductGalleryImages = async (req, res) => {
   try {
     uploadOptions.array("images", 10)(req, res, async (uploadError) => {
@@ -400,6 +424,78 @@ export const updateProductGalleryImages = async (req, res) => {
     });
   }
 };
+
+// @desc    Create new review
+// @route   POST /api/products/:id/reviews
+// @access  Private
+export const createProductReview = asyncHandler(async (req, res) => {
+  const { rating, comment } = req.body;
+
+  const product = await productModel.findById(req.params.id);
+
+  if (product) {
+    const alreadyReviewed = product.reviews.find(
+      (r) => r.user.toString() === req.user._id.toString()
+    );
+
+    if (alreadyReviewed) {
+      res.status(400);
+      throw new Error("Product already reviewed");
+    }
+
+    const review = {
+      name: req.user.name,
+      rating: Number(rating),
+      comment,
+      user: req.user._id,
+    };
+
+    product.reviews.push(review);
+
+    product.numReviews = product.reviews.length;
+
+    product.rating =
+      product.reviews.reduce((acc, item) => item.rating + acc, 0) /
+      product.reviews.length;
+
+    await product.save();
+    res.status(201).json({ message: "Review added" });
+  } else {
+    res.status(404);
+    throw new Error("Product not found");
+  }
+});
+
+// let imagePath;
+
+// if (file) {
+//   const fileName = file.filename;
+//   const basePath = `${req.protocol}://${req.get("host")}/public/uploads`;
+//   imagePath = `${basePath}/${fileName}`;
+// } else {
+//   imagePath = product.image;
+// }
+
+// //upload image functionality
+// const storage = multer.diskStorage({
+//   destination: function (req, file, cb) {
+//    const isValid = MIME_FILE_TYPE[file.mimetype]; //validate file type
+//    let uploadError = new Error("invalid image type");
+
+//    if(isValid) {
+//     uploadError = null;
+//    }
+
+//     cb(uploadError, 'public/uploads') //directory where image will be uploaded
+//   },
+//   filename: function (req, file, cb) {
+//     const fileName = file.originalname.split(' ').join('-');
+//     const extension = MIME_FILE_TYPE[file.mimetype];
+//     cb(null, `${fileName}-${Date.now()}.${extension}`)
+//   }
+// })
+
+// const uploadOptions = multer({ storage: storage })
 
 // //uploading/updating images in gallery
 

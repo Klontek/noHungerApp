@@ -29,6 +29,9 @@ const uploadOptions = multer({
   fileFilter,
 });
 
+// @desc Upload profile
+// @route POST /api/users/upload
+// @access Public
 export const uploadProfile = async (req, res) => {
   uploadOptions.single("profile")(req, res, async (uploadError) => {
     if (uploadError) {
@@ -41,10 +44,11 @@ export const uploadProfile = async (req, res) => {
 
     try {
       const { user } = req;
-      if (!user)
+      if (!user) {
         return res
           .status(401)
-          .json({ success: false, message: "unauthorized access!" });
+          .json({ success: false, message: "Unauthorized access!" });
+      }
 
       const result = await cloudinary.uploader.upload(req.file.path, {
         public_id: `${user._id}_profile`,
@@ -52,42 +56,100 @@ export const uploadProfile = async (req, res) => {
         height: 500,
         crop: "fill",
       });
-      // console.log(result);
 
-      await userModel.findByIdAndUpdate(
+      const userProfile = await userModel.findByIdAndUpdate(
         user._id,
-        { avatar: result.secure_url }, // Use result.secure_url from Cloudinary
+        { avatar: result.secure_url },
         { new: true }
       );
-      res
-        .status(201)
-        .json({ success: true, message: "Your profile pic is updated" });
+
+      res.status(201).json({
+        success: true,
+        message: "Your profile pic is updated",
+        data: userProfile,
+      });
     } catch (error) {
       console.log("Error while uploading profile image", error.message);
       res
         .status(500)
-        .json({ success: false, message: "Internal serer error!" });
+        .json({ success: false, message: "Internal server error!" });
     }
   });
 };
 
-export const getProfile = (req, res) => {
-  if (!req.user)
-    return res
-      .status(401)
-      .json({ success: false, message: "unauthorized access" });
+// @desc Get user profile
+// @route GET /api/users/profile
+// @access private
+export const getUserProfile = async (req, res) => {
+  try {
+    const user = await userModel.findById(req.user._id);
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found!",
+      });
+    }
 
-  res.status(201).json({
-    success: true,
-    profile: {
-      name: req.user.name,
-      email: res.user.email,
-      avatar: req.user.avatar ? req.user.avatar : "",
-    },
-  });
+    res.status(200).json({
+      success: true,
+      _id: user._id,
+      name: user.name,
+      email: user.email,
+      isAdmin: user.isAdmin,
+      avatar: user.avatar ? user.avatar : "",
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Server error",
+    });
+  }
 };
 
-export const addUser = async (req, res) => {
+// @desc Update user profile
+// @route PUT /api/users/:id/update-profile
+// @access Private
+export const updateUserProfile = async (req, res) => {
+  try {
+    const user = await userModel.findById(req.user._id);
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
+    }
+
+    user.name = req.body.name || user.name;
+    user.email = req.body.email || user.email;
+    user.password = req.body.password || user.password;
+
+    // Exclude confirmPassword from update operation
+    if (req.body.confirmPassword) {
+      user.confirmPassword = req.body.confirmPassword;
+    }
+
+    const updatedUser = await user.save();
+
+    res.json({
+      _id: updatedUser._id,
+      name: updatedUser.name,
+      email: updatedUser.email,
+      isAdmin: updatedUser.isAdmin,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      success: false,
+      msg: "Server Error",
+    });
+  }
+};
+
+// @desc Register a new user
+// @route POST /api/users
+// @access Public
+export const registerUser = async (req, res) => {
   try {
     const {
       name,
@@ -104,11 +166,12 @@ export const addUser = async (req, res) => {
     } = req.body;
 
     const isNewUser = await userModel.isThisEmailInUse(email);
-    if (!isNewUser)
+    if (!isNewUser) {
       return res.json({
         success: false,
         message: "This email is already in use, try another one!",
       });
+    }
 
     const newUser = await userModel.create({
       name,
@@ -125,13 +188,16 @@ export const addUser = async (req, res) => {
     });
 
     if (!newUser) {
-      res.status(404).json("User cannot be created");
+      return res.status(404).json({
+        success: false,
+        message: "User cannot be created",
+      });
     }
 
     res.status(201).json({
       success: true,
-      msg: "User created successfully",
-      newUser,
+      message: "User created successfully",
+      data: newUser,
     });
   } catch (error) {
     res.status(500).json({
@@ -141,14 +207,18 @@ export const addUser = async (req, res) => {
   }
 };
 
+// @desc    Get all users
+// @desc    Get all users
+// @route   GET /api/users
+// @access  Private/Admin
 export const getUsers = async (req, res) => {
   try {
     const users = await userModel.find().select("-password");
     if (!users || users.length === 0) {
-      res.status(404).json({ msg: "Users not Found", data: [] });
+      return res.status(404).json({ msg: "Users not found", data: [] });
     }
     res.status(200).json({
-      msg: "user created successfully",
+      msg: "Users fetched successfully",
       data: users,
     });
   } catch (error) {
@@ -160,16 +230,18 @@ export const getUsers = async (req, res) => {
   }
 };
 
+// @desc    Get user by id
+// @route   GET /api/users/:id
+// @access  Private/Admin
 export const getUser = async (req, res) => {
   try {
-    const user = await userModel
-      .findById(req.params.userId)
-      .select("-password");
-    if (!user || user.length === 0) {
-      res.status(404).json({ msg: "User not found" });
+    const user = await userModel.findById(req.params.id).select("-password");
+
+    if (!user) {
+      return res.status(404).json({ msg: "User not found" });
     }
 
-    res.status(201).json({ data: user });
+    res.status(200).json({ data: user });
   } catch (error) {
     res.status(500).json({
       msg: "Internal Server Error",
@@ -178,6 +250,9 @@ export const getUser = async (req, res) => {
   }
 };
 
+// @desc Authenticate user & get token
+// @route POST /api/users/login
+// @access Public
 export const loginUser = async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -195,10 +270,11 @@ export const loginUser = async (req, res) => {
     }
 
     const isMatch = await user.comparePassword(password);
-    if (!isMatch)
+    if (!isMatch) {
       return res
         .status(404)
-        .json({ success: false, message: "email / password does not match!" });
+        .json({ success: false, message: "Email/password does not match!" });
+    }
 
     const secret = process.env.SECRET;
 
@@ -210,30 +286,30 @@ export const loginUser = async (req, res) => {
         },
         secret,
         {
-          expiresIn: "1d",
+          expiresIn: "30d",
         }
       );
 
-      // to remove old tokens from the database
+      // Remove old tokens from the database
       let oldTokens = user.token || [];
 
       if (oldTokens.length) {
         oldTokens = oldTokens.filter((t) => {
           const timeDifference = (Date.now() - parseInt(t.signedAt)) / 1000;
-          if (timeDifference < 86400) {
-            return;
-          }
+          return timeDifference < 86400;
         });
       }
 
       await userModel.findByIdAndUpdate(user._id, {
         token: [...oldTokens, { token, signedAt: Date.now().toString() }],
-      }); // whenever user is signed in add the tokens and time to the database
+      });
 
       const userInfo = {
+        _id: user._id,
         name: user.name,
         email: user.email,
         avatar: user.avatar ? user.avatar : "",
+        isAdmin: user.isAdmin,
         token,
       };
 
@@ -253,24 +329,34 @@ export const loginUser = async (req, res) => {
   }
 };
 
+// @desc    Sign out a user
+// @route   GET /api/users/sign-out
+// @access  Private
 export const signOut = async (req, res) => {
   if (req.headers && req.headers.authorization) {
     const token = req.headers.authorization.split(" ")[1];
     if (!token) {
       return res
         .status(401)
-        .json({ success: true, message: "Authorization failed!" });
+        .json({ success: false, message: "Authorization failed!" });
     }
 
     const tokens = req.user.tokens;
 
-    const newToken = tokens.filter((t) => t.token !== token);
+    const newTokens = tokens.filter((t) => t.token !== token);
 
-    await userModel.findByIdAndUpdate(req.user._id, { tokens: newToken });
-    res.status(201).json({ success: true, message: "Sign out succesfully" });
+    await userModel.findByIdAndUpdate(req.user._id, { tokens: newTokens });
+    res.status(201).json({ success: true, message: "Sign out successful" });
+  } else {
+    res
+      .status(401)
+      .json({ success: false, message: "Authorization header missing!" });
   }
 };
 
+// @desc    Update a user
+// @route   PUT /api/users/:id
+// @access  Private/Admin
 export const updateUser = async (req, res) => {
   const {
     name,
@@ -286,8 +372,8 @@ export const updateUser = async (req, res) => {
   } = req.body;
 
   try {
-    await userModel.findByIdAndUpdate(
-      req.params.userId,
+    const updatedUser = await userModel.findByIdAndUpdate(
+      req.params.id,
       {
         name,
         email,
@@ -305,23 +391,38 @@ export const updateUser = async (req, res) => {
       }
     );
 
-    res.status(200).json("User has been updated successfully");
+    if (!updatedUser) {
+      return res.status(404).json({
+        msg: "User not found",
+      });
+    }
+
+    res.status(200).json({
+      msg: "User has been updated successfully",
+      user: updatedUser,
+    });
   } catch (error) {
     res.status(500).json({
       msg: "Internal Server Error",
-      err: error.message,
+      error: error.message,
     });
   }
 };
 
+// @desc    Delete a user
+// @route   GET /api/users/:id
+// @access  Private/Admin
 export const deleteUser = async (req, res) => {
   try {
-    let user = await userModel.findById(req.params.userId);
+    let user = await userModel.findById(req.params.id);
 
     !user
       ? res.status(404).json({ msg: "User not Found" })
       : await user.remove();
-    res.status(201).json("User has been deleted successfully");
+    res.status(201).json({
+      success: false,
+      msg: "User has been deleted successfully",
+    });
   } catch (error) {
     res.status(500).json({
       success: false,
@@ -330,6 +431,9 @@ export const deleteUser = async (req, res) => {
   }
 };
 
+// @desc    get number of users in database
+// @route   GET /api/users/:id
+// @access  Private/Admin
 export const getUserCount = async (req, res) => {
   const countUser = await userModel.countDocuments();
 

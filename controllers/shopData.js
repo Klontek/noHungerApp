@@ -15,27 +15,6 @@ const MIME_FILE_TYPE = {
   "image/jpg": "jpg",
 };
 
-// //upload image functionality
-// const storage = multer.diskStorage({
-//   destination: function (req, file, cb) {
-//     const isValid = MIME_FILE_TYPE[file.mimetype]; //validate file type
-//     let uploadError = new Error("invalid image type");
-
-//     if (isValid) {
-//       uploadError = null;
-//     }
-
-//     cb(uploadError, "public/shopData"); //directory where image will be uploaded
-//   },
-//   filename: function (req, file, cb) {
-//     const fileName = file.originalname.split(" ").join("-");
-//     const extension = MIME_FILE_TYPE[file.mimetype];
-//     cb(null, `${fileName}-${Date.now()}.${extension}`);
-//   },
-// });
-
-// const uploadOptions = multer({ storage: storage });
-
 // Define Multer storage
 const storage = multer.memoryStorage(); // Use memory storage for Cloudinary
 
@@ -253,6 +232,27 @@ export const deleteShopData = async (req, res) => {
     });
   }
 };
+
+// //upload image functionality
+// const storage = multer.diskStorage({
+//   destination: function (req, file, cb) {
+//     const isValid = MIME_FILE_TYPE[file.mimetype]; //validate file type
+//     let uploadError = new Error("invalid image type");
+
+//     if (isValid) {
+//       uploadError = null;
+//     }
+
+//     cb(uploadError, "public/shopData"); //directory where image will be uploaded
+//   },
+//   filename: function (req, file, cb) {
+//     const fileName = file.originalname.split(" ").join("-");
+//     const extension = MIME_FILE_TYPE[file.mimetype];
+//     cb(null, `${fileName}-${Date.now()}.${extension}`);
+//   },
+// });
+
+// const uploadOptions = multer({ storage: storage });
 
 // export const updateShopDatas = async (req, res) => {
 //   const {
