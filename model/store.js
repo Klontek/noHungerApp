@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
 const menuItemSchema = new mongoose.Schema({
   _id: {
@@ -19,9 +19,25 @@ const storeSchema = new mongoose.Schema({
   estimatedDeliveryTime: { type: Number, required: true },
   cuisines: [{ type: String, required: true }],
   menuItems: [menuItemSchema],
-  imageUrl: { type: String, required: true },
+  publicId: {
+    type: String,
+  },
+  imageUrl: { type: String, required: false },
   lastUpdated: { type: Date, required: true },
 });
 
-const storeModel = mongoose.model("Store", storeSchema);
-module.exports = storeModel;
+storeSchema.virtual("id").get(function () {
+  return this._id.toHexString();
+});
+
+storeSchema.set("toJSON", {
+  virtuals: true,
+});
+
+const storeModel =
+  mongoose.models.store || mongoose.model("store", storeSchema);
+
+export default storeModel;
+
+// const storeModel = mongoose.model("store", storeSchema);
+// module.exports = storeModel;

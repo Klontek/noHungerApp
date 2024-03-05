@@ -2,7 +2,6 @@ import mongoose from "mongoose";
 import categoryModel from "../model/category.js";
 import productModel from "../model/product.js";
 import multer from "multer";
-import asyncHandler from "express-async-handler";
 import {
   removeFromCloudinary,
   uploadToCloudinary,
@@ -34,27 +33,124 @@ const uploadOptions = multer({
   fileFilter: fileFilter,
 });
 
+// @desc register products
+// @route POST /api/products/
+// @access Private
+export const addProduct = async (req, res) => {
+  uploadOptions.single("image")(req, res, async (uploadError) => {
+    if (uploadError) {
+      return res.status(400).json({
+        msg: "Error uploading image",
+        error: uploadError.message,
+      });
+    }
+
+    try {
+      const categoryId = req.body.category;
+      const category = await categoryModel.findById(categoryId);
+      const file = req.file; // Check if req.file is defined
+
+      if (!category) {
+        return res.status(400).json({ msg: "Invalid Category" });
+      }
+
+      if (!file) {
+        return res.status(400).json({ msg: "Invalid file/image entry" });
+      }
+
+      const fileName = file.originalname.split(" ").join("-");
+      const buffer = file.buffer;
+
+      const cloudinaryResponse = await uploadToCloudinary(buffer, "products");
+
+      const {
+        name,
+        description,
+        richDescription,
+        images,
+        brand,
+        price,
+        countInStock,
+        rating,
+        numReviews,
+        isFeatured,
+        dateCreated,
+      } = req.body;
+
+      // Ensure comments field is set to an empty string if not provided
+      const comments = req.body.comments || "";
+
+      const newProduct = await productModel.create({
+        name,
+        description,
+        richDescription,
+        public_id: cloudinaryResponse.public_id,
+        image: cloudinaryResponse.secure_url,
+        images,
+        brand,
+        price,
+        category: categoryId,
+        countInStock,
+        rating,
+        comments, // Set the comments field
+        numReviews,
+        isFeatured,
+        dateCreated,
+      });
+
+      res.status(201).json(newProduct);
+    } catch (error) {
+      res.status(500).json({
+        msg: "Internal Server Error",
+        error: error.message,
+      });
+    }
+  });
+};
+
 // @desc fetch all products
 // @route GET /api/products
 // @access Public
 export const getProducts = async (req, res) => {
   try {
+    const pageSize = 10;
+    const page = Number(req.query.pageNumber) || 1;
+
     let filter = {};
     if (req.query.categories) {
-      filter = { category: req.query.categories.split(",") };
+      filter = { category: { $in: req.query.categories.split(",") } };
     }
 
-    const products = await productModel.find(filter).populate("category");
+    const keyword = req.query.keyword
+      ? {
+          name: {
+            $regex: req.query.keyword,
+            $options: "i",
+          },
+        }
+      : {};
+
+    const count = await productModel.countDocuments({ ...filter, ...keyword });
+    const products = await productModel
+      .find({ ...filter, ...keyword })
+      .limit(pageSize)
+      .skip(pageSize * (page - 1))
+      .populate("category");
 
     if (!products) {
-      console.log(products);
       res.status(404).json({ msg: "Cannot find products" });
     }
-    res.status(200).json(products);
+
+    res.status(200).json({
+      products,
+      page,
+      pages: Math.ceil(count / pageSize),
+    });
   } catch (error) {
+    console.error(error);
     res.status(500).json({
-      err: error,
-      msg: "Internal server error",
+      msg: "Internal Server Error",
+      error: error.message,
     });
   }
 };
@@ -62,30 +158,38 @@ export const getProducts = async (req, res) => {
 // @desc  fetch products for categories page
 // @route GET /api/products/category
 // @access Public
-export const getCategoryProducts = asyncHandler(async (req, res, next) => {
-  const resultPerPage = 3;
-  const productsCount = await productModel.countDocuments();
+export const getCategoryProducts = async (req, res, next) => {
+  try {
+    const resultPerPage = 3;
+    const productsCount = await productModel.countDocuments();
 
-  const apiFeature = new ApiFeatures(productModel.find(), req.query)
-    .search()
-    .filter();
+    const apiFeature = new ApiFeatures(productModel.find(), req.query)
+      .search()
+      .filter();
 
-  let products = await apiFeature.query;
+    let products = await apiFeature.query;
 
-  let filteredProductsCount = products.length;
+    let filteredProductsCount = products.length;
 
-  apiFeature.pagination(resultPerPage);
+    apiFeature.pagination(resultPerPage);
 
-  products = await apiFeature.query.clone();
+    products = await apiFeature.query.clone();
 
-  res.status(200).json({
-    success: true,
-    products,
-    productsCount,
-    resultPerPage,
-    filteredProductsCount,
-  });
-});
+    res.status(200).json({
+      success: true,
+      products,
+      productsCount,
+      resultPerPage,
+      filteredProductsCount,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      msg: "Internal Server Error",
+      error: error.message,
+    });
+  }
+};
 
 // @desc fetch single product
 // @route GET /api/product
@@ -159,81 +263,30 @@ export const getFeaturedProduct = async (req, res) => {
   }
 };
 
-// @desc register products
-// @route POST /api/products/
-// @access Private
-export const addProduct = async (req, res) => {
-  uploadOptions.single("image")(req, res, async (uploadError) => {
-    if (uploadError) {
-      return res.status(400).json({
-        msg: "Error uploading image",
-        error: uploadError.message,
-      });
+// @desc   Get top rated products
+// @route  GET /api/products/top
+// @access Public
+export const getTopRatedProducts = async (req, res) => {
+  try {
+    const products = await productModel
+      .find({})
+      .sort({ rating: -1 })
+      .limit(3)
+      .select("-richDescription -comments"); // Optionally exclude some fields
+    console.log(products);
+
+    if (!products || products.length === 0) {
+      return res.status(404).json({ msg: "No top rated products found" });
     }
 
-    try {
-      const categoryId = req.body.category;
-      const category = await categoryModel.findById(categoryId);
-      const file = req.file; // Check if req.file is defined
-
-      if (!category) {
-        return res.status(400).json({ msg: "Invalid Category" });
-      }
-
-      if (!file) {
-        return res.status(400).json({ msg: "Invalid file/image entry" });
-      }
-
-      // const fileName = file.filename;
-      // const basePath = `${req.protocol}://${req.get('host')}/public/uploads`;
-
-      const fileName = file.originalname.split(" ").join("-");
-      const buffer = file.buffer;
-
-      // Upload image to Cloudinary
-      const cloudinaryResponse = await uploadToCloudinary(buffer, "products");
-
-      const {
-        name,
-        description,
-        richDescription,
-        image,
-        images,
-        brand,
-        price,
-        countInStock,
-        rating,
-        numReviews,
-        isFeatured,
-        dateCreated,
-      } = req.body;
-
-      const newProduct = await productModel.create({
-        name,
-        description,
-        richDescription,
-        public_id: cloudinaryResponse.public_id,
-        image: cloudinaryResponse.secure_url,
-        // image: `${basePath}/${fileName}`, // Correct the path
-        images,
-        brand,
-        price,
-        category: categoryId,
-        countInStock,
-        rating,
-        numReviews,
-        isFeatured,
-        dateCreated,
-      });
-
-      res.status(201).json(newProduct);
-    } catch (error) {
-      res.status(500).json({
-        msg: "Internal Server Error",
-        error: error.message,
-      });
-    }
-  });
+    res.status(200).json(products);
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).json({
+      msg: "Internal Server Error",
+      error: error.message,
+    });
+  }
 };
 
 // @desc update product
@@ -348,7 +401,7 @@ export const deleteProduct = async (req, res) => {
 
     // Remove image from Cloudinary
     await removeFromCloudinary(product.public_id);
-
+    await product.deleteOne();
     res.status(201).json("Product has been deleted successfully");
   } catch (error) {
     res.status(500).json({
@@ -425,46 +478,213 @@ export const updateProductGalleryImages = async (req, res) => {
   }
 };
 
+/*
+ *   @desc   Update product count in stock
+ *   @route  PUT PUT /api/products/:id/stock
+ *   @access Private
+ */
+export const updateProductStock = async (req, res) => {
+  try {
+    const { countInStock } = req.body;
+
+    const product = await productModel.findById(req.params.id);
+
+    if (product) {
+      product.countInStock = countInStock;
+
+      const updatedProduct = await product.save();
+      res.json(updatedProduct);
+    } else {
+      res.status(404);
+      throw new Error("Product not found");
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      msg: "Internal Server Error",
+      error: error.message,
+    });
+  }
+};
+
+/**
+ * PRODUCT REVIEW LOGICS
+ */
+
 // @desc    Create new review
 // @route   POST /api/products/:id/reviews
 // @access  Private
-export const createProductReview = asyncHandler(async (req, res) => {
-  const { rating, comment } = req.body;
+export const createProductReview = async (req, res) => {
+  try {
+    const { rating, comment } = req.body;
 
-  const product = await productModel.findById(req.params.id);
+    const product = await productModel.findById(req.params.id);
 
-  if (product) {
-    const alreadyReviewed = product.reviews.find(
-      (r) => r.user.toString() === req.user._id.toString()
-    );
+    if (product) {
+      const alreadyReviewed = product.reviews.find(
+        (r) => r.user.toString() === req.user._id.toString()
+      );
 
-    if (alreadyReviewed) {
-      res.status(400);
-      throw new Error("Product already reviewed");
+      if (alreadyReviewed) {
+        res.status(400);
+        throw new Error("Product already reviewed");
+      }
+
+      const review = {
+        name: req.user.name,
+        rating: Number(rating),
+        comment,
+        user: req.user._id,
+      };
+
+      product.reviews.push(review);
+
+      product.numReviews = product.reviews.length;
+
+      product.rating =
+        product.reviews.reduce((acc, item) => item.rating + acc, 0) /
+        product.reviews.length;
+
+      await product.save();
+      res.status(201).json({ message: "Review added" });
+    } else {
+      res.status(404);
+      throw new Error("Product not found");
     }
-
-    const review = {
-      name: req.user.name,
-      rating: Number(rating),
-      comment,
-      user: req.user._id,
-    };
-
-    product.reviews.push(review);
-
-    product.numReviews = product.reviews.length;
-
-    product.rating =
-      product.reviews.reduce((acc, item) => item.rating + acc, 0) /
-      product.reviews.length;
-
-    await product.save();
-    res.status(201).json({ message: "Review added" });
-  } else {
-    res.status(404);
-    throw new Error("Product not found");
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      msg: "Internal Server Error",
+      error: error.message,
+    });
   }
-});
+};
+
+// @desc    Get product reviews
+// @route   GET /api/products/:id/reviews
+// @access  Private
+export const getProductReviews = async (req, res) => {
+  try {
+    const product = await productModel.findById(req.params.id);
+
+    if (product) {
+      res.status(200).json(product.reviews);
+    } else {
+      res.status(404);
+      throw new Error("Product not found");
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      msg: "Internal Server Error",
+      error: error.message,
+    });
+  }
+};
+
+// @desc    Delete product review
+// @route   DELETE /api/products/:id/reviews/:reviewId
+// @access  Private/Admin
+export const deleteProductReview = async (req, res) => {
+  try {
+    const product = await productModel.findById(req.params.id);
+
+    if (product) {
+      const review = product.reviews.find(
+        (r) => r._id.toString() === req.params.reviewId.toString()
+      );
+
+      if (!review) {
+        res.status(404);
+        throw new Error("Review not found");
+      }
+
+      product.reviews = product.reviews.filter(
+        (r) => r._id.toString() !== req.params.reviewId.toString()
+      );
+      product.numReviews = product.reviews.length;
+
+      product.rating =
+        product.reviews.reduce((acc, item) => item.rating + acc, 0) /
+        product.reviews.length;
+
+      await product.save();
+      res.status(200).json({ message: "Review deleted" });
+    } else {
+      res.status(404);
+      throw new Error("Product not found");
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      msg: "Internal Server Error",
+      error: error.message,
+    });
+  }
+};
+
+// @desc    Edit product review
+// @route   PUT /api/products/:id/reviews/:reviewId
+// @access  Private/Admin
+export const editProductReview = async (req, res) => {
+  try {
+    const { rating, comment } = req.body;
+
+    const product = await productModel.findById(req.params.id);
+
+    if (product) {
+      const review = product.reviews.find(
+        (r) => r._id.toString() === req.params.reviewId.toString()
+      );
+
+      if (!review) {
+        res.status(404);
+        throw new Error("Review not found");
+      }
+
+      review.rating = Number(rating);
+      review.comment = comment;
+
+      product.rating =
+        product.reviews.reduce((acc, item) => item.rating + acc, 0) /
+        product.reviews.length;
+
+      await product.save();
+      res.status(200).json({ message: "Review updated" });
+    } else {
+      res.status(404);
+      throw new Error("Product not found");
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      msg: "Internal Server Error",
+      error: error.message,
+    });
+  }
+};
+
+// export const getProducts = async (req, res) => {
+//   try {
+//     let filter = {};
+//     if (req.query.categories) {
+//       filter = { category: req.query.categories.split(",") };
+//     }
+
+//     const products = await productModel.find(filter).populate("category");
+
+//     if (!products) {
+//       console.log(products);
+//       res.status(404).json({ msg: "Cannot find products" });
+//     }
+//     res.status(200).json(products);
+//   } catch (error) {
+//     res.status(500).json({
+//       err: error,
+//       msg: "Internal server error",
+//     });
+//   }
+// };
 
 // let imagePath;
 
@@ -494,8 +714,6 @@ export const createProductReview = asyncHandler(async (req, res) => {
 //     cb(null, `${fileName}-${Date.now()}.${extension}`)
 //   }
 // })
-
-// const uploadOptions = multer({ storage: storage })
 
 // //uploading/updating images in gallery
 

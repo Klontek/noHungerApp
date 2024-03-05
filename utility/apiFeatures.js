@@ -1,20 +1,25 @@
-const ApiFeatures = (query, queryStr) => {
-  const search = () => {
-    const keyword = queryStr.keyword
+class ApiFeatures {
+  constructor(query, queryStr) {
+    this.query = query;
+    this.queryStr = queryStr;
+  }
+
+  search() {
+    const keyword = this.queryStr.keyword
       ? {
           name: {
-            $regex: queryStr.keyword,
+            $regex: this.queryStr.keyword,
             $options: "i",
           },
         }
       : {};
 
-    query = query.find({ ...keyword });
-    return query;
-  };
+    this.query = this.query.find({ ...keyword });
+    return this;
+  }
 
-  const filter = () => {
-    const queryCopy = { ...queryStr };
+  filter() {
+    const queryCopy = { ...this.queryStr };
     const removeFields = ["keyword", "page", "limit"];
 
     removeFields.forEach((key) => delete queryCopy[key]);
@@ -22,26 +27,20 @@ const ApiFeatures = (query, queryStr) => {
     let queryStr = JSON.stringify(queryCopy);
     queryStr = queryStr.replace(/\b(gt|gte|lt|lte)\b/g, (key) => `$${key}`);
 
-    query = query.find(JSON.parse(queryStr));
+    this.query = this.query.find(JSON.parse(queryStr));
 
-    return query;
-  };
+    return this;
+  }
 
-  const pagination = (resultPerPage) => {
-    const currentPage = Number(queryStr.page) || 1;
+  pagination(resultPerPage) {
+    const currentPage = Number(this.queryStr.page) || 1;
 
     const skip = resultPerPage * (currentPage - 1);
 
-    query = query.limit(resultPerPage).skip(skip);
+    this.query = this.query.limit(resultPerPage).skip(skip);
 
-    return query;
-  };
-
-  return {
-    search,
-    filter,
-    pagination,
-  };
-};
+    return this;
+  }
+}
 
 export default ApiFeatures;

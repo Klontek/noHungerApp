@@ -1,10 +1,25 @@
-// const Store = require("../models/store");
-// const cloudinary = require("cloudinary").v2;
-// const Order = require("../models/order");
+import storeModel from "../model/store.js";
 import { v2 as cloudinary } from "cloudinary";
 import mongoose from "mongoose";
+import orderModel from "../model/order.js";
 
-const getMyStore = async (req, res) => {
+cloudinary.config({
+  cloud_name: process.env.CLOUD_NAME,
+  api_key: process.env.API_KEY,
+  api_secret: process.env.API_SECRET,
+});
+
+export const getAllStores = async (req, res) => {
+  try {
+    const stores = await storeModel.find({});
+    res.status(200).json(stores);
+  } catch (error) {
+    console.log("error", error);
+    res.status(500).json({ message: "Error fetching stores" });
+  }
+};
+
+export const getMyStore = async (req, res) => {
   try {
     const store = await storeModel.findOne({ user: req.userId });
     if (!store) {
@@ -17,7 +32,7 @@ const getMyStore = async (req, res) => {
   }
 };
 
-const getStore = async (req, res) => {
+export const getStore = async (req, res) => {
   try {
     const storeId = req.params.storeId;
 
@@ -33,7 +48,7 @@ const getStore = async (req, res) => {
   }
 };
 
-const createMyStore = async (req, res) => {
+export const createMyStore = async (req, res) => {
   try {
     const existingStore = await storeModel.findOne({ user: req.userId });
 
@@ -60,7 +75,7 @@ const createMyStore = async (req, res) => {
   }
 };
 
-const updateMyStore = async (req, res) => {
+export const updateMyStore = async (req, res) => {
   try {
     const store = await storeModel.findOne({
       user: req.userId,
@@ -92,7 +107,7 @@ const updateMyStore = async (req, res) => {
   }
 };
 
-const getMyStoreOrders = async (req, res) => {
+export const getMyStoreOrders = async (req, res) => {
   try {
     const store = await storeModel.findOne({ user: req.userId });
     if (!store) {
@@ -111,7 +126,7 @@ const getMyStoreOrders = async (req, res) => {
   }
 };
 
-const updateOrderStatus = async (req, res) => {
+export const updateOrderStatus = async (req, res) => {
   try {
     const { orderId } = req.params;
     const { status } = req.body;
@@ -137,7 +152,7 @@ const updateOrderStatus = async (req, res) => {
   }
 };
 
-const uploadImage = async (file) => {
+export const uploadImage = async (file) => {
   const image = file;
   const base64Image = Buffer.from(image.buffer).toString("base64");
   const dataURI = `data:${image.mimetype};base64,${base64Image}`;
@@ -146,7 +161,7 @@ const uploadImage = async (file) => {
   return uploadResponse.url;
 };
 
-const searchStore = async (req, res) => {
+export const searchStore = async (req, res) => {
   try {
     const city = req.params.city;
 
@@ -197,7 +212,7 @@ const searchStore = async (req, res) => {
       .limit(pageSize)
       .lean();
 
-    const total = await Store.countDocuments(query);
+    const total = await stores.countDocuments(query);
 
     const response = {
       data: stores,
@@ -215,12 +230,12 @@ const searchStore = async (req, res) => {
   }
 };
 
-module.exports = {
-  updateOrderStatus,
-  getMyStoreOrders,
-  getMyStore,
-  createMyStore,
-  updateMyStore,
-  searchStore,
-  getStore,
-};
+// module.exports = {
+//   updateOrderStatus,
+//   getMyStoreOrders,
+//   getMyStore,
+//   createMyStore,
+//   updateMyStore,
+//   searchStore,
+//   getStore,
+// };

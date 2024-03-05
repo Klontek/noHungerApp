@@ -16,6 +16,10 @@ import userRoutes from "./routes/users.js";
 import orderRoutes from "./routes/orders.js";
 import shopDataRoutes from "./routes/shopDatas.js";
 import productDataRoutes from "./routes/productData.js";
+import uploadRoutes from "./routes/uploads.js";
+import storeRoutes from "./routes/stores.js";
+import searchRoutes from "./routes/stores.js";
+
 import { uploadProfile } from "./controllers/users.js";
 
 const app = express();
@@ -54,6 +58,9 @@ app.use(`${api}/orders`, orderRoutes);
 app.use(`${api}/shopDatas`, shopDataRoutes);
 app.use(`${api}/productDatas`, productDataRoutes);
 app.use(`${api}/upload-profile`, uploadProfile);
+app.use(`${api}/upload`, uploadRoutes);
+app.use(`${api}/stores`, storeRoutes);
+app.use(`${api}/search`, searchRoutes);
 
 app.get("/", (req, res) => {
   res.send("Welcome to Restful API!");

@@ -1,9 +1,9 @@
 import userModel from "../model/user.js";
-import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import multer from "multer";
 import { v2 as cloudinary } from "cloudinary";
 import dotenv from "dotenv";
+import generateToken from "../utility/generateToken.js";
 
 dotenv.config();
 cloudinary.config({
@@ -60,8 +60,11 @@ export const uploadProfile = async (req, res) => {
       const userProfile = await userModel.findByIdAndUpdate(
         user._id,
         { avatar: result.secure_url },
-        { new: true }
+        { new: true } // This object should be within the findByIdAndUpdate method
       );
+
+      // Update the user's token separately
+      userProfile.token = generateToken(user._id);
 
       res.status(201).json({
         success: true,
@@ -75,179 +78,6 @@ export const uploadProfile = async (req, res) => {
         .json({ success: false, message: "Internal server error!" });
     }
   });
-};
-
-// @desc Get user profile
-// @route GET /api/users/profile
-// @access private
-export const getUserProfile = async (req, res) => {
-  try {
-    const user = await userModel.findById(req.user._id);
-    if (!user) {
-      return res.status(404).json({
-        success: false,
-        message: "User not found!",
-      });
-    }
-
-    res.status(200).json({
-      success: true,
-      _id: user._id,
-      name: user.name,
-      email: user.email,
-      isAdmin: user.isAdmin,
-      avatar: user.avatar ? user.avatar : "",
-    });
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: "Server error",
-    });
-  }
-};
-
-// @desc Update user profile
-// @route PUT /api/users/:id/update-profile
-// @access Private
-export const updateUserProfile = async (req, res) => {
-  try {
-    const user = await userModel.findById(req.user._id);
-
-    if (!user) {
-      return res.status(404).json({
-        success: false,
-        message: "User not found",
-      });
-    }
-
-    user.name = req.body.name || user.name;
-    user.email = req.body.email || user.email;
-    user.password = req.body.password || user.password;
-
-    // Exclude confirmPassword from update operation
-    if (req.body.confirmPassword) {
-      user.confirmPassword = req.body.confirmPassword;
-    }
-
-    const updatedUser = await user.save();
-
-    res.json({
-      _id: updatedUser._id,
-      name: updatedUser.name,
-      email: updatedUser.email,
-      isAdmin: updatedUser.isAdmin,
-    });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({
-      success: false,
-      msg: "Server Error",
-    });
-  }
-};
-
-// @desc Register a new user
-// @route POST /api/users
-// @access Public
-export const registerUser = async (req, res) => {
-  try {
-    const {
-      name,
-      email,
-      password,
-      confirmPassword,
-      isAdmin,
-      street,
-      phone,
-      apartment,
-      city,
-      zip,
-      country,
-    } = req.body;
-
-    const isNewUser = await userModel.isThisEmailInUse(email);
-    if (!isNewUser) {
-      return res.json({
-        success: false,
-        message: "This email is already in use, try another one!",
-      });
-    }
-
-    const newUser = await userModel.create({
-      name,
-      email,
-      password,
-      confirmPassword,
-      isAdmin,
-      street,
-      phone,
-      apartment,
-      city,
-      zip,
-      country,
-    });
-
-    if (!newUser) {
-      return res.status(404).json({
-        success: false,
-        message: "User cannot be created",
-      });
-    }
-
-    res.status(201).json({
-      success: true,
-      message: "User created successfully",
-      data: newUser,
-    });
-  } catch (error) {
-    res.status(500).json({
-      msg: "Internal Server Error",
-      err: error.message,
-    });
-  }
-};
-
-// @desc    Get all users
-// @desc    Get all users
-// @route   GET /api/users
-// @access  Private/Admin
-export const getUsers = async (req, res) => {
-  try {
-    const users = await userModel.find().select("-password");
-    if (!users || users.length === 0) {
-      return res.status(404).json({ msg: "Users not found", data: [] });
-    }
-    res.status(200).json({
-      msg: "Users fetched successfully",
-      data: users,
-    });
-  } catch (error) {
-    console.log(error);
-    res.status(500).json({
-      msg: "Internal Server Error",
-      error: error.message,
-    });
-  }
-};
-
-// @desc    Get user by id
-// @route   GET /api/users/:id
-// @access  Private/Admin
-export const getUser = async (req, res) => {
-  try {
-    const user = await userModel.findById(req.params.id).select("-password");
-
-    if (!user) {
-      return res.status(404).json({ msg: "User not found" });
-    }
-
-    res.status(200).json({ data: user });
-  } catch (error) {
-    res.status(500).json({
-      msg: "Internal Server Error",
-      error: error.message,
-    });
-  }
 };
 
 // @desc Authenticate user & get token
@@ -311,6 +141,7 @@ export const loginUser = async (req, res) => {
         avatar: user.avatar ? user.avatar : "",
         isAdmin: user.isAdmin,
         token,
+        // token: generateToken(user._id),
       };
 
       return res.status(200).json({
@@ -322,6 +153,181 @@ export const loginUser = async (req, res) => {
     }
   } catch (error) {
     console.error("Error", error);
+    res.status(500).json({
+      msg: "Internal Server Error",
+      error: error.message,
+    });
+  }
+};
+
+// @desc Register a new user
+// @route POST /api/users
+// @access Public
+export const registerUser = async (req, res) => {
+  try {
+    const {
+      name,
+      email,
+      password,
+      confirmPassword,
+      isAdmin,
+      street,
+      phone,
+      apartment,
+      city,
+      zip,
+      country,
+    } = req.body;
+
+    const isNewUser = await userModel.isThisEmailInUse(email);
+    if (!isNewUser) {
+      return res.json({
+        success: false,
+        message: "This email is already in use, try another one!",
+      });
+    }
+
+    const newUser = await userModel.create({
+      name,
+      email,
+      password,
+      confirmPassword,
+      isAdmin,
+      street,
+      phone,
+      apartment,
+      city,
+      zip,
+      country,
+    });
+
+    if (!newUser) {
+      return res.status(404).json({
+        success: false,
+        message: "User cannot be created",
+      });
+    }
+
+    res.status(201).json({
+      success: true,
+      message: "User created successfully",
+      data: newUser,
+      // token: generateToken(newUser._id),
+    });
+  } catch (error) {
+    res.status(500).json({
+      msg: "Internal Server Error",
+      err: error.message,
+    });
+  }
+};
+
+// @desc Get user profile
+// @route GET /api/users/profile
+// @access private
+export const getUserProfile = async (req, res) => {
+  try {
+    const user = await userModel.findById(req.user._id);
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found!",
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      _id: user._id,
+      name: user.name,
+      email: user.email,
+      isAdmin: user.isAdmin,
+      avatar: user.avatar ? user.avatar : "",
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Server error",
+    });
+  }
+};
+
+// @desc Update user profile
+// @route PUT /api/users/:id/update-profile
+// @access Private
+export const updateUserProfile = async (req, res) => {
+  try {
+    const user = await userModel.findById(req.user._id);
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
+    }
+
+    user.name = req.body.name || user.name;
+    user.email = req.body.email || user.email;
+    user.password = req.body.password || user.password;
+
+    // Exclude confirmPassword from update operation
+    if (req.body.confirmPassword) {
+      user.confirmPassword = req.body.confirmPassword;
+    }
+
+    const updatedUser = await user.save();
+
+    res.json({
+      _id: updatedUser._id,
+      name: updatedUser.name,
+      email: updatedUser.email,
+      isAdmin: updatedUser.isAdmin,
+      // token: generateToken(updatedUser._id),
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      success: false,
+      msg: "Server Error",
+    });
+  }
+};
+
+// @desc    Get all users
+// @desc    Get all users
+// @route   GET /api/users
+// @access  Private/Admin
+export const getUsers = async (req, res) => {
+  try {
+    const users = await userModel.find().select("-password");
+    if (!users || users.length === 0) {
+      return res.status(404).json({ msg: "Users not found", data: [] });
+    }
+    res.status(200).json({
+      msg: "Users fetched successfully",
+      data: users,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      msg: "Internal Server Error",
+      error: error.message,
+    });
+  }
+};
+
+// @desc    Get user by id
+// @route   GET /api/users/:id
+// @access  Private/Admin
+export const getUser = async (req, res) => {
+  try {
+    const user = await userModel.findById(req.params.id).select("-password");
+
+    if (!user) {
+      return res.status(404).json({ msg: "User not found" });
+    }
+
+    res.status(200).json({ data: user });
+  } catch (error) {
     res.status(500).json({
       msg: "Internal Server Error",
       error: error.message,
@@ -410,17 +416,19 @@ export const updateUser = async (req, res) => {
 };
 
 // @desc    Delete a user
-// @route   GET /api/users/:id
+// @route   DELETE /api/users/:id
 // @access  Private/Admin
 export const deleteUser = async (req, res) => {
   try {
     let user = await userModel.findById(req.params.id);
 
-    !user
-      ? res.status(404).json({ msg: "User not Found" })
-      : await user.remove();
-    res.status(201).json({
-      success: false,
+    if (!user) {
+      return res.status(404).json({ msg: "User not found" });
+    }
+
+    await user.deleteOne();
+    res.status(200).json({
+      success: true,
       msg: "User has been deleted successfully",
     });
   } catch (error) {
@@ -451,3 +459,16 @@ export const getUserCount = async (req, res) => {
     });
   }
 };
+
+// const userProfile = await userModel.findByIdAndUpdate(
+//   user._id,
+//   { avatar: result.secure_url },
+//   token: generateToken(user._id)
+//   { new: true }
+// );
+
+// res.status(201).json({
+//   success: true,
+//   message: "Your profile pic is updated",
+//   data: userProfile,
+// });

@@ -1,4 +1,5 @@
 // import shopDataModel from "../model/productData.js";
+// import productModel from "../model/product.js";
 
 import shopDataModel from "../model/shopData.js";
 import multer from "multer";
@@ -7,7 +8,6 @@ import {
   removeFromCloudinary,
   uploadToCloudinary,
 } from "../services/cloudinary.js";
-// import productModel from "../model/product.js";
 
 const MIME_FILE_TYPE = {
   "image/png": "png",
@@ -33,35 +33,6 @@ const uploadOptions = multer({
   storage: storage,
   fileFilter: fileFilter,
 });
-export const getShopDatas = async (req, res) => {
-  try {
-    const shopData = await shopDataModel.find().populate("productData");
-    res.status(201).json(shopData);
-  } catch (error) {
-    res.status(500).json({
-      msg: error,
-    });
-  }
-};
-
-export const getShopData = async (req, res) => {
-  const shopDataId = req.params.shopDataId;
-  try {
-    const shopData = await shopDataModel.findById(shopDataId);
-    if (!shopData) {
-      res
-        .status(404)
-        .json({ msg: "The shopData with the given ID was not found" });
-    }
-    res.status(200).json(shopData);
-  } catch (error) {
-    res.status(500).json({
-      msg: "Invalid Id parameter",
-      success: false,
-      value: error,
-    });
-  }
-};
 
 export const addShopData = async (req, res) => {
   uploadOptions.single("image")(req, res, async (uploadError) => {
@@ -130,6 +101,36 @@ export const addShopData = async (req, res) => {
       });
     }
   });
+};
+
+export const getShopDatas = async (req, res) => {
+  try {
+    const shopData = await shopDataModel.find().populate("productData");
+    res.status(201).json(shopData);
+  } catch (error) {
+    res.status(500).json({
+      msg: error,
+    });
+  }
+};
+
+export const getShopData = async (req, res) => {
+  const shopDataId = req.params.shopDataId;
+  try {
+    const shopData = await shopDataModel.findById(shopDataId);
+    if (!shopData) {
+      res
+        .status(404)
+        .json({ msg: "The shopData with the given ID was not found" });
+    }
+    res.status(200).json(shopData);
+  } catch (error) {
+    res.status(500).json({
+      msg: "Invalid Id parameter",
+      success: false,
+      value: error,
+    });
+  }
 };
 
 export const updateShopDatas = async (req, res) => {

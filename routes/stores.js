@@ -1,12 +1,22 @@
 import express from "express";
 import multer from "multer";
-import stores from "../controllers/stores";
+// import stores from "../controllers/js";
 import { validateMyStoreRequest } from "../middleware/validation/storeMiddleware.js";
 import {
   isAuthorize,
   admin,
 } from "../middleware/validation/authMiddleware.mjs";
 import { param } from "express-validator";
+import {
+  updateOrderStatus,
+  getMyStoreOrders,
+  getMyStore,
+  createMyStore,
+  updateMyStore,
+  searchStore,
+  getStore,
+  getAllStores,
+} from "../controllers/stores.js";
 
 const router = express.Router();
 
@@ -18,16 +28,13 @@ const upload = multer({
   },
 });
 
-router.get("/order", isAuthorize, admin, stores.getMyStoreOrders);
+router.get("/order", isAuthorize, admin, getMyStoreOrders);
 
-router.patch(
-  "/order/:orderId/status",
-  isAuthorize,
-  admin,
-  stores.updateOrderStatus
-);
+router.patch("/order/:orderId/status", isAuthorize, admin, updateOrderStatus);
 
-router.get("/", isAuthorize, admin, stores.getMyStore);
+router.get("/all", isAuthorize, admin, getAllStores);
+
+router.get("/", isAuthorize, admin, getMyStore);
 
 router.post(
   "/",
@@ -35,7 +42,7 @@ router.post(
   validateMyStoreRequest,
   isAuthorize,
   admin,
-  stores.createMyStore
+  createMyStore
 );
 
 router.put(
@@ -44,7 +51,7 @@ router.put(
   validateMyStoreRequest,
   isAuthorize,
   admin,
-  stores.updateMyStore
+  updateMyStore
 );
 
 router.get(
@@ -54,7 +61,7 @@ router.get(
     .trim()
     .notEmpty()
     .withMessage("storeId parameter must be a valid string"),
-  stores.getStore
+  getStore
 );
 
 router.get(
@@ -64,7 +71,7 @@ router.get(
     .trim()
     .notEmpty()
     .withMessage("City parameter must be a valid string"),
-  stores.searchStore
+  searchStore
 );
 
 export default router;
