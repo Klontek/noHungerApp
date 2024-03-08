@@ -20,9 +20,8 @@ export const loginUser = (user, dispatch) => {
   })
     .then((res) => res.json())
     .then((data) => {
-      // console.log(data);
       if (data.success) {
-        const token = data.user.token; // Extract token from user object
+        const token = data.user.token; // Assuming the token is directly returned in the response
         AsyncStorage.setItem("jwt", token)
           .then(() => console.log("Token stored successfully"))
           .catch((storageErr) =>
@@ -32,13 +31,22 @@ export const loginUser = (user, dispatch) => {
         console.log("Decoded Token:", decoded);
         dispatch(setCurrentUser(decoded, user));
       } else {
-        LogoutUser(dispatch);
+        Toast.show({
+          topOffset: 60,
+          type: "error",
+          text1: `Invalid email or password`,
+          text2: "",
+        });
       }
     })
     .catch((err) => {
       console.log(err);
-
-      LogoutUser(dispatch);
+      Toast.show({
+        topOffset: 60,
+        type: "error",
+        text1: `An error occurred. Please try again later.`,
+        text2: "",
+      });
     });
 };
 
@@ -67,6 +75,39 @@ export const setCurrentUser = (decoded, user) => {
     userProfile: user,
   };
 };
+
+// export const loginUser = (user, dispatch) => {
+//   fetch(`${baseUrl}users/login`, {
+//     method: "POST",
+//     body: JSON.stringify(user),
+//     headers: {
+//       Accept: "application/json",
+//       "Content-Type": "application/json",
+//     },
+//   })
+//     .then((res) => res.json())
+//     .then((data) => {
+//       // console.log(data);
+//       if (data.success) {
+//         const token = data.user.token; // Extract token from user object
+//         AsyncStorage.setItem("jwt", token)
+//           .then(() => console.log("Token stored successfully"))
+//           .catch((storageErr) =>
+//             console.log("Error storing token:", storageErr)
+//           );
+//         const decoded = jwt_decode(token);
+//         console.log("Decoded Token:", decoded);
+//         dispatch(setCurrentUser(decoded, user));
+//       } else {
+//         LogoutUser(dispatch);
+//       }
+//     })
+//     .catch((err) => {
+//       console.log(err);
+
+//       LogoutUser(dispatch);
+//     });
+// };
 
 // export const LOGOUT_USER = "LOGOUT_USER";
 
