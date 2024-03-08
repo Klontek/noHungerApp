@@ -79,15 +79,18 @@ router.delete("/:id", async (req, res) => {
   }
 });
 
-// Get images uploaded by a single authenticated user
-// router.get("/user", async (req, res) => {
-//   const userId = req.user.id; // Assuming user ID is available in req.user
-//   try {
-//     const images = await Image.find({ user: userId });
-//     res.json(images);
-//   } catch (error) {
-//     res.status(500).json({ error: "Failed to fetch user's images" });
-//   }
-// });
+// Get a single image by ID
+router.get("/:id", async (req, res) => {
+  const id = req.params.id; // Extract the image ID from the URL params
+  try {
+    const image = await Image.findById(id);
+    if (!image) {
+      return res.status(404).json({ error: "Image not found" });
+    }
+    res.json(image);
+  } catch (error) {
+    res.status(500).json({ error: "Failed to fetch image" });
+  }
+});
 
 export default router;
