@@ -11,7 +11,7 @@ cloudinary.config({
 
 export const getAllStores = async (req, res) => {
   try {
-    const stores = await storeModel.find({});
+    const stores = await storeModel.find();
     res.status(200).json(stores);
   } catch (error) {
     console.log("error", error);

@@ -106,7 +106,7 @@ export const addShopData = async (req, res) => {
 export const getShopDatas = async (req, res) => {
   try {
     const shopData = await shopDataModel.find().populate("productData");
-    res.status(201).json(shopData);
+    res.status(200).json(shopData);
   } catch (error) {
     res.status(500).json({
       msg: error,
