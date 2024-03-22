@@ -34,6 +34,10 @@ function authJwt() {
         url: /\/api\/v1\/orders(.*)/,
         methods: ["GET", "OPTIONS"],
       },
+      {
+        url: /\/api\/v1\/upload(.*)/,
+        methods: ["GET", "OPTIONS"],
+      },
       // the orders route is a protected route so the below exclusion is temporary
       // {
       //   url: /\/api\/v1\/users(.*)/,

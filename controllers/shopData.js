@@ -1,6 +1,3 @@
-// import shopDataModel from "../model/productData.js";
-// import productModel from "../model/product.js";
-
 import shopDataModel from "../model/shopData.js";
 import multer from "multer";
 import productDataModel from "../model/productData.js";
@@ -34,6 +31,9 @@ const uploadOptions = multer({
   fileFilter: fileFilter,
 });
 
+// @desc Add a new shopData
+// @route POST /api/shopDatas
+// @access Public
 export const addShopData = async (req, res) => {
   uploadOptions.single("image")(req, res, async (uploadError) => {
     if (uploadError) {
@@ -103,6 +103,9 @@ export const addShopData = async (req, res) => {
   });
 };
 
+// @desc fetch all shopDatas
+// @route GET /api/shopDatas
+// @access Public
 export const getShopDatas = async (req, res) => {
   try {
     const shopData = await shopDataModel.find().populate("productData");
@@ -114,6 +117,9 @@ export const getShopDatas = async (req, res) => {
   }
 };
 
+// @desc Fetch a single shopData by ID
+// @route GET /api/shopDatas/:shopDataId
+// @access Public
 export const getShopData = async (req, res) => {
   const shopDataId = req.params.shopDataId;
   try {
@@ -133,6 +139,9 @@ export const getShopData = async (req, res) => {
   }
 };
 
+// @desc Update a shopData
+// @route PUT /api/shopDatas/:shopDataId
+// @access Public
 export const updateShopDatas = async (req, res) => {
   uploadOptions.single("image")(req, res, async (uploadError) => {
     if (uploadError) {
@@ -208,6 +217,9 @@ export const updateShopDatas = async (req, res) => {
   });
 };
 
+// @desc Delete a shopData
+// @route DELETE /api/shopDatas/:shopDataId
+// @access Public
 export const deleteShopData = async (req, res) => {
   const shopDataId = req.params.shopDataId;
 

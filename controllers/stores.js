@@ -9,6 +9,9 @@ cloudinary.config({
   api_secret: process.env.API_SECRET,
 });
 
+// @desc fetch all stores
+// @route GET /api/stores/
+// @access Private
 export const getAllStores = async (req, res) => {
   try {
     const stores = await storeModel.find();
@@ -19,6 +22,9 @@ export const getAllStores = async (req, res) => {
   }
 };
 
+// @desc Fetch the current user's store
+// @route GET /api/stores/my-store
+// @access Private
 export const getMyStore = async (req, res) => {
   try {
     const store = await storeModel.findOne({ user: req.userId });
@@ -32,6 +38,9 @@ export const getMyStore = async (req, res) => {
   }
 };
 
+// @desc Fetch a single store by ID
+// @route GET /api/stores/:storeId
+// @access Public
 export const getStore = async (req, res) => {
   try {
     const storeId = req.params.storeId;
@@ -48,6 +57,9 @@ export const getStore = async (req, res) => {
   }
 };
 
+// @desc Create a new store for the current user
+// @route POST /api/stores/
+// @access Private
 export const createMyStore = async (req, res) => {
   try {
     const existingStore = await storeModel.findOne({ user: req.userId });
@@ -75,6 +87,9 @@ export const createMyStore = async (req, res) => {
   }
 };
 
+// @desc Update the current user's store
+// @route PUT /api/stores/
+// @access Private
 export const updateMyStore = async (req, res) => {
   try {
     const store = await storeModel.findOne({
@@ -107,6 +122,9 @@ export const updateMyStore = async (req, res) => {
   }
 };
 
+// @desc Get all orders for the current user's store
+// @route GET /api/stores/my-store/orders
+// @access Private
 export const getMyStoreOrders = async (req, res) => {
   try {
     const store = await storeModel.findOne({ user: req.userId });
@@ -126,6 +144,9 @@ export const getMyStoreOrders = async (req, res) => {
   }
 };
 
+// @desc Update the status of an order
+// @route PUT /api/stores/orders/:orderId
+// @access Private
 export const updateOrderStatus = async (req, res) => {
   try {
     const { orderId } = req.params;
@@ -152,6 +173,8 @@ export const updateOrderStatus = async (req, res) => {
   }
 };
 
+// @desc Upload an image to Cloudinary
+// @access Private
 export const uploadImage = async (file) => {
   const image = file;
   const base64Image = Buffer.from(image.buffer).toString("base64");
@@ -161,6 +184,9 @@ export const uploadImage = async (file) => {
   return uploadResponse.url;
 };
 
+// @desc Search for stores based on city, search query, selected cuisines, and sort option
+// @route GET /api/stores/search/:city
+// @access Public
 export const searchStore = async (req, res) => {
   try {
     const city = req.params.city;
@@ -204,7 +230,6 @@ export const searchStore = async (req, res) => {
     const pageSize = 10;
     const skip = (page - 1) * pageSize;
 
-    // sortOption = "lastUpdated"
     const stores = await storeModel
       .find(query)
       .sort({ [sortOption]: 1 })
@@ -212,7 +237,7 @@ export const searchStore = async (req, res) => {
       .limit(pageSize)
       .lean();
 
-    const total = await stores.countDocuments(query);
+    const total = await storeModel.countDocuments(query);
 
     const response = {
       data: stores,
