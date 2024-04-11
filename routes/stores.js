@@ -32,9 +32,9 @@ router.get("/order", isAuthorize, admin, getMyStoreOrders);
 
 router.patch("/order/:orderId/status", isAuthorize, admin, updateOrderStatus);
 
-router.get("/all", isAuthorize, admin, getAllStores);
+router.get("/", isAuthorize, admin, getAllStores);
 
-router.get("/", isAuthorize, admin, getMyStore);
+router.get("/mystore", isAuthorize, admin, getMyStore);
 
 router.post(
   "/",
